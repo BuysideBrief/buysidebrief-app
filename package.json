@@ -1,0 +1,14 @@
+{
+  "name": "buysidebrief",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Buyside Brief — actionable SEC insider trading signals delivered daily",
+  "scripts": {
+    "dev": "vercel dev",
+    "test-fetch": "node --experimental-modules scripts/test-fetch.js",
+    "test-score": "node --experimental-modules scripts/test-score.js"
+  },
+  "dependencies": {
+    "resend": "^3.2.0"
+  }
+}
