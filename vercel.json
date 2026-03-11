@@ -11,7 +11,7 @@
   ],
   "functions": {
     "api/fetch-and-send.js": {
-      "maxDuration": 120
+      "maxDuration": 60
     },
     "api/send-weekly.js": {
       "maxDuration": 60
