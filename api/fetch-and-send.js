@@ -37,9 +37,8 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 2: Fetch + parse individual Form 4 XML docs ──
-    // Limit to 30 to stay within Vercel timeout
     console.log('[2/7] Parsing individual Form 4 filings...');
-    const toProcess = filingIndex.slice(0, 50);
+    const toProcess = filingIndex.slice(0, 100);
     const parsed = [];
 
     // Debug mode: return raw filing index data
@@ -52,13 +51,24 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    for (const filing of toProcess) {
-      const result = await fetchAndParseForm4(filing);
-      if (result && result.transactions.length > 0) {
-        parsed.push(result);
+    // Process in parallel batches of 5 (safe for SEC 10 req/sec limit)
+    const BATCH_SIZE = 5;
+    for (let i = 0; i < toProcess.length; i += BATCH_SIZE) {
+      const batch = toProcess.slice(i, i + BATCH_SIZE);
+      const results = await Promise.all(
+        batch.map(filing => fetchAndParseForm4(filing).catch(() => null))
+      );
+      for (const result of results) {
+        if (result && result.transactions.length > 0) {
+          parsed.push(result);
+        }
+      }
+      // Brief pause between batches to respect rate limit
+      if (i + BATCH_SIZE < toProcess.length) {
+        await new Promise(r => setTimeout(r, 200));
       }
     }
-    console.log(`  Parsed ${parsed.length} filings with transactions`);
+    console.log(`  Parsed ${parsed.length} filings with transactions out of ${toProcess.length}`);
 
     // ── Step 3: Score all filings ──
     console.log('[3/7] Scoring filings...');
