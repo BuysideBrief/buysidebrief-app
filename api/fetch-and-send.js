@@ -17,10 +17,18 @@ const { storeIssue } = require('./archive');
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
+  const isDebug = req.query.debug === 'true';
+  const isManualSend = req.query.send === 'true';
+  const isCron = req.headers['x-vercel-cron'] === '1';
   const startTime = Date.now();
 
+  // Safeguard: hitting the URL without params defaults to dry run
+  // Live sends only happen from cron or with explicit ?send=true
+  const shouldSend = isCron || isManualSend;
+  const effectiveDryRun = isDryRun || (!shouldSend && !isDebug);
+
   try {
-    console.log(`[BuysideBrief] Starting ${isDryRun ? 'DRY RUN' : 'LIVE'} digest...`);
+    console.log(`[BuysideBrief] Starting ${effectiveDryRun ? 'DRY RUN' : 'LIVE'} digest (cron: ${isCron}, manual: ${isManualSend})...`);
 
     // ── Step 1: Fetch recent Form 4 filing index ──
     console.log('[1/5] Fetching filing index from EDGAR...');
@@ -32,7 +40,7 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({
         success: true,
         message: 'No filings found today',
-        dry: isDryRun,
+        dry: effectiveDryRun,
       });
     }
 
@@ -118,7 +126,7 @@ module.exports = async function handler(req, res) {
     const { subject, html } = formatDigestEmail(enrichedCategorized, null, extraHtml, marketHtml);
 
     // ── Step 7: Send via Resend ──
-    if (isDryRun) {
+    if (effectiveDryRun) {
       console.log('[7/7] DRY RUN — skipping send');
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
       return res.status(200).json({
