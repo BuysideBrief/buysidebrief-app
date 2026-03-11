@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
     // ── Step 2: Fetch + parse individual Form 4 XML docs ──
     // Limit to 30 to stay within Vercel timeout
     console.log('[2/7] Parsing individual Form 4 filings...');
-    const toProcess = filingIndex.slice(0, 30);
+    const toProcess = filingIndex.slice(0, 80);
     const parsed = [];
 
     // Debug mode: return raw filing index data
