@@ -11,7 +11,8 @@ const { fetchRecentFilingsFromFeed, fetchAndParseForm4 } = require('../lib/sec-f
 const { scoreAllFilings, categorizeForDigest } = require('../lib/signal-scorer');
 const { formatDigestEmail } = require('../lib/email-formatter');
 const { enrichAllFilings } = require('../lib/context-enricher');
-const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail } = require('../lib/performance-tracker');
+const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile } = require('../lib/performance-tracker');
+const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
@@ -80,11 +81,30 @@ module.exports = async function handler(req, res) {
     const updatedReturns = await updateAllReturns();
     console.log(`  Updated returns for ${updatedReturns} past picks`);
 
-    // ── Step 6: Format email (with scorecard) ──
+    // ── Step 6: Format email (with market overview, scorecard + CEO spotlight) ──
     console.log('[6/7] Formatting email digest...');
-    const scorecard = generateScorecard();
+
+    // Market overview
+    const marketOverview = await getMarketOverview();
+    const marketHtml = formatMarketOverviewForEmail(marketOverview);
+
+    const scorecard = await generateScorecard();
     const scorecardHtml = formatScorecardForEmail(scorecard);
-    const { subject, html } = formatDigestEmail(enrichedCategorized, null, scorecardHtml);
+
+    // Find the most interesting CEO from today's picks for the spotlight
+    let ceoSpotlightHtml = '';
+    for (const f of enriched) {
+      if (f.ownerCik && (f.tier === 'top_pick' || f.tier === 'feature')) {
+        const profile = await getCeoProfile(f.ownerCik);
+        if (profile && profile.totalPicks >= 2 && profile.winRate !== null) {
+          ceoSpotlightHtml = formatCeoSpotlight(profile);
+          break; // Just show one per email
+        }
+      }
+    }
+
+    const extraHtml = scorecardHtml + ceoSpotlightHtml;
+    const { subject, html } = formatDigestEmail(enrichedCategorized, null, extraHtml, marketHtml);
 
     // ── Step 7: Send via Resend ──
     if (isDryRun) {
