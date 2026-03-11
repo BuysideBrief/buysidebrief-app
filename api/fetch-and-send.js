@@ -230,6 +230,7 @@ async function sendViaResend(subject, html) {
   // Broadcast to audience via Resend Broadcast API
   if (AUDIENCE_ID) {
     // Step 1: Create the broadcast
+    // Resend renamed audiences to segments — try segment_id first
     const createRes = await fetch('https://api.resend.com/broadcasts', {
       method: 'POST',
       headers: {
@@ -237,7 +238,7 @@ async function sendViaResend(subject, html) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        audienceId: AUDIENCE_ID,
+        segment_id: AUDIENCE_ID,
         from: 'Buyside Brief <hello@buysidebrief.com>',
         subject,
         html,
