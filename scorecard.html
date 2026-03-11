@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scorecard — Buyside Brief</title>
+  <meta name="description" content="Track record of Buyside Brief's insider trading picks. Win rates, returns at 30/60/90 days, and CEO-level performance data.">
+  <meta property="og:title" content="Buyside Brief Scorecard — How Our Picks Are Doing">
+  <meta property="og:description" content="Transparent performance tracking of every insider trade we feature. Win rates, returns, and CEO track records.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #faf8f4;
+      --cream-dark: #f2efe8;
+      --white: #ffffff;
+      --ink: #1a1a1a;
+      --ink-light: #3d3d3d;
+      --ink-muted: #7a7a7a;
+      --ink-faint: #b0a99f;
+      --green: #1a7a4c;
+      --green-bg: #e8f5ee;
+      --red: #c0392b;
+      --red-bg: #fce8e6;
+      --accent: #d4a853;
+      --accent-bg: #fdf6e8;
+      --rule: #e0dbd3;
+      --serif: 'Instrument Serif', Georgia, serif;
+      --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { color: var(--ink); }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Nav ── */
+    nav {
+      border-bottom: 1px solid var(--rule);
+      padding: 16px 0;
+    }
+    nav .inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .logo {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav .logo em { color: var(--green); font-style: italic; }
+    nav .links { display: flex; gap: 20px; font-size: 14px; }
+    nav .links a { color: var(--ink-muted); text-decoration: none; }
+    nav .links a:hover { color: var(--green); }
+    nav .links a.active { color: var(--green); font-weight: 600; }
+
+    /* ── Header ── */
+    header {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+    header h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    header h1 em { color: var(--green); font-style: italic; }
+    header .subtitle {
+      font-size: 16px;
+      color: var(--ink-muted);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 80px 0;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .loading .dot { animation: blink 1.4s infinite; }
+    .loading .dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+    .empty-state h2 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .empty-state p { color: var(--ink-muted); font-size: 15px; margin-bottom: 20px; }
+    .empty-state a.cta {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .empty-state a.cta:hover { background: var(--green); color: white; }
+
+    /* ── Stat cards ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card .value {
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .stat-card .value.positive { color: var(--green); }
+    .stat-card .value.negative { color: var(--red); }
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Timeframes ── */
+    .timeframes {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .tf-pill {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 12px 20px;
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+    }
+    .tf-pill .period {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .tf-pill .return {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+    }
+    .tf-pill .return.positive { color: var(--green); }
+    .tf-pill .return.negative { color: var(--red); }
+    .tf-pill .return.na { color: var(--ink-faint); font-size: 14px; }
+
+    /* ── Section headers ── */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 16px;
+    }
+    .section-header h2 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+    }
+    .section-header .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    /* ── Picks table ── */
+    .picks-table { margin-bottom: 48px; }
+    .pick-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 100px 100px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .pick-row.header {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--ink-faint);
+      padding-bottom: 8px;
+    }
+    .pick-ticker {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--green);
+    }
+    .pick-info .name { font-size: 14px; color: var(--ink); font-weight: 500; }
+    .pick-info .meta { font-size: 12px; color: var(--ink-muted); }
+    .pick-return {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: right;
+    }
+    .pick-return.positive { color: var(--green); }
+    .pick-return.negative { color: var(--red); }
+    .pick-score {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--ink-muted);
+      text-align: right;
+    }
+
+    /* ── CEO profiles ── */
+    .ceo-grid { margin-bottom: 48px; }
+    .ceo-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 12px;
+    }
+    .ceo-card .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .ceo-card .name {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+    }
+    .ceo-card .title-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-bg);
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+    .ceo-stats {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .ceo-stat {
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+    .ceo-stat strong { color: var(--ink); }
+    .ceo-stat strong.positive { color: var(--green); }
+    .ceo-stat strong.negative { color: var(--red); }
+    .ceo-picks {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .ceo-pick-chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--rule);
+    }
+    .ceo-pick-chip.positive { background: var(--green-bg); color: var(--green); border-color: var(--green-bg); }
+    .ceo-pick-chip.negative { background: var(--red-bg); color: var(--red); border-color: var(--red-bg); }
+
+    /* ── CTA ── */
+    .bottom-cta {
+      text-align: center;
+      padding: 48px 0 64px;
+    }
+    .bottom-cta h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .bottom-cta h2 em { color: var(--green); font-style: italic; }
+    .bottom-cta p { color: var(--ink-muted); margin-bottom: 20px; }
+    .bottom-cta a.cta {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .bottom-cta a.cta:hover { background: var(--green); transform: translateY(-1px); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 24px 0 48px;
+      text-align: center;
+    }
+    footer p { font-size: 12px; color: var(--ink-faint); line-height: 1.7; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .pick-row { grid-template-columns: 70px 1fr 80px; }
+      .pick-score { display: none; }
+      .timeframes { flex-direction: column; }
+    }
+
+    /* ── Animations ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fade-up 0.4s ease both; }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.1s; }
+    .d3 { animation-delay: 0.15s; }
+    .d4 { animation-delay: 0.2s; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="inner">
+      <a href="/" class="logo">Buyside <em>Brief</em></a>
+      <div class="links">
+        <a href="/">Home</a>
+        <a href="/scorecard.html" class="active">Scorecard</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <h1 class="fade-up">How our <em>picks</em> are doing</h1>
+      <p class="subtitle fade-up d1">
+        Every insider trade we feature gets tracked. Here's the transparent record.
+      </p>
+    </header>
+
+    <!-- Content loads here -->
+    <div id="app">
+      <div class="loading">
+        Fetching scorecard data<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="bottom-cta">
+      <h2>Get the <em>signals</em> daily</h2>
+      <p>Free. No paywall. Just public SEC data, scored and explained.</p>
+      <a href="/" class="cta">Subscribe free</a>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>
+        Not investment advice. SEC Form 4 data is public record. Past insider buying
+        patterns do not predict future performance. Do your own research.
+      </p>
+      <p style="margin-top:8px;">
+        &copy; 2026 Buyside Brief &middot;
+        <a href="mailto:hello@buysidebrief.com" style="color:var(--ink-faint);">Contact</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    async function loadScorecard() {
+      const app = document.getElementById('app');
+
+      try {
+        const res = await fetch('/api/scorecard');
+        if (!res.ok) throw new Error('API error');
+        const data = await res.json();
+
+        if (!data.success || !data.scorecard || data.scorecard.totalPicks === 0) {
+          app.innerHTML = renderEmptyState();
+          return;
+        }
+
+        const sc = data.scorecard;
+        const ceos = data.ceoProfiles || [];
+
+        let html = '';
+
+        // Stat cards
+        html += `<div class="stats-grid fade-up d1">
+          <div class="stat-card">
+            <div class="value">${sc.totalPicks}</div>
+            <div class="label">Total Picks</div>
+          </div>
+          <div class="stat-card">
+            <div class="value ${sc.winRate >= 50 ? 'positive' : ''}">${sc.winRate}%</div>
+            <div class="label">Win Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="value ${sc.avgReturn > 0 ? 'positive' : 'negative'}">${sc.avgReturn > 0 ? '+' : ''}${sc.avgReturn}%</div>
+            <div class="label">Avg Return</div>
+          </div>
+          <div class="stat-card">
+            <div class="value">${sc.winners}/${sc.losers}</div>
+            <div class="label">W / L</div>
+          </div>
+        </div>`;
+
+        // Timeframes
+        html += `<div class="timeframes fade-up d2">
+          ${tfPill('30 Day', sc.avg30dReturn)}
+          ${tfPill('60 Day', sc.avg60dReturn)}
+          ${tfPill('90 Day', sc.avg90dReturn)}
+          ${tfPill('YTD', sc.avgYtdReturn)}
+          ${sc.sp500Return !== null ? tfPill('S&P 500', sc.sp500Return) : ''}
+        </div>`;
+
+        // Recent picks
+        if (sc.recentPicks && sc.recentPicks.length > 0) {
+          html += `<div class="picks-table fade-up d3">
+            <div class="section-header">
+              <h2>Recent Picks</h2>
+              <span class="count">${sc.recentPicks.length} picks</span>
+            </div>
+            <div class="pick-row header">
+              <div>Ticker</div>
+              <div>Insider</div>
+              <div style="text-align:right;">Return</div>
+              <div style="text-align:right;">Score</div>
+            </div>
+            ${sc.recentPicks.map(p => `
+              <div class="pick-row">
+                <div class="pick-ticker">$${esc(p.ticker)}</div>
+                <div class="pick-info">
+                  <div class="name">${esc(p.ownerName)}</div>
+                  <div class="meta">${esc(p.officerTitle || 'Insider')} &middot; ${esc(p.entryDate)}</div>
+                </div>
+                <div class="pick-return ${p.currentReturn > 0 ? 'positive' : 'negative'}">
+                  ${p.currentReturn > 0 ? '+' : ''}${p.currentReturn}%
+                </div>
+                <div class="pick-score">${p.score}</div>
+              </div>
+            `).join('')}
+          </div>`;
+        }
+
+        // CEO profiles
+        if (ceos.length > 0) {
+          html += `<div class="ceo-grid fade-up d4">
+            <div class="section-header">
+              <h2>Insider Track Records</h2>
+              <span class="count">${ceos.length} insiders tracked</span>
+            </div>
+            ${ceos.map(ceo => `
+              <div class="ceo-card">
+                <div class="top">
+                  <div class="name">${esc(ceo.ownerName)}</div>
+                  <span class="title-badge">${esc(ceo.officerTitle)}</span>
+                </div>
+                <div class="ceo-stats">
+                  <div class="ceo-stat"><strong>${ceo.totalPicks}</strong> picks</div>
+                  ${ceo.winRate !== null ? `<div class="ceo-stat"><strong class="${ceo.winRate >= 50 ? 'positive' : ''}">${ceo.winRate}%</strong> win rate</div>` : ''}
+                  ${ceo.avgReturn !== null ? `<div class="ceo-stat">Avg: <strong class="${ceo.avgReturn > 0 ? 'positive' : 'negative'}">${ceo.avgReturn > 0 ? '+' : ''}${ceo.avgReturn}%</strong></div>` : ''}
+                  <div class="ceo-stat">$${formatValue(ceo.totalBuyValue)} invested</div>
+                </div>
+                ${ceo.picks && ceo.picks.length > 0 ? `
+                <div class="ceo-picks">
+                  ${ceo.picks.map(pk => `
+                    <span class="ceo-pick-chip ${pk.currentReturn > 0 ? 'positive' : 'negative'}">
+                      $${esc(pk.ticker)} ${pk.currentReturn > 0 ? '+' : ''}${pk.currentReturn}%
+                    </span>
+                  `).join('')}
+                </div>` : ''}
+              </div>
+            `).join('')}
+          </div>`;
+        }
+
+        app.innerHTML = html;
+
+      } catch (err) {
+        console.error('Scorecard load error:', err);
+        app.innerHTML = renderEmptyState();
+      }
+    }
+
+    function renderEmptyState() {
+      return `<div class="empty-state fade-up">
+        <h2>Scorecard is warming up</h2>
+        <p>We started tracking picks this week. Return data will appear here within a few days as we collect price updates. Check back soon.</p>
+        <a href="/" class="cta">Subscribe to get daily signals</a>
+      </div>`;
+    }
+
+    function tfPill(label, value) {
+      if (value === null || value === undefined) {
+        return `<div class="tf-pill">
+          <div class="period">${label}</div>
+          <div class="return na">Pending</div>
+        </div>`;
+      }
+      const cls = value > 0 ? 'positive' : 'negative';
+      return `<div class="tf-pill">
+        <div class="period">${label}</div>
+        <div class="return ${cls}">${value > 0 ? '+' : ''}${value}%</div>
+      </div>`;
+    }
+
+    function formatValue(num) {
+      if (!num) return '0';
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return Math.round(num / 1000) + 'K';
+      return Math.round(num).toString();
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    loadScorecard();
+  </script>
+</body>
+</html>
