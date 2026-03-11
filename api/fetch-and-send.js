@@ -13,6 +13,7 @@ const { formatDigestEmail } = require('../lib/email-formatter');
 const { enrichAllFilings } = require('../lib/context-enricher');
 const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile } = require('../lib/performance-tracker');
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
+const { storeIssue } = require('./archive');
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
@@ -138,6 +139,15 @@ module.exports = async function handler(req, res) {
 
     console.log('[7/7] Sending via Resend...');
     const sendResult = await sendViaResend(subject, html);
+
+    // Store in archive
+    const today = new Date().toISOString().split('T')[0];
+    const topPick = enrichedCategorized.topPicks[0] || enrichedCategorized.featured[0];
+    await storeIssue(today, subject, html, {
+      topPick: topPick ? `$${topPick.ticker}` : null,
+      signalCount: enrichedCategorized.topPicks.length + enrichedCategorized.featured.length,
+      filingsScanned: filingIndex.length,
+    });
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
     console.log(`[BuysideBrief] Done in ${elapsed}s`);
