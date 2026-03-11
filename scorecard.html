@@ -340,6 +340,92 @@
     }
     .bottom-cta a.cta:hover { background: var(--green); transform: translateY(-1px); }
 
+    /* ── Launch state ── */
+    .launch-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 16px;
+      padding: 48px 36px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .launch-icon { font-size: 40px; margin-bottom: 16px; }
+    .launch-card h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+    .launch-main {
+      font-size: 15px;
+      color: var(--ink-light);
+      max-width: 500px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+    .launch-timeline {
+      text-align: left;
+      max-width: 420px;
+      margin: 0 auto 32px;
+    }
+    .tl-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding-bottom: 20px;
+      position: relative;
+    }
+    .tl-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 20px;
+      bottom: 0;
+      width: 2px;
+      background: var(--rule);
+    }
+    .tl-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--rule);
+      background: var(--white);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .tl-dot.active {
+      border-color: var(--green);
+      background: var(--green-bg);
+      box-shadow: 0 0 0 4px rgba(26, 122, 76, 0.1);
+    }
+    .tl-content strong {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .tl-content span {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+    .launch-sub {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+    }
+    .launch-card .cta {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .launch-card .cta:hover { background: var(--green); color: white; transform: translateY(-1px); }
+
     /* ── Footer ── */
     footer {
       border-top: 1px solid var(--rule);
@@ -393,8 +479,50 @@
 
     <!-- Content loads here -->
     <div id="app">
-      <div class="loading">
-        Fetching scorecard data<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+      <!-- Default state shown immediately while API loads -->
+      <div class="launch-state fade-up" id="launch-state">
+        <div class="launch-card">
+          <div class="launch-icon">&#128202;</div>
+          <h2>We just launched</h2>
+          <p class="launch-main">
+            Buyside Brief started tracking insider trades this week. Our scoring model is live and 
+            recording every pick — but meaningful performance data takes time to develop.
+          </p>
+          <div class="launch-timeline">
+            <div class="tl-item">
+              <div class="tl-dot active"></div>
+              <div class="tl-content">
+                <strong>Week 1 (now)</strong>
+                <span>Recording picks and entry prices from daily SEC filings</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <strong>Week 2</strong>
+                <span>Current returns start appearing for each pick</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <strong>30 days</strong>
+                <span>30-day return snapshots and win rate calculations</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <strong>90 days</strong>
+                <span>Full scorecard with 30/60/90 day returns and S&amp;P 500 comparison</span>
+              </div>
+            </div>
+          </div>
+          <p class="launch-sub">
+            Subscribe to get the daily signals now, and watch this scorecard fill in over the coming weeks.
+          </p>
+          <a href="/" class="cta">Subscribe free</a>
+        </div>
       </div>
     </div>
 
@@ -423,20 +551,37 @@
   <script>
     async function loadScorecard() {
       const app = document.getElementById('app');
+      const launchState = document.getElementById('launch-state');
 
       try {
         const res = await fetch('/api/scorecard');
-        if (!res.ok) throw new Error('API error');
+        if (!res.ok) return; // Keep launch state visible
+
         const data = await res.json();
 
-        if (!data.success || !data.scorecard || data.scorecard.totalPicks === 0) {
-          app.innerHTML = renderEmptyState();
-          return;
-        }
+        // If no data or no picks with returns, keep the launch state
+        if (!data.success || !data.scorecard || data.scorecard.totalPicks === 0) return;
 
         const sc = data.scorecard;
         const ceos = data.ceoProfiles || [];
 
+        // Check if we actually have return data (not just recorded picks)
+        const hasReturns = sc.recentPicks && sc.recentPicks.some(p => 
+          p.currentReturn !== null && p.currentReturn !== undefined
+        );
+
+        if (!hasReturns) {
+          // We have picks but no returns yet — show a hybrid state
+          if (launchState) {
+            const h2 = launchState.querySelector('h2');
+            if (h2) h2.textContent = `Tracking ${sc.totalPicks} pick${sc.totalPicks > 1 ? 's' : ''}`;
+            const main = launchState.querySelector('.launch-main');
+            if (main) main.textContent = `We've recorded ${sc.totalPicks} insider trade signal${sc.totalPicks > 1 ? 's' : ''} so far. Return data will start appearing within a day or two as we collect price updates.`;
+          }
+          return;
+        }
+
+        // We have real data — replace the launch state with the full scorecard
         let html = '';
 
         // Stat cards
@@ -465,15 +610,16 @@
           ${tfPill('60 Day', sc.avg60dReturn)}
           ${tfPill('90 Day', sc.avg90dReturn)}
           ${tfPill('YTD', sc.avgYtdReturn)}
-          ${sc.sp500Return !== null ? tfPill('S&P 500', sc.sp500Return) : ''}
+          ${sc.sp500Return !== null && sc.sp500Return !== undefined ? tfPill('S&P 500', sc.sp500Return) : ''}
         </div>`;
 
         // Recent picks
-        if (sc.recentPicks && sc.recentPicks.length > 0) {
+        const picksWithReturns = sc.recentPicks.filter(p => p.currentReturn !== null && p.currentReturn !== undefined);
+        if (picksWithReturns.length > 0) {
           html += `<div class="picks-table fade-up d3">
             <div class="section-header">
               <h2>Recent Picks</h2>
-              <span class="count">${sc.recentPicks.length} picks</span>
+              <span class="count">${picksWithReturns.length} picks</span>
             </div>
             <div class="pick-row header">
               <div>Ticker</div>
@@ -481,7 +627,7 @@
               <div style="text-align:right;">Return</div>
               <div style="text-align:right;">Score</div>
             </div>
-            ${sc.recentPicks.map(p => `
+            ${picksWithReturns.map(p => `
               <div class="pick-row">
                 <div class="pick-ticker">$${esc(p.ticker)}</div>
                 <div class="pick-info">
@@ -532,17 +678,9 @@
         app.innerHTML = html;
 
       } catch (err) {
+        // API failed — just keep the launch state visible, no error shown
         console.error('Scorecard load error:', err);
-        app.innerHTML = renderEmptyState();
       }
-    }
-
-    function renderEmptyState() {
-      return `<div class="empty-state fade-up">
-        <h2>Scorecard is warming up</h2>
-        <p>We started tracking picks this week. Return data will appear here within a few days as we collect price updates. Check back soon.</p>
-        <a href="/" class="cta">Subscribe to get daily signals</a>
-      </div>`;
     }
 
     function tfPill(label, value) {
