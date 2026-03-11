@@ -8,22 +8,36 @@
  * Vercel cron: "0 14 * * 6" (Saturday 10am ET / 2pm UTC)
  */
 
-const { loadPicks } = require('../lib/performance-tracker');
 const { generateScorecard, formatScorecardForWeekly } = require('../lib/performance-tracker');
 const { formatValue } = require('../lib/signal-scorer');
+const { Redis } = require('@upstash/redis');
+
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.REDIS_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.REDIS_TOKEN;
+let kv;
+try {
+  kv = (redisUrl && redisToken) ? new Redis({ url: redisUrl, token: redisToken }) : Redis.fromEnv();
+} catch (e) {
+  kv = { get: async () => null, zrange: async () => [] };
+}
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
 
   try {
-    // Load this week's picks from the tracker
-    const allPicks = loadPicks();
+    // Load this week's picks from KV
+    const pickIds = await kv.zrange('picks:index', 0, -1);
+    const allPicks = [];
+    for (const id of (pickIds || [])) {
+      const pick = await kv.get(id);
+      if (pick) allPicks.push(pick);
+    }
+
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const weekStr = oneWeekAgo.toISOString().split('T')[0];
-
     const weekPicks = allPicks.filter(p => p.entryDate >= weekStr);
-    const scorecard = generateScorecard();
+    const scorecard = await generateScorecard();
 
     // Build the weekly email
     const { subject, html } = formatWeeklyEmail(weekPicks, scorecard);

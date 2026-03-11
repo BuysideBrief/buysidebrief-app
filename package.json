@@ -9,6 +9,7 @@
     "test-score": "node --experimental-modules scripts/test-score.js"
   },
   "dependencies": {
+    "@upstash/redis": "^1.34.0",
     "resend": "^3.2.0"
   }
 }
