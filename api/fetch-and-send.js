@@ -160,55 +160,73 @@ async function sendViaResend(subject, html) {
     throw new Error('RESEND_API_KEY not set');
   }
 
-  // For MVP: send to Resend audience (broadcast)
-  // You'll create an audience in Resend dashboard and paste the ID here
   const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID;
+  const TEST_EMAIL = process.env.TEST_EMAIL;
 
-  if (AUDIENCE_ID) {
-    // Broadcast to audience
-    const res = await fetch('https://api.resend.com/emails/batch', {
+  // If we have a test email, always send there first (for MVP)
+  if (TEST_EMAIL) {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify([{
+      body: JSON.stringify({
         from: 'Buyside Brief <hello@buysidebrief.com>',
-        to: AUDIENCE_ID, // Resend audience
+        to: [TEST_EMAIL],
         subject,
         html,
-      }]),
+      }),
     });
 
     if (!res.ok) {
       const err = await res.text();
-      throw new Error(`Resend batch send failed: ${res.status} — ${err}`);
+      throw new Error(`Resend send failed: ${res.status} — ${err}`);
     }
 
     return await res.json();
   }
 
-  // Fallback: send to a test email for development
-  const TEST_EMAIL = process.env.TEST_EMAIL || 'hello@buysidebrief.com';
+  // Broadcast to audience via Resend Broadcast API
+  if (AUDIENCE_ID) {
+    // Step 1: Create the broadcast
+    const createRes = await fetch('https://api.resend.com/broadcasts', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        audienceId: AUDIENCE_ID,
+        from: 'Buyside Brief <hello@buysidebrief.com>',
+        subject,
+        html,
+      }),
+    });
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: 'Buyside Brief <hello@buysidebrief.com>',
-      to: [TEST_EMAIL],
-      subject: `[TEST] ${subject}`,
-      html,
-    }),
-  });
+    if (!createRes.ok) {
+      const err = await createRes.text();
+      throw new Error(`Resend broadcast create failed: ${createRes.status} — ${err}`);
+    }
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Resend send failed: ${res.status} — ${err}`);
+    const broadcast = await createRes.json();
+
+    // Step 2: Send the broadcast
+    const sendRes = await fetch(`https://api.resend.com/broadcasts/${broadcast.id}/send`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!sendRes.ok) {
+      const err = await sendRes.text();
+      throw new Error(`Resend broadcast send failed: ${sendRes.status} — ${err}`);
+    }
+
+    return await sendRes.json();
   }
 
-  return await res.json();
+  throw new Error('No TEST_EMAIL or RESEND_AUDIENCE_ID configured');
 }
