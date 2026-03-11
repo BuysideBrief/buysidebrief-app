@@ -9,6 +9,14 @@
       "schedule": "0 14 * * 6"
     }
   ],
+  "functions": {
+    "api/fetch-and-send.js": {
+      "maxDuration": 120
+    },
+    "api/send-weekly.js": {
+      "maxDuration": 60
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",
