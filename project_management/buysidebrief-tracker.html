@@ -310,7 +310,7 @@
   <div class="header-inner">
     <div>
       <h1>Buyside <em>Brief</em></h1>
-      <p class="subtitle">Launch Tracker</p>
+      <p class="subtitle">Project Tracker — Live & Sending</p>
     </div>
     <div class="progress-wrap">
       <div class="progress-label"><strong id="pctDone">0%</strong> complete</div>
@@ -323,117 +323,165 @@
 <div class="container" id="app"></div>
 
 <div class="footer">
-  <p>Buyside Brief — Launch Tracker</p>
+  <p>Buyside Brief — Project Tracker</p>
   <button class="reset-btn" onclick="resetAll()">Reset all</button>
 </div>
 
 <script>
 const DATA = [
   {
-    phase: "Domain & Accounts",
+    phase: "Infrastructure (Done)",
+    badge: "done",
+    items: [
+      { id: "inf1", text: "Register buysidebrief.com on GoDaddy", done: true },
+      { id: "inf2", text: "Create GitHub repo + connect to Vercel", done: true },
+      { id: "inf3", text: "Point DNS to Vercel (A record + CNAME)", done: true },
+      { id: "inf4", text: "SSL certificate active", done: true },
+      { id: "inf5", text: "Verify domain in Resend", done: true },
+      { id: "inf6", text: "Create Resend audience", done: true },
+      { id: "inf7", text: "All env vars configured in Vercel", note: "RESEND_API_KEY, RESEND_AUDIENCE_ID, SEC_USER_AGENT, FINNHUB_API_KEY", done: true },
+      { id: "inf8", text: "Vercel Pro plan activated", done: true },
+      { id: "inf9", text: "Upstash Redis connected", done: true },
+    ]
+  },
+  {
+    phase: "Core Product (Done)",
+    badge: "done",
+    items: [
+      { id: "prod1", text: "SEC EDGAR Form 4 fetcher (EFTS + index.json)", done: true },
+      { id: "prod2", text: "Signal scoring engine with 10+ signal types", done: true },
+      { id: "prod3", text: "Context enricher with 'Why it matters' blurbs", done: true },
+      { id: "prod4", text: "Insider filing history lookup", done: true },
+      { id: "prod5", text: "52-week-low proximity signal (+20 boost)", done: true },
+      { id: "prod6", text: "Cluster and paired buying detection", done: true },
+      { id: "prod7", text: "Finnhub price data + market overview", done: true },
+      { id: "prod8", text: "HTML email formatter (editorial style)", done: true },
+      { id: "prod9", text: "Resend Broadcast API integration (segment_id)", done: true },
+      { id: "prod10", text: "Daily cron (5am CST / 11am UTC, Mon–Fri)", done: true },
+      { id: "prod11", text: "Weekly digest cron (Saturday 10am ET)", done: true },
+      { id: "prod12", text: "Batch processing (100 filings in parallel batches of 5)", done: true },
+      { id: "prod13", text: "Filing deduplication (same insider + ticker)", done: true },
+      { id: "prod14", text: "Send safeguard (bare URL = dry run, ?send=true for manual)", done: true },
+      { id: "prod15", text: "Cron detection via vercel-cron user-agent", done: true },
+    ]
+  },
+  {
+    phase: "Website & Pages (Done)",
+    badge: "done",
+    items: [
+      { id: "site1", text: "Landing page with subscribe form", done: true },
+      { id: "site2", text: "Editorial design (cream/green, Instrument Serif, DM Sans)", done: true },
+      { id: "site3", text: "Scorecard page (/scorecard.html)", done: true },
+      { id: "site4", text: "Archive page (/archive.html)", done: true },
+      { id: "site5", text: "Ticker links to TradingView on scorecard", done: true },
+      { id: "site6", text: "Archive hides today's issue until next day", done: true },
+      { id: "site7", text: "Scorecard + Archive JSON APIs", done: true },
+    ]
+  },
+  {
+    phase: "Monetization (Done)",
+    badge: "done",
+    items: [
+      { id: "mon1", text: "Multi-partner affiliate system built", done: true },
+      { id: "mon2", text: "Tastytrade affiliate active (8K8P8N4D73)", done: true },
+      { id: "mon3", text: "Broker CTA buttons on each signal in emails", done: true },
+      { id: "mon4", text: "Ticker links → TradingView in emails", done: true },
+      { id: "mon5", text: "Affiliate disclosure in email footer", done: true },
+    ]
+  },
+  {
+    phase: "Testing (Done)",
+    badge: "done",
+    items: [
+      { id: "tst1", text: "Jest test suite — 64 tests all passing", done: true },
+      { id: "tst2", text: "Signal scorer tests (29 tests)", done: true },
+      { id: "tst3", text: "Context enricher tests (15 tests)", done: true },
+      { id: "tst4", text: "Affiliate links tests (6 tests)", done: true },
+      { id: "tst5", text: "Pipeline tests — dedup + safeguards (14 tests)", done: true },
+    ]
+  },
+  {
+    phase: "Critical To-Do",
     badge: "active",
     items: [
-      { id: "dom1", text: "Register buysidebrief.com on GoDaddy", note: "~$12", tags: ["money"] },
-      { id: "dom2", text: "Create GitHub repo (private)", note: "github.com/new → buysidebrief" },
-      { id: "dom3", text: "Push code to GitHub", note: "git init, add, commit, push" },
-      { id: "dom4", text: "Create Vercel project from repo", note: "Use name 'buysidebrief-app' if 'buysidebrief' is taken" },
-      { id: "dom5", text: "Point DNS to Vercel", note: "A record → 76.76.21.21, CNAME www → cname.vercel-dns.com" },
-      { id: "dom6", text: "Add domain in Vercel dashboard", note: "Settings → Domains → buysidebrief.com" },
-      { id: "dom7", text: "Verify SSL certificate is active", note: "Vercel handles this automatically after DNS propagates" },
+      { id: "crit1", text: "Verify cron fires automatically tomorrow at 5am CST", note: "Check Vercel logs — vercel-cron user-agent fix was just pushed", tags: ["critical"] },
+      { id: "crit2", text: "Set up email forwarding for hello@buysidebrief.com", note: "GoDaddy → Email → Forward to your personal email", tags: ["critical"] },
+      { id: "crit3", text: "Add www.buysidebrief.com domain in Vercel", note: "Settings → Domains → add www subdomain for SSL", tags: ["critical"] },
+      { id: "crit4", text: "Push latest code (dedup, cron fix, tests, archive/scorecard updates)", tags: ["critical"] },
     ]
   },
   {
-    phase: "Email & Sending",
+    phase: "Growth — Active",
     badge: "active",
     items: [
-      { id: "email1", text: "Verify buysidebrief.com domain in Resend", note: "Resend → Domains → Add DNS records in GoDaddy", tags: ["critical"] },
-      { id: "email2", text: "Create Resend audience: 'Buyside Brief Subscribers'", note: "Resend → Audiences → copy audience ID" },
-      { id: "email3", text: "Add RESEND_API_KEY to Vercel env vars" },
-      { id: "email4", text: "Add RESEND_AUDIENCE_ID to Vercel env vars" },
-      { id: "email5", text: "Add SEC_USER_AGENT to Vercel env vars", note: "BuysideBrief hello@buysidebrief.com" },
-      { id: "email6", text: "Add TEST_EMAIL to Vercel env vars", note: "Your personal email for test sends" },
-      { id: "email7", text: "Send a test email from Resend dashboard", note: "Confirm domain verification works" },
+      { id: "grow1", text: "Reddit ad campaign running", note: "Approved, waiting for impressions to start", done: true },
+      { id: "grow2", text: "Create Canva ad creatives for Reddit/Meta", note: "Hero screenshot + subtitle + green CTA button" },
+      { id: "grow3", text: "Post LinkedIn launch post (personal story angle)", note: "Tuesday/Wednesday 8-10am ET for max reach" },
+      { id: "grow4", text: "Post LinkedIn 'AI weekend warrior' post", note: "Space 3-5 days after launch post" },
+      { id: "grow5", text: "Update LinkedIn About section with Buyside Brief", note: "Draft ready — 'building at the intersection of AI and finance'" },
+      { id: "grow6", text: "Post on r/investing with sample issue screenshot" },
+      { id: "grow7", text: "Post on r/stocks (focus on scoring model angle)" },
+      { id: "grow8", text: "Post on Hacker News (Show HN)", note: "Lead with tech: free SEC API → scoring → email" },
+      { id: "grow9", text: "Post on Twitter/X with sample signal", note: "Tag #fintwit" },
+      { id: "grow10", text: "Tell 5 friends who invest" },
+      { id: "grow11", text: "Cross-promote from ShopsTally audience" },
+      { id: "grow12", text: "Launch on Product Hunt" },
     ]
   },
   {
-    phase: "Price Data APIs",
+    phase: "Growth — Next Milestones",
     badge: "upcoming",
     items: [
-      { id: "price1", text: "Sign up for Finnhub free tier", note: "finnhub.io/register — 60 req/min" },
-      { id: "price2", text: "Add FINNHUB_API_KEY to Vercel env vars" },
-      { id: "price3", text: "Sign up for Alpha Vantage (optional fallback)", note: "alphavantage.co — 25 req/day" },
-      { id: "price4", text: "Add ALPHA_VANTAGE_KEY to Vercel env vars", note: "Optional — Finnhub is primary" },
+      { id: "mile1", text: "50 subscribers → add real count to landing page", note: "Social proof converts" },
+      { id: "mile2", text: "100 subscribers → upload list to Meta, create 1% lookalike audience", note: "Meta Ads Manager → Audiences → Custom → Lookalike" },
+      { id: "mile3", text: "Get IBKR affiliate code → add IBKR_REF to Vercel env", note: "interactivebrokers.com affiliate program" },
+      { id: "mile4", text: "Get TradingView affiliate code → add TRADINGVIEW_REF to Vercel env" },
+      { id: "mile5", text: "Use Zeely credits for Meta video ads", note: "UGC-style: 'I just found this free newsletter that scans SEC filings'" },
+      { id: "mile6", text: "Create Zeely static + video ads for ShopsTally", note: "Better fit for Zeely's e-commerce templates" },
+      { id: "mile7", text: "500 subscribers → tastytrade affiliate meaningful ($50-150/funded account)" },
+      { id: "mile8", text: "1,000 subscribers → plan Buyside Brief Pro ($9/mo)", note: "Real-time alerts, sector filters, watchlists" },
+      { id: "mile9", text: "2,500 subscribers → newsletter cross-promos (Sparkloop/Beehiiv Boost)" },
+      { id: "mile10", text: "5,000 subscribers → direct sponsorship outreach ($500+/issue)" },
     ]
   },
   {
-    phase: "Test & Validate",
+    phase: "Future Ideas",
     badge: "upcoming",
     items: [
-      { id: "test1", text: "Run dry run: /api/fetch-and-send?dry=true", note: "Check JSON response for scored filings", tags: ["critical"] },
-      { id: "test2", text: "Review signal scores — do thresholds feel right?", note: "Adjust in lib/signal-scorer.js if too many or too few signals" },
-      { id: "test3", text: "Check 'Why it matters' blurbs on top picks", note: "Should read like a smart friend, not a data dump" },
-      { id: "test4", text: "Send live test email to yourself", note: "Hit /api/fetch-and-send (no ?dry) with TEST_EMAIL set" },
-      { id: "test5", text: "Check email rendering in Gmail", note: "Verify fonts, colors, spacing, links" },
-      { id: "test6", text: "Check email rendering on mobile", note: "Open on your phone — is it readable?" },
-      { id: "test7", text: "Test subscribe form on landing page", note: "Enter email → check Resend audience for new contact" },
-      { id: "test8", text: "Test weekly digest: /api/send-weekly?dry=true" },
-    ]
-  },
-  {
-    phase: "Launch",
-    badge: "upcoming",
-    items: [
-      { id: "launch1", text: "Upgrade Vercel to Pro plan", note: "$20/mo — needed for crons > 1/day and longer timeouts", tags: ["money"] },
-      { id: "launch2", text: "Verify cron jobs are active in Vercel dashboard", note: "Settings → Crons — should show daily + weekly schedules" },
-      { id: "launch3", text: "Send Issue #1 manually to yourself", note: "This is your last check before real subscribers" },
-      { id: "launch4", text: "Subscribe yourself to the list via the landing page" },
-      { id: "launch5", text: "Wait for first automated cron run (11pm ET)", note: "Check Vercel function logs the next morning" },
-      { id: "launch6", text: "Confirm email arrived in your inbox" },
-    ]
-  },
-  {
-    phase: "Get First Subscribers",
-    badge: "upcoming",
-    items: [
-      { id: "grow1", text: "Post on r/investing with a sample issue", note: "Show real value — include a screenshot of an actual digest" },
-      { id: "grow2", text: "Post on r/stocks", note: "Different angle — focus on the scoring model" },
-      { id: "grow3", text: "Post on Hacker News (Show HN)", note: "Lead with the tech: free SEC API → scoring → daily email" },
-      { id: "grow4", text: "Share on Twitter/X with a sample signal", note: "Tag #fintwit — the finance Twitter community" },
-      { id: "grow5", text: "Tell 5 friends who invest", note: "Personal referrals convert highest" },
-      { id: "grow6", text: "Cross-promote from ShopsTally audience", note: "Different audience but same trust" },
-    ]
-  },
-  {
-    phase: "Post-Launch Improvements",
-    badge: "upcoming",
-    items: [
-      { id: "post1", text: "Monitor scorecard data after 7 days", note: "Do the 7-day returns look meaningful?" },
-      { id: "post2", text: "Calibrate scoring thresholds based on real data", note: "Are you getting 0 signals or 50? Adjust accordingly" },
-      { id: "post3", text: "Add CEO track record to Top Pick blurbs", note: "Uses getInsiderTrackRecord() — needs 30+ days of data" },
-      { id: "post4", text: "Build /scorecard page on the website", note: "Public performance tracker — your credibility builder" },
-      { id: "post5", text: "Set up Beehiiv as backup subscriber management", note: "Optional — Resend handles it for now" },
-      { id: "post6", text: "Add archive pages for past issues", note: "SEO value — deferred from MVP" },
-      { id: "post7", text: "Explore 52-week-low proximity signal", note: "Requires price data — now feasible with Finnhub" },
-      { id: "post8", text: "Plan Insider Signal Pro ($9/mo tier)", note: "Real-time alerts, sector filters, watchlists" },
+      { id: "fut1", text: "Email open/click tracking and analytics", note: "Resend provides this — add dashboard" },
+      { id: "fut2", text: "Landing page live subscriber count (once at 50+)" },
+      { id: "fut3", text: "Referral program — 'Give 5, Get 5' free referrals", note: "Viral loop for organic growth" },
+      { id: "fut4", text: "Sector/industry filtering for Pro tier", note: "Let users choose: tech, healthcare, energy, etc." },
+      { id: "fut5", text: "Real-time alerts (SMS or push) for Pro tier", note: "When a CEO buys >$1M, alert within minutes" },
+      { id: "fut6", text: "API access ($49/mo) for quant traders", note: "JSON endpoint with scored filings" },
+      { id: "fut7", text: "Watchlist feature — track specific tickers or insiders" },
+      { id: "fut8", text: "Historical backtest — 'what if you followed our picks for the past year?'" },
+      { id: "fut9", text: "Weekly podcast/audio summary using AI voice", note: "2-minute audio brief for commuters" },
+      { id: "fut10", text: "Mobile app (PWA or native)", note: "Push notifications for high-signal trades" },
+      { id: "fut11", text: "Form an LLC once affiliate revenue starts" },
+      { id: "fut12", text: "Explore Realize (Taboola) ads at 2,000+ subscribers", note: "Native ads on publisher network — better for scale" },
+      { id: "fut13", text: "Partner with finance YouTubers/podcasters for sponsorships" },
+      { id: "fut14", text: "Add Form 13D/13G tracking (activist investor positions)" },
     ]
   },
 ];
 
 // ── State ──
-const STORAGE_KEY = 'buysidebrief_tracker';
+const STORAGE_KEY = 'buysidebrief_tracker_v2';
 
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved && Object.keys(saved).length > 0) return saved;
   } catch {}
-  // Default state — pre-checked items
-  return {
-    "dom1": true,
-    "dom2": true,
-    "dom3": true,
-    "dom4": true,
-  };
+  // Default state — mark completed items
+  const defaults = {};
+  DATA.forEach(phase => {
+    phase.items.forEach(item => {
+      if (item.done) defaults[item.id] = true;
+    });
+  });
+  return defaults;
 }
 
 function saveState(state) {
