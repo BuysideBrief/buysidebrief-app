@@ -5,11 +5,16 @@
   "description": "Buyside Brief — actionable SEC insider trading signals delivered daily",
   "scripts": {
     "dev": "vercel dev",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch --verbose",
     "test-fetch": "node --experimental-modules scripts/test-fetch.js",
     "test-score": "node --experimental-modules scripts/test-score.js"
   },
   "dependencies": {
     "@upstash/redis": "^1.34.0",
     "resend": "^3.2.0"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
   }
 }
