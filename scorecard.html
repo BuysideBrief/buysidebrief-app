@@ -630,7 +630,7 @@
             </div>
             ${picksWithReturns.map(p => `
               <div class="pick-row">
-                <div class="pick-ticker">$${esc(p.ticker)}</div>
+                <div class="pick-ticker"><a href="https://www.tradingview.com/symbols/${esc(p.ticker)}/" target="_blank" style="color:#1a7a4c;text-decoration:none;">$${esc(p.ticker)}</a></div>
                 <div class="pick-info">
                   <div class="name">${esc(p.ownerName)}</div>
                   <div class="meta">${esc(p.officerTitle || 'Insider')} &middot; ${esc(p.entryDate)}</div>
@@ -666,9 +666,9 @@
                 ${ceo.picks && ceo.picks.length > 0 ? `
                 <div class="ceo-picks">
                   ${ceo.picks.map(pk => `
-                    <span class="ceo-pick-chip ${pk.currentReturn > 0 ? 'positive' : 'negative'}">
+                    <a href="https://www.tradingview.com/symbols/${esc(pk.ticker)}/" target="_blank" class="ceo-pick-chip ${pk.currentReturn > 0 ? 'positive' : 'negative'}" style="text-decoration:none;">
                       $${esc(pk.ticker)} ${pk.currentReturn > 0 ? '+' : ''}${pk.currentReturn}%
-                    </span>
+                    </a>
                   `).join('')}
                 </div>` : ''}
               </div>
