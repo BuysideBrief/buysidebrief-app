@@ -19,7 +19,11 @@ module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
   const isDebug = req.query.debug === 'true';
   const isManualSend = req.query.send === 'true';
-  const isCron = req.headers['x-vercel-cron'] === '1';
+
+  // Detect Vercel cron: user-agent or CRON_SECRET authorization header
+  const ua = req.headers['user-agent'] || '';
+  const isCron = ua.includes('vercel-cron')
+    || (process.env.CRON_SECRET && req.headers['authorization'] === `Bearer ${process.env.CRON_SECRET}`);
   const startTime = Date.now();
 
   // Safeguard: hitting the URL without params defaults to dry run
@@ -28,7 +32,7 @@ module.exports = async function handler(req, res) {
   const effectiveDryRun = isDryRun || (!shouldSend && !isDebug);
 
   try {
-    console.log(`[BuysideBrief] Starting ${effectiveDryRun ? 'DRY RUN' : 'LIVE'} digest (cron: ${isCron}, manual: ${isManualSend})...`);
+    console.log(`[BuysideBrief] Starting ${effectiveDryRun ? 'DRY RUN' : 'LIVE'} digest (cron: ${isCron}, manual: ${isManualSend}, ua: ${ua.substring(0, 30)})...`);
 
     // ── Step 1: Fetch recent Form 4 filing index ──
     console.log('[1/5] Fetching filing index from EDGAR...');
