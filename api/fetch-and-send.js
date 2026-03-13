@@ -82,9 +82,29 @@ module.exports = async function handler(req, res) {
     }
     console.log(`  Parsed ${parsed.length} filings with transactions out of ${toProcess.length}`);
 
+    // Deduplicate: same insider (ownerCik) + same ticker = keep highest value filing
+    const deduped = [];
+    const seen = new Set();
+    // Sort by total buy value descending so we keep the most significant filing
+    parsed.sort((a, b) => {
+      const aVal = (a.summary?.totalBuyValue || 0) + (a.summary?.totalSellValue || 0);
+      const bVal = (b.summary?.totalBuyValue || 0) + (b.summary?.totalSellValue || 0);
+      return bVal - aVal;
+    });
+    for (const filing of parsed) {
+      const key = `${filing.ticker || 'UNK'}:${filing.ownerCik || filing.ownerName || 'UNK'}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        deduped.push(filing);
+      }
+    }
+    if (deduped.length < parsed.length) {
+      console.log(`  Deduped: ${parsed.length} → ${deduped.length} (removed ${parsed.length - deduped.length} duplicates)`);
+    }
+
     // ── Step 3: Score all filings ──
     console.log('[3/7] Scoring filings...');
-    const scored = scoreAllFilings(parsed);
+    const scored = scoreAllFilings(deduped);
     const categorized = categorizeForDigest(scored);
     console.log(`  Top picks: ${categorized.topPicks.length}`);
     console.log(`  Featured: ${categorized.featured.length}`);
