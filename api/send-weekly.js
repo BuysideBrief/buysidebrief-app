@@ -53,34 +53,59 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Send via Resend
+    // Send via Resend Broadcast API
     const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    const RESEND_AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID;
+    const AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID;
 
     if (!RESEND_API_KEY) {
       return res.status(500).json({ error: 'RESEND_API_KEY not set' });
     }
 
-    const to = RESEND_AUDIENCE_ID || process.env.TEST_EMAIL || 'hello@buysidebrief.com';
+    if (!AUDIENCE_ID) {
+      return res.status(500).json({ error: 'RESEND_AUDIENCE_ID not set' });
+    }
 
-    const sendRes = await fetch('https://api.resend.com/emails', {
+    // Step 1: Create the broadcast
+    const createRes = await fetch('https://api.resend.com/broadcasts', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        segment_id: AUDIENCE_ID,
         from: 'Buyside Brief <hello@buysidebrief.com>',
-        to: Array.isArray(to) ? to : [to],
-        subject: isDryRun ? `[TEST] ${subject}` : subject,
+        subject,
         html,
       }),
     });
 
+    if (!createRes.ok) {
+      const err = await createRes.text();
+      return res.status(500).json({ success: false, error: `Broadcast create failed: ${createRes.status} — ${err}` });
+    }
+
+    const broadcast = await createRes.json();
+
+    // Step 2: Send the broadcast
+    const sendRes = await fetch(`https://api.resend.com/broadcasts/${broadcast.id}/send`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!sendRes.ok) {
+      const err = await sendRes.text();
+      return res.status(500).json({ success: false, error: `Broadcast send failed: ${sendRes.status} — ${err}` });
+    }
+
     return res.status(200).json({
-      success: sendRes.ok,
+      success: true,
       subject,
       weekPicks: weekPicks.length,
+      broadcastId: broadcast.id,
     });
 
   } catch (err) {
