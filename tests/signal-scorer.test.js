@@ -103,7 +103,7 @@ describe('scoreFiling', () => {
     ]));
   });
 
-  test('director purchase gets +15', () => {
+  test('director purchase gets +20', () => {
     const result = scoreFiling(makeFiling({
       isDirector: true,
       transactions: [buyTx(1000, 50)],
@@ -121,6 +121,17 @@ describe('scoreFiling', () => {
     }));
     const directorSignals = result.signals.filter(s => /Director purchase/.test(s));
     expect(directorSignals.length).toBe(0);
+  });
+
+  test('VP/SVP purchase gets senior officer boost', () => {
+    const result = scoreFiling(makeFiling({
+      officerTitle: 'SVP, General Counsel',
+      isOfficer: true,
+      transactions: [buyTx(1000, 50)],
+    }));
+    expect(result.signals).toEqual(expect.arrayContaining([
+      expect.stringMatching(/Senior officer purchase/),
+    ]));
   });
 
   test('10% owner purchase gets +20', () => {
@@ -215,11 +226,12 @@ describe('scoreFiling', () => {
     expect(result.tier).toBe('top_pick');
   });
 
-  test('score >= 50 but < 75 → feature', () => {
-    // Director + large purchase + discretionary = 15 + 25 + 10 = 50
+  test('score >= 45 but < 75 → feature', () => {
+    // Director + moderate purchase + discretionary = 20 + 10 + 10 = 40... need more
+    // Director + medium purchase + discretionary = 20 + 15 + 10 = 45
     const result = scoreFiling(makeFiling({
       isDirector: true,
-      transactions: [buyTx(5000, 110)],
+      transactions: [buyTx(1000, 110)], // $110K
     }));
     expect(result.tier).toBe('feature');
   });
