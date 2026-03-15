@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://buysidebrief.com/sitemap.xml
