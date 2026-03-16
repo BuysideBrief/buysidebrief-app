@@ -13,6 +13,7 @@ const { formatDigestEmail } = require('../lib/email-formatter');
 const { enrichAllFilings } = require('../lib/context-enricher');
 const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile } = require('../lib/performance-tracker');
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
+const { generateMarketContext, generateWhyItMattersAI, generateSocialSnippet } = require('../lib/ai-content');
 const { storeIssue } = require('./archive');
 
 module.exports = async function handler(req, res) {
@@ -111,12 +112,29 @@ module.exports = async function handler(req, res) {
     console.log(`  Mentions: ${categorized.mentions.length}`);
 
     // ── Step 4: Enrich top picks with context ──
-    console.log('[4/7] Enriching filings with context...');
+    console.log('[4/8] Enriching filings with context...');
     const enriched = await enrichAllFilings(scored);
+
+    // ── Step 4b: AI-powered "Why it matters" for top signals ──
+    console.log('[4b/8] Generating AI content...');
+    for (const f of enriched) {
+      if (f.tier === 'top_pick' || f.tier === 'feature') {
+        try {
+          const aiBlurb = await generateWhyItMattersAI(f);
+          if (aiBlurb) {
+            f.whyItMatters = aiBlurb;
+          }
+        } catch (e) {
+          // Keep the template-based blurb as fallback
+          console.error(`AI blurb failed for ${f.ticker}:`, e.message);
+        }
+      }
+    }
+
     const enrichedCategorized = categorizeForDigest(enriched);
 
     // ── Step 5: Record picks for performance tracking ──
-    console.log('[5/7] Recording picks for scorecard...');
+    console.log('[5/8] Recording picks for scorecard...');
     const newPicksCount = recordNewPicks(enriched);
     console.log(`  Recorded ${newPicksCount} new picks`);
 
@@ -124,11 +142,15 @@ module.exports = async function handler(req, res) {
     const updatedReturns = await updateAllReturns();
     console.log(`  Updated returns for ${updatedReturns} past picks`);
 
-    // ── Step 6: Format email (with market overview, scorecard + CEO spotlight) ──
-    console.log('[6/7] Formatting email digest...');
+    // ── Step 6: Format email (with AI market context, scorecard + CEO spotlight) ──
+    console.log('[6/8] Formatting email digest...');
 
-    // Market overview
+    // Market overview + AI context
     const marketOverview = await getMarketOverview();
+    const aiMarketContext = await generateMarketContext(marketOverview, enriched);
+    if (aiMarketContext && marketOverview) {
+      marketOverview.summary = aiMarketContext;
+    }
     const marketHtml = formatMarketOverviewForEmail(marketOverview);
 
     const scorecard = await generateScorecard();
@@ -149,15 +171,23 @@ module.exports = async function handler(req, res) {
     const extraHtml = scorecardHtml + ceoSpotlightHtml;
     const { subject, html } = formatDigestEmail(enrichedCategorized, null, extraHtml, marketHtml);
 
+    // Generate social snippet for later use
+    const topSignal = enrichedCategorized.topPicks[0] || enrichedCategorized.featured[0];
+    const socialSnippet = await generateSocialSnippet(topSignal);
+
     // ── Step 7: Send via Resend ──
     if (effectiveDryRun) {
-      console.log('[7/7] DRY RUN — skipping send');
+      console.log('[7/8] DRY RUN — skipping send');
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
       return res.status(200).json({
         success: true,
         dry: true,
         elapsed: `${elapsed}s`,
         subject,
+        aiContent: {
+          marketContext: aiMarketContext || '(fallback — no API key)',
+          socialSnippet: socialSnippet || '(fallback — no API key)',
+        },
         stats: {
           filingsScanned: filingIndex.length,
           filingsParsed: parsed.length,
@@ -165,7 +195,6 @@ module.exports = async function handler(req, res) {
           featured: categorized.featured.length,
           mentions: categorized.mentions.length,
         },
-        // Include top 5 scored filings for review
         preview: scored.slice(0, 5).map(f => ({
           ticker: f.ticker,
           owner: f.ownerName,
@@ -174,12 +203,13 @@ module.exports = async function handler(req, res) {
           tier: f.tier,
           signals: f.signals,
           buyValue: f.summary.totalBuyValue,
+          whyItMatters: f.whyItMatters || null,
         })),
         html: html,
       });
     }
 
-    console.log('[7/7] Sending via Resend...');
+    console.log('[7/8] Sending via Resend...');
     const sendResult = await sendViaResend(subject, html);
 
     // Store in archive
