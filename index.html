@@ -563,24 +563,25 @@
       </div>
     </div>
 
-    <!-- Scorecard proof -->
-    <div class="why-section" style="margin-bottom:32px;">
+    <!-- Scorecard proof (loads dynamically from API) -->
+    <div class="why-section" style="margin-bottom:32px;" id="scorecard-proof">
       <h2>Our track record so far</h2>
       <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap;margin-top:16px;">
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:36px;color:var(--green);">83%</div>
+          <div style="font-family:var(--serif);font-size:36px;color:var(--green);" id="sc-winrate">—</div>
           <div style="font-size:13px;color:var(--ink-muted);">Win rate</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:36px;color:var(--green);">+3.5%</div>
+          <div style="font-family:var(--serif);font-size:36px;" id="sc-avgreturn">—</div>
           <div style="font-size:13px;color:var(--ink-muted);">Avg return per pick</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:36px;color:var(--red);">-1.3%</div>
+          <div style="font-family:var(--serif);font-size:36px;" id="sc-sp500">—</div>
           <div style="font-size:13px;color:var(--ink-muted);">S&P 500 same period</div>
         </div>
       </div>
-      <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--ink-faint);">Based on picks tracked since launch. <a href="/scorecard.html" style="color:var(--green);">View full scorecard &rarr;</a></p>
+      <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--ink-muted);" id="sc-picks-count"></p>
+      <p style="text-align:center;margin-top:4px;font-size:13px;color:var(--ink-faint);">Based on picks tracked since launch. <a href="/scorecard.html" style="color:var(--green);">View full scorecard &rarr;</a></p>
     </div>
 
     <!-- How it works -->
@@ -724,6 +725,50 @@
     document.getElementById('emailInput2').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') handleSubscribe2();
     });
+
+    // Load live scorecard data
+    async function loadScorecard() {
+      try {
+        const res = await fetch('/api/scorecard');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success || !data.scorecard || data.scorecard.totalPicks === 0) return;
+
+        const sc = data.scorecard;
+
+        // Win rate
+        const winEl = document.getElementById('sc-winrate');
+        winEl.textContent = sc.winRate + '%';
+        winEl.style.color = sc.winRate >= 50 ? 'var(--green)' : 'var(--red)';
+
+        // Avg return
+        const retEl = document.getElementById('sc-avgreturn');
+        const sign = sc.avgReturn >= 0 ? '+' : '';
+        retEl.textContent = sign + sc.avgReturn + '%';
+        retEl.style.color = sc.avgReturn >= 0 ? 'var(--green)' : 'var(--red)';
+
+        // S&P comparison
+        const spEl = document.getElementById('sc-sp500');
+        if (sc.sp500Return !== undefined && sc.sp500Return !== null) {
+          const spSign = sc.sp500Return >= 0 ? '+' : '';
+          spEl.textContent = spSign + sc.sp500Return + '%';
+          spEl.style.color = sc.sp500Return >= 0 ? 'var(--green)' : 'var(--red)';
+        } else {
+          spEl.textContent = '—';
+          spEl.style.color = 'var(--ink-muted)';
+        }
+
+        // Picks count
+        document.getElementById('sc-picks-count').textContent = 
+          sc.totalPicks + ' picks tracked · ' + sc.winners + ' winners · ' + sc.losers + ' losers';
+
+      } catch (e) {
+        // Hide the section if API fails
+        const section = document.getElementById('scorecard-proof');
+        if (section) section.style.display = 'none';
+      }
+    }
+    loadScorecard();
   </script>
 </body>
 </html>

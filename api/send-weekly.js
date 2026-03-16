@@ -10,6 +10,7 @@
 
 const { generateScorecard, formatScorecardForWeekly } = require('../lib/performance-tracker');
 const { formatValue } = require('../lib/signal-scorer');
+const { generateWeeklyDeepDive } = require('../lib/ai-content');
 const { Redis } = require('@upstash/redis');
 
 const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.REDIS_URL;
@@ -39,8 +40,16 @@ module.exports = async function handler(req, res) {
     const weekPicks = allPicks.filter(p => p.entryDate >= weekStr);
     const scorecard = await generateScorecard();
 
+    // Generate AI weekly deep dive
+    let deepDive = null;
+    try {
+      deepDive = await generateWeeklyDeepDive(weekPicks, scorecard);
+    } catch (e) {
+      console.error('Weekly deep dive generation failed:', e.message);
+    }
+
     // Build the weekly email
-    const { subject, html } = formatWeeklyEmail(weekPicks, scorecard);
+    const { subject, html } = formatWeeklyEmail(weekPicks, scorecard, deepDive);
 
     if (isDryRun) {
       return res.status(200).json({
@@ -114,7 +123,7 @@ module.exports = async function handler(req, res) {
   }
 };
 
-function formatWeeklyEmail(weekPicks, scorecard) {
+function formatWeeklyEmail(weekPicks, scorecard, deepDive) {
   const now = new Date();
   const weekEnd = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
@@ -171,11 +180,10 @@ function formatWeeklyEmail(weekPicks, scorecard) {
   </p>
 </td></tr>
 
-<!-- Intro -->
+<!-- Intro / Deep Dive -->
 <tr><td style="padding:24px 20px;">
   <p style="margin:0;font-size:16px;color:#3d3d3d;font-family:Georgia,serif;line-height:1.6;">
-    Here's your weekly roundup — the insider trades that mattered most this week, 
-    plus how our past picks are performing. Grab your coffee. ☕
+    ${deepDive || `Here's your weekly roundup — the insider trades that mattered most this week, plus how our past picks are performing. Grab your coffee. ☕`}
   </p>
 </td></tr>
 
