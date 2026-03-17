@@ -15,6 +15,7 @@ const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForE
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
 const { generateMarketContext, generateWhyItMattersAI, generateSocialSnippet } = require('../lib/ai-content');
 const { batchAnalyzeEarnings } = require('../lib/earnings-helper');
+const { storeAllScoredFilings } = require('../lib/historical-store');
 const { storeIssue } = require('./archive');
 
 module.exports = async function handler(req, res) {
@@ -154,6 +155,19 @@ module.exports = async function handler(req, res) {
     // Re-sort and re-categorize after earnings adjustments
     scored.sort((a, b) => b.score - a.score);
     const postEarningsCategorized = categorizeForDigest(scored);
+
+    // ── Step 3c: Store ALL scored filings for historical data ──
+    console.log('[3c/9] Storing historical filing data...');
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const storeResult = await storeAllScoredFilings(scored, today);
+      console.log(`  Stored ${storeResult.stored} filings (${storeResult.skipped} skipped)`);
+      if (storeResult.dailySummary) {
+        console.log(`  Daily: ${storeResult.dailySummary.buyFilings} buys, ${storeResult.dailySummary.sellFilings} sells, avg score ${storeResult.dailySummary.avgScore}`);
+      }
+    } catch (e) {
+      console.error('  Historical store failed (non-fatal):', e.message);
+    }
 
     // ── Step 4: Enrich top picks with context ──
     console.log('[4/9] Enriching filings with context...');
