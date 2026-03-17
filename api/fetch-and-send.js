@@ -14,6 +14,7 @@ const { enrichAllFilings } = require('../lib/context-enricher');
 const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile } = require('../lib/performance-tracker');
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
 const { generateMarketContext, generateWhyItMattersAI, generateSocialSnippet } = require('../lib/ai-content');
+const { batchAnalyzeEarnings } = require('../lib/earnings-helper');
 const { storeIssue } = require('./archive');
 
 module.exports = async function handler(req, res) {
@@ -104,29 +105,85 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 3: Score all filings ──
-    console.log('[3/7] Scoring filings...');
+    console.log('[3/9] Scoring filings...');
     const scored = scoreAllFilings(deduped);
     const categorized = categorizeForDigest(scored);
     console.log(`  Top picks: ${categorized.topPicks.length}`);
     console.log(`  Featured: ${categorized.featured.length}`);
     console.log(`  Mentions: ${categorized.mentions.length}`);
 
+    // ── Step 3b: Cross-reference with earnings calendar ──
+    console.log('[3b/9] Checking earnings calendar context...');
+    try {
+      const earningsMap = await batchAnalyzeEarnings(scored);
+      let earningsBoosts = 0;
+      let earningsFlags = 0;
+
+      for (const f of scored) {
+        const ec = earningsMap.get(f.ticker);
+        if (!ec || !ec.signal) continue;
+
+        // Attach earnings context to the filing
+        f.earningsContext = ec;
+
+        if (ec.scoreAdjustment > 0 && f.summary.buyCount > 0) {
+          // Post-earnings buy boost — only apply to buys
+          f.score += ec.scoreAdjustment;
+          f.signals.push(`Post-earnings buy (+${ec.scoreAdjustment}): ${ec.signal === 'post_earnings_buy' ? `bought ${ec.daysSinceEarnings}d after earnings` : ec.signal}`);
+          earningsBoosts++;
+
+          // Re-evaluate tier after boost
+          if (f.score >= 75) f.tier = 'top_pick';
+          else if (f.score >= 45) f.tier = 'feature';
+          else if (f.score >= 25) f.tier = 'mention';
+        } else if (ec.signal === 'blackout_flag') {
+          f.warnings = f.warnings || [];
+          f.warnings.push(`Traded ${ec.daysUntilEarnings}d before earnings — inside typical blackout window`);
+          earningsFlags++;
+        } else if (ec.signal === 'pre_earnings_caution') {
+          // Just informational — attach context for AI blurb
+          earningsFlags++;
+        }
+      }
+
+      console.log(`  Earnings context: ${earningsBoosts} boosts, ${earningsFlags} flags`);
+    } catch (e) {
+      console.error('  Earnings calendar check failed (non-fatal):', e.message);
+    }
+
+    // Re-sort and re-categorize after earnings adjustments
+    scored.sort((a, b) => b.score - a.score);
+    const postEarningsCategorized = categorizeForDigest(scored);
+
     // ── Step 4: Enrich top picks with context ──
-    console.log('[4/8] Enriching filings with context...');
+    console.log('[4/9] Enriching filings with context...');
     const enriched = await enrichAllFilings(scored);
 
     // ── Step 4b: AI-powered "Why it matters" for top signals ──
-    console.log('[4b/8] Generating AI content...');
+    console.log('[4b/9] Generating AI content...');
     for (const f of enriched) {
       if (f.tier === 'top_pick' || f.tier === 'feature') {
         try {
+          // Pass earnings context to AI for richer blurbs
           const aiBlurb = await generateWhyItMattersAI(f);
           if (aiBlurb) {
-            f.whyItMatters = aiBlurb;
+            // If we have earnings context, append it to the AI blurb
+            if (f.earningsContext && f.earningsContext.context) {
+              f.whyItMatters = aiBlurb + ' ' + f.earningsContext.context;
+            } else {
+              f.whyItMatters = aiBlurb;
+            }
+          } else if (f.earningsContext && f.earningsContext.context) {
+            // No AI blurb but we have earnings context — append to template blurb
+            f.whyItMatters = (f.whyItMatters || '') + ' ' + f.earningsContext.context;
           }
         } catch (e) {
           // Keep the template-based blurb as fallback
           console.error(`AI blurb failed for ${f.ticker}:`, e.message);
+          // Still try to append earnings context even if AI fails
+          if (f.earningsContext && f.earningsContext.context) {
+            f.whyItMatters = (f.whyItMatters || '') + ' ' + f.earningsContext.context;
+          }
         }
       }
     }
@@ -134,7 +191,7 @@ module.exports = async function handler(req, res) {
     const enrichedCategorized = categorizeForDigest(enriched);
 
     // ── Step 5: Record picks for performance tracking ──
-    console.log('[5/8] Recording picks for scorecard...');
+    console.log('[5/9] Recording picks for scorecard...');
     const newPicksCount = recordNewPicks(enriched);
     console.log(`  Recorded ${newPicksCount} new picks`);
 
@@ -143,7 +200,7 @@ module.exports = async function handler(req, res) {
     console.log(`  Updated returns for ${updatedReturns} past picks`);
 
     // ── Step 6: Format email (with AI market context, scorecard + CEO spotlight) ──
-    console.log('[6/8] Formatting email digest...');
+    console.log('[6/9] Formatting email digest...');
 
     // Market overview + AI context
     const marketOverview = await getMarketOverview();
@@ -177,7 +234,7 @@ module.exports = async function handler(req, res) {
 
     // ── Step 7: Send via Resend ──
     if (effectiveDryRun) {
-      console.log('[7/8] DRY RUN — skipping send');
+      console.log('[7/9] DRY RUN — skipping send');
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
       return res.status(200).json({
         success: true,
@@ -204,16 +261,21 @@ module.exports = async function handler(req, res) {
           signals: f.signals,
           buyValue: f.summary.totalBuyValue,
           whyItMatters: f.whyItMatters || null,
+          earningsContext: f.earningsContext ? {
+            signal: f.earningsContext.signal,
+            scoreAdjustment: f.earningsContext.scoreAdjustment,
+            context: f.earningsContext.context,
+          } : null,
         })),
         html: html,
       });
     }
 
-    console.log('[7/8] Sending via Resend...');
+    console.log('[7/9] Sending via Resend...');
     const sendResult = await sendViaResend(subject, html);
 
     // Send social snippet to Pete for easy copy/paste
-    console.log('[8/8] Sending social snippet...');
+    console.log('[8/9] Sending social snippet...');
     if (socialSnippet && process.env.RESEND_API_KEY) {
       try {
         const snippetEmail = process.env.SNIPPET_EMAIL || process.env.OWNER_EMAIL;
@@ -244,7 +306,8 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // Store in archive
+    // ── Step 9: Store in archive ──
+    console.log('[9/9] Storing in archive...');
     const today = new Date().toISOString().split('T')[0];
     const topPick = enrichedCategorized.topPicks[0] || enrichedCategorized.featured[0];
     await storeIssue(today, subject, html, {
