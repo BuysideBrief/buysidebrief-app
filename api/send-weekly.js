@@ -11,16 +11,9 @@
 const { generateScorecard, formatScorecardForWeekly } = require('../lib/performance-tracker');
 const { formatValue } = require('../lib/signal-scorer');
 const { generateWeeklyDeepDive } = require('../lib/ai-content');
-const { Redis } = require('@upstash/redis');
+const { getRedisOrNoop } = require('../lib/redis');
 
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.REDIS_URL;
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.REDIS_TOKEN;
-let kv;
-try {
-  kv = (redisUrl && redisToken) ? new Redis({ url: redisUrl, token: redisToken }) : Redis.fromEnv();
-} catch (e) {
-  kv = { get: async () => null, zrange: async () => [] };
-}
+const kv = getRedisOrNoop();
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';

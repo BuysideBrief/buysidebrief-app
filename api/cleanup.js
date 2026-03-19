@@ -6,16 +6,14 @@
  *   /api/cleanup?run=true    → actually remove duplicates
  */
 
-const { Redis } = require('@upstash/redis');
-
-const redisUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const { getRedis } = require('../lib/redis');
 
 module.exports = async function handler(req, res) {
   const isDry = req.query.run !== 'true';
 
   try {
-    const kv = new Redis({ url: redisUrl, token: redisToken });
+    const kv = getRedis();
+    if (!kv) return res.status(500).json({ error: 'Redis not configured' });
 
     // Get all pick IDs from the sorted set
     const pickIds = await kv.zrange('picks:index', 0, -1);
