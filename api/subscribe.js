@@ -17,7 +17,8 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { email } = req.body || {};
+    const raw = (req.body || {}).email;
+    const email = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
 
     if (!email || !isValidEmail(email)) {
       return res.status(400).json({ error: 'Valid email required' });
@@ -97,5 +98,32 @@ module.exports = async function handler(req, res) {
 };
 
 function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (typeof email !== 'string') return false;
+
+  // Basic structure check
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+
+  // Reasonable length limits
+  if (email.length > 254) return false;
+
+  const [local, domain] = email.split('@');
+  if (!local || !domain) return false;
+  if (local.length > 64) return false;
+
+  // Domain must have a TLD of at least 2 chars (rejects "user@localhost", "a@b.c")
+  const parts = domain.split('.');
+  const tld = parts[parts.length - 1];
+  if (tld.length < 2) return false;
+
+  // Block common disposable/temporary email domains
+  const disposable = new Set([
+    'mailinator.com', 'guerrillamail.com', 'tempmail.com', 'throwaway.email',
+    'yopmail.com', 'sharklasers.com', 'guerrillamailblock.com', 'grr.la',
+    'dispostable.com', 'trashmail.com', 'maildrop.cc', 'fakeinbox.com',
+    'tempail.com', 'temp-mail.org', 'emailondeck.com', 'getnada.com',
+    'mailnesia.com', 'mohmal.com', '10minutemail.com', 'minutemail.com',
+  ]);
+  if (disposable.has(domain.toLowerCase())) return false;
+
+  return true;
 }
