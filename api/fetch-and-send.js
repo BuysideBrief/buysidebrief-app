@@ -15,6 +15,7 @@ const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForE
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
 const { generateMarketContext, generateWhyItMattersAI, generateSocialSnippet } = require('../lib/ai-content');
 const { batchAnalyzeEarnings } = require('../lib/earnings-helper');
+const { batchAnalyzeContrarian } = require('../lib/contrarian-detector');
 const { storeAllScoredFilings } = require('../lib/historical-store');
 const { rotateHeadlinePick, recordHeadlinePick } = require('../lib/recently-featured');
 const { storeIssue } = require('./archive');
@@ -157,8 +158,37 @@ module.exports = async function handler(req, res) {
     scored.sort((a, b) => b.score - a.score);
     const postEarningsCategorized = categorizeForDigest(scored);
 
-    // ── Step 3c: Store ALL scored filings for historical data ──
-    console.log('[3c/9] Storing historical filing data...');
+    // ── Step 3c: Contrarian signal detection ──
+    console.log('[3c/9] Checking for contrarian signals...');
+    try {
+      const contrarianMap = await batchAnalyzeContrarian(scored);
+      let contrarianBoosts = 0;
+
+      for (const f of scored) {
+        const cc = contrarianMap.get(f.ticker);
+        if (!cc || f.summary.buyCount === 0) continue;
+
+        f.contrarianContext = cc;
+        f.score += cc.boost;
+        f.signals.push(`${cc.label} (${cc.drawdownPct}% off high, +${cc.boost})`);
+        contrarianBoosts++;
+
+        // Re-evaluate tier after boost
+        if (f.score >= 75) f.tier = 'top_pick';
+        else if (f.score >= 45) f.tier = 'feature';
+        else if (f.score >= 25) f.tier = 'mention';
+      }
+
+      if (contrarianBoosts > 0) {
+        scored.sort((a, b) => b.score - a.score);
+      }
+      console.log(`  Contrarian signals: ${contrarianBoosts} boosts`);
+    } catch (e) {
+      console.error('  Contrarian check failed (non-fatal):', e.message);
+    }
+
+    // ── Step 3d: Store ALL scored filings for historical data ──
+    console.log('[3d/9] Storing historical filing data...');
     try {
       const today = new Date().toISOString().split('T')[0];
       const storeResult = await storeAllScoredFilings(scored, today);

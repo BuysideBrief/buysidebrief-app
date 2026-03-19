@@ -402,11 +402,12 @@ const DATA = [
     phase: "Testing (Done)",
     badge: "done",
     items: [
-      { id: "tst1", text: "Jest test suite — 65 tests all passing", done: true },
+      { id: "tst1", text: "Jest test suite — 120 tests all passing", done: true },
       { id: "tst2", text: "Signal scorer tests (30 tests)", done: true },
       { id: "tst3", text: "Context enricher tests (15 tests)", done: true },
       { id: "tst4", text: "Affiliate links tests (6 tests)", done: true },
       { id: "tst5", text: "Pipeline tests — dedup + safeguards (14 tests)", done: true },
+      { id: "tst6", text: "Earnings helper tests (29 tests)", done: true },
     ]
   },
   {
@@ -451,8 +452,8 @@ const DATA = [
     items: [
       { id: "feat1", text: "Auto-post social snippet to X via Twitter API", note: "Fully automated daily tweets at 7am CST" },
       { id: "feat2", text: "Weekly 'what happened' tracker", note: "Friday email: last week's picks + what happened to each one" },
-      { id: "feat3", text: "Earnings calendar cross-reference", note: "Flag insiders buying within 2 weeks of earnings — Finnhub has this endpoint" },
-      { id: "feat4", text: "Contrarian signal detector", note: "Insider buys when stock is down 20%+ and market is also down" },
+      { id: "feat3", text: "Earnings calendar cross-reference", note: "Post-earnings buy boost (+10/+20), blackout flag, pre-earnings caution. 29 tests passing.", done: true },
+      { id: "feat4", text: "Contrarian signal detector", note: "3 tiers: -20% (+10), -30% (+15), -50% (+20) from 52-week high. Coral tags + callouts in email. 26 tests passing.", done: true },
       { id: "feat5", text: "Email subject line A/B testing", note: "AI generates 2 subjects, Resend sends each to half the list" },
       { id: "feat6", text: "'Ask the Brief' chat tool on site", note: "Type a ticker → see recent insider activity. SEO + lead capture" },
       { id: "feat7", text: "Insider sentiment index", note: "Daily aggregate buy/sell score — chartable metric for media pickup" },
@@ -475,15 +476,39 @@ const DATA = [
     ]
   },
   {
-    phase: "Data Products (Post-500)",
+    phase: "Data Roadmap — Phase 1 (March 17)",
+    badge: "active",
+    items: [
+      { id: "dp1a", text: "Store every scored filing in Redis (not just picks)", note: "~500 bytes/filing × 100/day = ~50KB/day, ~1.5MB/month. No TTL — keep forever.", done: true },
+      { id: "dp1b", text: "Daily summary stats stored (buy/sell counts, avg score, unique tickers)", done: true },
+      { id: "dp1c", text: "Ticker index for per-stock queries", note: "filings:ticker:{TICKER} sorted set", done: true },
+      { id: "dp1d", text: "Insider sentiment function built", note: "getInsiderSentiment() — 0-100 score with trend direction", done: true },
+      { id: "dp1e", text: "Historical store tests passing (21 tests)", done: true },
+      { id: "dp1f", text: "Push code + verify first day of data stored", note: "Check Redis after tomorrow's 5am cron", tags: ["critical"] },
+    ]
+  },
+  {
+    phase: "Data Roadmap — Phase 2 (Target: March 24)",
     badge: "upcoming",
     items: [
-      { id: "data1", text: "Historical backtest report", note: "'What if you followed our picks for 6 months?' — ultimate marketing asset" },
-      { id: "data2", text: "Searchable historical database", note: "Every CEO purchase over $1M in last 90 days — Pro feature" },
-      { id: "data3", text: "Insider sentiment index (daily)", note: "Aggregate buy/sell score, track over time, correlate with market" },
-      { id: "data4", text: "Sector heat maps (weekly)", note: "Which sectors are insiders buying? Visual for social + email" },
-      { id: "data5", text: "CEO track record profiles", note: "Win rate, avg return, total invested for tracked insiders" },
-      { id: "data6", text: "Bulk data export for quant traders", note: "CSV/API of all scored filings — $49/mo" },
+      { id: "dp2a", text: "Verify Phase 1 running clean for 7 days", note: "Check Redis daily summaries, confirm no errors in Vercel logs" },
+      { id: "dp2b", text: "Bump filing scan from 100 to 200 per day", note: "Monitor Vercel function execution time — must stay under 45s" },
+      { id: "dp2c", text: "Monitor Finnhub rate limit impact", note: "Earnings helper adds ~40 calls/run. Free tier = 60/min — should be fine" },
+      { id: "dp2d", text: "Validate historical data quality", note: "Spot-check 5 random filings in Redis against SEC EDGAR" },
+    ]
+  },
+  {
+    phase: "Data Roadmap — Phase 3 (Target: April 17)",
+    badge: "upcoming",
+    items: [
+      { id: "dp3a", text: "Build query API: filings by ticker", note: "GET /api/filings?ticker=AAPL — all insider activity for a stock" },
+      { id: "dp3b", text: "Build query API: filings by date range", note: "GET /api/filings?from=2026-03-01&to=2026-03-31" },
+      { id: "dp3c", text: "Build query API: top buys over $500K in last 90 days", note: "Powers the 'search any ticker' tool on the site" },
+      { id: "dp3d", text: "Build insider sentiment API endpoint", note: "GET /api/sentiment — daily score for the sentiment index" },
+      { id: "dp3e", text: "Sector heat map data", note: "Which sectors are insiders buying/selling this week?" },
+      { id: "dp3f", text: "Historical backtest report", note: "'What if you followed our picks for 30+ days?' — ultimate marketing asset" },
+      { id: "dp3g", text: "Searchable historical database on site", note: "Every CEO purchase over $1M in last 90 days — Pro feature" },
+      { id: "dp3h", text: "Bulk data export for quant traders", note: "CSV/API of all scored filings — $49/mo" },
     ]
   },
   {
