@@ -54,14 +54,14 @@ describe('generateWhyItMatters', () => {
     const blurb = generateWhyItMatters(makeScoredFiling({
       signals: ['Cluster buying: 3 insiders at $TEST'],
     }));
-    expect(blurb).toMatch(/cluster/i);
+    expect(blurb).toMatch(/multiple insiders|shared conviction|notable/i);
   });
 
   test('paired signal gets paired context', () => {
     const blurb = generateWhyItMatters(makeScoredFiling({
       signals: ['Paired buying: 2 insiders at $TEST'],
     }));
-    expect(blurb).toMatch(/cluster|pair/i);
+    expect(blurb).toMatch(/two insiders|worth noting|worth watching/i);
   });
 
   test('discretionary purchase gets discretionary context', () => {

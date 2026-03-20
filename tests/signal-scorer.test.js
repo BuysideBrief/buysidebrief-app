@@ -273,7 +273,7 @@ describe('scoreFiling', () => {
 
 describe('scoreAllFilings — cluster detection', () => {
 
-  test('3+ insiders buying same ticker get cluster bonus (+40)', () => {
+  test('3+ insiders buying same ticker get cluster bonus (+25)', () => {
     const filings = [
       makeFiling({ ticker: 'XYZ', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
       makeFiling({ ticker: 'XYZ', ownerName: 'B', ownerCik: '002', transactions: [buyTx(100, 50)] }),
@@ -287,7 +287,7 @@ describe('scoreAllFilings — cluster detection', () => {
     }
   });
 
-  test('2 insiders buying same ticker get paired bonus (+15)', () => {
+  test('2 insiders buying same ticker get paired bonus (+10)', () => {
     const filings = [
       makeFiling({ ticker: 'ABC', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
       makeFiling({ ticker: 'ABC', ownerName: 'B', ownerCik: '002', transactions: [buyTx(100, 50)] }),

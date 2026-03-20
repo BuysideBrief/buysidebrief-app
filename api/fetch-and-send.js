@@ -11,13 +11,14 @@ const { fetchRecentFilingsFromFeed, fetchAndParseForm4 } = require('../lib/sec-f
 const { scoreAllFilings, categorizeForDigest } = require('../lib/signal-scorer');
 const { formatDigestEmail } = require('../lib/email-formatter');
 const { enrichAllFilings } = require('../lib/context-enricher');
-const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile } = require('../lib/performance-tracker');
+const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile, loadRecentPicks } = require('../lib/performance-tracker');
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
 const { generateMarketContext, generateWhyItMattersAI, generateSocialSnippet } = require('../lib/ai-content');
 const { batchAnalyzeEarnings } = require('../lib/earnings-helper');
 const { batchAnalyzeContrarian } = require('../lib/contrarian-detector');
 const { storeAllScoredFilings } = require('../lib/historical-store');
 const { rotateHeadlinePick, recordHeadlinePick } = require('../lib/recently-featured');
+const { dampenRepeatInsiders } = require('../lib/pick-filters');
 const { storeIssue } = require('./archive');
 
 module.exports = async function handler(req, res) {
@@ -40,7 +41,7 @@ module.exports = async function handler(req, res) {
     console.log(`[BuysideBrief] Starting ${effectiveDryRun ? 'DRY RUN' : 'LIVE'} digest (cron: ${isCron}, manual: ${isManualSend}, ua: ${ua.substring(0, 30)})...`);
 
     // ── Step 1: Fetch recent Form 4 filing index ──
-    console.log('[1/5] Fetching filing index from EDGAR...');
+    console.log('[1/10] Fetching filing index from EDGAR...');
     const filingIndex = await fetchRecentFilingsFromFeed(50);
     console.log(`  Found ${filingIndex.length} filings in index`);
 
@@ -54,7 +55,7 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 2: Fetch + parse individual Form 4 XML docs ──
-    console.log('[2/7] Parsing individual Form 4 filings...');
+    console.log('[2/10] Parsing individual Form 4 filings...');
     const toProcess = filingIndex.slice(0, 100);
     const parsed = [];
 
@@ -108,7 +109,7 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 3: Score all filings ──
-    console.log('[3/9] Scoring filings...');
+    console.log('[3/10] Scoring filings...');
     const scored = scoreAllFilings(deduped);
     const categorized = categorizeForDigest(scored);
     console.log(`  Top picks: ${categorized.topPicks.length}`);
@@ -116,7 +117,7 @@ module.exports = async function handler(req, res) {
     console.log(`  Mentions: ${categorized.mentions.length}`);
 
     // ── Step 3b: Cross-reference with earnings calendar ──
-    console.log('[3b/9] Checking earnings calendar context...');
+    console.log('[3b/10] Checking earnings calendar context...');
     try {
       const earningsMap = await batchAnalyzeEarnings(scored);
       let earningsBoosts = 0;
@@ -159,7 +160,7 @@ module.exports = async function handler(req, res) {
     const postEarningsCategorized = categorizeForDigest(scored);
 
     // ── Step 3c: Contrarian signal detection ──
-    console.log('[3c/9] Checking for contrarian signals...');
+    console.log('[3c/10] Checking for contrarian signals...');
     try {
       const contrarianMap = await batchAnalyzeContrarian(scored);
       let contrarianBoosts = 0;
@@ -187,8 +188,33 @@ module.exports = async function handler(req, res) {
       console.error('  Contrarian check failed (non-fatal):', e.message);
     }
 
-    // ── Step 3d: Store ALL scored filings for historical data ──
-    console.log('[3d/9] Storing historical filing data...');
+    // ── Step 3d: Dampen repeat insiders ──
+    console.log('[3d/10] Dampening repeat insiders...');
+    try {
+      // Load recent picks from Redis (last 30 days)
+      const recentPicks = await loadRecentPicks(30);
+      const beforeCount = scored.filter(f => f.tier === 'top_pick' || f.tier === 'feature').length;
+
+      const dampened = dampenRepeatInsiders(scored, recentPicks);
+      // Replace scored array contents
+      scored.length = 0;
+      scored.push(...dampened);
+
+      const afterCount = scored.filter(f => f.tier === 'top_pick' || f.tier === 'feature').length;
+      const dampenedCount = scored.filter(f => f.dampened).length;
+      if (dampenedCount > 0) {
+        console.log(`  Dampened ${dampenedCount} repeat insiders (picks: ${beforeCount} → ${afterCount})`);
+      } else {
+        console.log(`  No repeat insiders found`);
+      }
+
+      scored.sort((a, b) => b.score - a.score);
+    } catch (e) {
+      console.error('  Repeat dampening failed (non-fatal):', e.message);
+    }
+
+    // ── Step 3e: Store ALL scored filings for historical data ──
+    console.log('[3e/10] Storing historical filing data...');
     try {
       const today = new Date().toISOString().split('T')[0];
       const storeResult = await storeAllScoredFilings(scored, today);
@@ -201,11 +227,11 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 4: Enrich top picks with context ──
-    console.log('[4/9] Enriching filings with context...');
+    console.log('[4/10] Enriching filings with context...');
     const enriched = await enrichAllFilings(scored);
 
     // ── Step 4b: AI-powered "Why it matters" for top signals ──
-    console.log('[4b/9] Generating AI content...');
+    console.log('[4b/10] Generating AI content...');
     for (const f of enriched) {
       if (f.tier === 'top_pick' || f.tier === 'feature') {
         try {
@@ -236,7 +262,7 @@ module.exports = async function handler(req, res) {
     let enrichedCategorized = categorizeForDigest(enriched);
 
     // ── Step 4c: Rotate headline pick to avoid repeats ──
-    console.log('[4c/9] Checking for repeat headline picks...');
+    console.log('[4c/10] Checking for repeat headline picks...');
     try {
       const beforeTicker = enrichedCategorized.topPicks[0]?.ticker || '(none)';
       enrichedCategorized = await rotateHeadlinePick(enrichedCategorized);
@@ -251,7 +277,7 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 5: Record picks for performance tracking ──
-    console.log('[5/9] Recording picks for scorecard...');
+    console.log('[5/10] Recording picks for scorecard...');
     const newPicksCount = recordNewPicks(enriched);
     console.log(`  Recorded ${newPicksCount} new picks`);
 
@@ -260,7 +286,7 @@ module.exports = async function handler(req, res) {
     console.log(`  Updated returns for ${updatedReturns} past picks`);
 
     // ── Step 6: Format email (with AI market context, scorecard + CEO spotlight) ──
-    console.log('[6/9] Formatting email digest...');
+    console.log('[6/10] Formatting email digest...');
 
     // Market overview + AI context
     const marketOverview = await getMarketOverview();
@@ -294,7 +320,7 @@ module.exports = async function handler(req, res) {
 
     // ── Step 7: Send via Resend ──
     if (effectiveDryRun) {
-      console.log('[7/9] DRY RUN — skipping send');
+      console.log('[7/10] DRY RUN — skipping send');
       const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
       return res.status(200).json({
         success: true,
@@ -331,11 +357,11 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    console.log('[7/9] Sending via Resend...');
+    console.log('[7/10] Sending via Resend...');
     const sendResult = await sendViaResend(subject, html);
 
     // Send social snippet to Pete for easy copy/paste
-    console.log('[8/9] Sending social snippet...');
+    console.log('[8/10] Sending social snippet...');
     if (socialSnippet && process.env.RESEND_API_KEY) {
       try {
         const snippetEmail = process.env.SNIPPET_EMAIL || process.env.OWNER_EMAIL;
@@ -367,7 +393,7 @@ module.exports = async function handler(req, res) {
     }
 
     // ── Step 9: Store in archive ──
-    console.log('[9/9] Storing in archive...');
+    console.log('[9/10] Storing in archive...');
     const today = new Date().toISOString().split('T')[0];
     const topPick = enrichedCategorized.topPicks[0] || enrichedCategorized.featured[0];
     await storeIssue(today, subject, html, {
