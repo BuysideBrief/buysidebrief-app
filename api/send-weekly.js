@@ -199,6 +199,8 @@ ${scorecardHtml}
     Past insider buying patterns do not predict future performance.<br><br>
     <a href="https://buysidebrief.com" style="color:#1a7a4c;">buysidebrief.com</a>
     &middot; <a href="%unsubscribe_url%" style="color:#b0a99f;">Unsubscribe</a>
+    &nbsp;&middot;&nbsp; <a href="https://buysidebrief.com/privacy.html" style="color:#b0a99f;">Privacy</a>
+    &nbsp;&middot;&nbsp; <a href="https://buysidebrief.com/terms.html" style="color:#b0a99f;">Terms</a>
   </p>
 </td></tr>
 
