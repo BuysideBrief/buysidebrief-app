@@ -137,7 +137,8 @@ module.exports = async function handler(req, res) {
           earningsBoosts++;
 
           // Re-evaluate tier after boost
-          if (f.score >= 75) f.tier = 'top_pick';
+          if (f.score >= 100) f.tier = 'strong_signal';
+          else if (f.score >= 75) f.tier = 'top_pick';
           else if (f.score >= 45) f.tier = 'feature';
           else if (f.score >= 25) f.tier = 'mention';
         } else if (ec.signal === 'blackout_flag') {
@@ -175,7 +176,8 @@ module.exports = async function handler(req, res) {
         contrarianBoosts++;
 
         // Re-evaluate tier after boost
-        if (f.score >= 75) f.tier = 'top_pick';
+        if (f.score >= 100) f.tier = 'strong_signal';
+        else if (f.score >= 75) f.tier = 'top_pick';
         else if (f.score >= 45) f.tier = 'feature';
         else if (f.score >= 25) f.tier = 'mention';
       }
