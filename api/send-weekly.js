@@ -10,6 +10,7 @@
 
 const { generateScorecard, formatScorecardForWeekly } = require('../lib/performance-tracker');
 const { formatValue } = require('../lib/signal-scorer');
+const { getTimingPhrase } = require('../lib/email-formatter');
 const { generateWeeklyDeepDive } = require('../lib/ai-content');
 const { getRedisOrNoop } = require('../lib/redis');
 
@@ -139,7 +140,7 @@ function formatWeeklyEmail(weekPicks, scorecard, deepDive) {
           <strong style="font-size:16px;font-family:Georgia,serif;">$${esc(p.ticker)}</strong>
           <span style="color:#7a7a7a;font-size:13px;font-family:-apple-system,Helvetica,Arial,sans-serif;"> — ${esc(p.companyName || '')}</span><br>
           <span style="font-size:14px;color:#3d3d3d;font-family:-apple-system,Helvetica,Arial,sans-serif;">
-            ${esc(p.ownerName)} (${esc(p.officerTitle || 'Insider')}) bought 
+            ${esc(p.ownerName)} (${esc(p.officerTitle || 'Insider')}) ${getTimingPhrase(p)}
             <strong style="color:${color};">$${formatValue(p.buyValue)}</strong>
           </span><br>
           <span style="font-size:12px;color:#b0a99f;font-family:-apple-system,Helvetica,Arial,sans-serif;">
