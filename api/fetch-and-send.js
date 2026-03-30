@@ -278,7 +278,7 @@ module.exports = async function handler(req, res) {
 
     // ── Step 5: Record picks for performance tracking ──
     console.log('[5/10] Recording picks for scorecard...');
-    const newPicksCount = recordNewPicks(enriched);
+    const newPicksCount = await recordNewPicks(enriched);
     console.log(`  Recorded ${newPicksCount} new picks`);
 
     // ── Step 5b: Update past pick returns ──
