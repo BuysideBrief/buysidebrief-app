@@ -162,6 +162,15 @@ describe('generateWhyItMatters', () => {
     expect(blurb.length).toBeGreaterThan(0);
   });
 
+  test('strong_signal CEO gets C-suite context same as top_pick', () => {
+    const blurb = generateWhyItMatters(makeScoredFiling({
+      officerTitle: 'CEO',
+      tier: 'strong_signal',
+      score: 115,
+    }));
+    expect(blurb).toMatch(/CEO|conviction/i);
+  });
+
   test('always returns a non-empty string', () => {
     const blurb = generateWhyItMatters(makeScoredFiling({
       has10b51Plan: true,
