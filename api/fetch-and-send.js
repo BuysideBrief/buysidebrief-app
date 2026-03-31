@@ -20,6 +20,7 @@ const { storeAllScoredFilings } = require('../lib/historical-store');
 const { rotateHeadlinePick, recordHeadlinePick } = require('../lib/recently-featured');
 const { dampenRepeatInsiders } = require('../lib/pick-filters');
 const { storeIssue } = require('./archive');
+const { getRedisOrNoop } = require('../lib/redis');
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
@@ -87,6 +88,19 @@ module.exports = async function handler(req, res) {
       }
     }
     console.log(`  Parsed ${parsed.length} filings with transactions out of ${toProcess.length}`);
+
+    // ── Persist processed accession numbers for afternoon dedup ──
+    try {
+      const accessionNumbers = parsed.map(f => f.accessionNumber).filter(Boolean);
+      if (accessionNumbers.length > 0) {
+        const redis = getRedisOrNoop();
+        const today = new Date().toISOString().split('T')[0];
+        await redis.set(`morning:accessions:${today}`, JSON.stringify(accessionNumbers), { ex: 172800 }); // 48h TTL
+        console.log(`  Stored ${accessionNumbers.length} accession numbers for afternoon dedup`);
+      }
+    } catch (e) {
+      console.error('  Accession number persistence failed (non-fatal):', e.message);
+    }
 
     // Deduplicate: same insider (ownerCik) + same ticker = keep highest value filing
     const deduped = [];

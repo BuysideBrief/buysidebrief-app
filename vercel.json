@@ -7,6 +7,10 @@
     {
       "path": "/api/send-weekly",
       "schedule": "30 13 * * 6"
+    },
+    {
+      "path": "/api/afternoon-scan",
+      "schedule": "0 19 * * 1-5"
     }
   ],
   "functions": {
@@ -14,6 +18,9 @@
       "maxDuration": 60
     },
     "api/send-weekly.js": {
+      "maxDuration": 60
+    },
+    "api/afternoon-scan.js": {
       "maxDuration": 60
     }
   },
