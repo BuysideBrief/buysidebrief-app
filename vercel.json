@@ -11,6 +11,10 @@
     {
       "path": "/api/afternoon-scan",
       "schedule": "0 19 * * 1-5"
+    },
+    {
+      "path": "/api/seo/generate",
+      "schedule": "0 10 * * *"
     }
   ],
   "functions": {
@@ -22,8 +26,16 @@
     },
     "api/afternoon-scan.js": {
       "maxDuration": 60
+    },
+    "api/seo/generate.js": {
+      "maxDuration": 60
     }
   },
+  "rewrites": [
+    { "source": "/blog", "destination": "/api/blog" },
+    { "source": "/blog/:slug", "destination": "/api/blog/:slug" },
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
