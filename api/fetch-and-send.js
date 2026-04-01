@@ -91,13 +91,10 @@ module.exports = async function handler(req, res) {
 
     // ── Persist processed accession numbers for afternoon dedup ──
     try {
-      const accessionNumbers = parsed.map(f => f.accessionNumber).filter(Boolean);
-      if (accessionNumbers.length > 0) {
-        const redis = getRedisOrNoop();
-        const today = new Date().toISOString().split('T')[0];
-        await redis.set(`morning:accessions:${today}`, JSON.stringify(accessionNumbers), { ex: 172800 }); // 48h TTL
-        console.log(`  Stored ${accessionNumbers.length} accession numbers for afternoon dedup`);
-      }
+      const redis = getRedisOrNoop();
+      const today = new Date().toISOString().split('T')[0];
+      await redis.set(`morning:accessions:${today}`, JSON.stringify(filingIndex.map(f => f.accessionNumber)), { ex: 172800 });
+      console.log(`  Stored ${filingIndex.length} accession numbers for afternoon dedup`);
     } catch (e) {
       console.error('  Accession number persistence failed (non-fatal):', e.message);
     }
