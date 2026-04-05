@@ -1,0 +1,168 @@
+{
+  "generatedAt": "2026-04-05T01:36:15.447Z",
+  "totalPicks": 0,
+  "matrix": {
+    "strong_signal": {
+      "micro": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "small": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "mid": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "large": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      }
+    },
+    "top_pick": {
+      "micro": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "small": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "mid": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "large": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      }
+    },
+    "feature": {
+      "micro": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "small": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "mid": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "large": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      }
+    },
+    "mention": {
+      "micro": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "small": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "mid": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      },
+      "large": {
+        "count": 0,
+        "winRate": 0,
+        "avgReturn": 0,
+        "medianReturn": 0
+      }
+    }
+  },
+  "tierTotals": {
+    "strong_signal": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    },
+    "top_pick": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    },
+    "feature": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    },
+    "mention": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    }
+  },
+  "bucketTotals": {
+    "micro": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    },
+    "small": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    },
+    "mid": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    },
+    "large": {
+      "count": 0,
+      "winRate": 0,
+      "avgReturn": 0,
+      "medianReturn": 0
+    }
+  },
+  "grandTotal": {
+    "count": 0,
+    "winRate": 0,
+    "avgReturn": 0,
+    "medianReturn": 0
+  }
+}
