@@ -54,7 +54,7 @@ module.exports = async function handler(req, res) {
 
   } catch (err) {
     console.error('Archive API error:', err);
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: 'Internal server error' });
   }
 };
 

@@ -233,7 +233,7 @@ module.exports = async function handler(req, res) {
     console.error('[AfternoonScan] Error:', err);
     return res.status(500).json({
       success: false,
-      error: err.message,
+      error: 'Internal server error',
     });
   }
 };

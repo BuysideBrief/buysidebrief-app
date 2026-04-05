@@ -85,6 +85,7 @@ module.exports = async function handler(req, res) {
     });
 
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.error('cleanup error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
