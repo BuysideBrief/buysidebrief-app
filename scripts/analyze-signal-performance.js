@@ -13,6 +13,7 @@ require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const fs = require('fs');
 const path = require('path');
 const { getRedis } = require('../lib/redis');
+const { getQuote } = require('../lib/price-helper');
 
 // ── Signal normalization map ──────────────────────────────────
 
@@ -131,15 +132,76 @@ async function main() {
   const with90d = picks.filter(p => p.return90d != null);
   console.log(`${with30d.length} picks have 30d returns, ${with90d.length} have 90d returns.`);
 
+  // 2b. Calculate live "current return" for picks without 30d return yet
+  const needsLiveReturn = picks.filter(p => p.return30d == null && p.entryPrice > 0);
+  if (needsLiveReturn.length) {
+    console.log(`\nFetching live prices for ${needsLiveReturn.length} picks without 30d return...`);
+    const CHUNK_SIZE = 10;
+    for (let i = 0; i < needsLiveReturn.length; i += CHUNK_SIZE) {
+      const chunk = needsLiveReturn.slice(i, i + CHUNK_SIZE);
+      await Promise.all(chunk.map(async (pick) => {
+        try {
+          const quote = await getQuote(pick.ticker);
+          if (quote && quote.price > 0) {
+            const daysSince = Math.round((Date.now() - new Date(pick.entryDate).getTime()) / 86400000);
+            pick._currentPrice = quote.price;
+            pick._currentReturn = +((quote.price - pick.entryPrice) / pick.entryPrice * 100).toFixed(2);
+            pick._daysHeld = daysSince;
+          }
+        } catch (e) { /* skip */ }
+      }));
+      if (i + CHUNK_SIZE < needsLiveReturn.length) {
+        await new Promise(r => setTimeout(r, 1000)); // 1s between chunks
+      }
+    }
+
+    const withLive = needsLiveReturn.filter(p => p._currentReturn != null);
+    if (withLive.length) {
+      console.log(`\n═══ Current Returns (picks pending 30d mark) ═══\n`);
+      console.log(
+        'Ticker'.padEnd(10) +
+        'Entry'.padStart(10) +
+        'Current'.padStart(10) +
+        'Return'.padStart(10) +
+        '  Days Held'
+      );
+      console.log('─'.repeat(55));
+      for (const p of withLive.sort((a, b) => b._currentReturn - a._currentReturn)) {
+        const sign = p._currentReturn >= 0 ? '+' : '';
+        console.log(
+          p.ticker.padEnd(10) +
+          `$${p.entryPrice.toFixed(2)}`.padStart(10) +
+          `$${p._currentPrice.toFixed(2)}`.padStart(10) +
+          `${sign}${p._currentReturn}%`.padStart(10) +
+          `  ${p._daysHeld}d`
+        );
+      }
+    }
+  }
+
   // 3. Build stats
   const stats30d = buildCategoryStats(picks, 'return30d');
   const stats90d = buildCategoryStats(picks, 'return90d');
+
+  // Current returns for picks pending 30d
+  const currentReturns = needsLiveReturn
+    .filter(p => p._currentReturn != null)
+    .map(p => ({
+      ticker: p.ticker,
+      entryPrice: p.entryPrice,
+      currentPrice: p._currentPrice,
+      currentReturn: p._currentReturn,
+      daysHeld: p._daysHeld,
+      entryDate: p.entryDate,
+    }))
+    .sort((a, b) => b.currentReturn - a.currentReturn);
 
   const report = {
     generatedAt: new Date().toISOString(),
     totalPicks: picks.length,
     picksWith30dReturn: with30d.length,
     picksWith90dReturn: with90d.length,
+    currentReturns,
     bySignal30d: stats30d,
     bySignal90d: stats90d,
   };
