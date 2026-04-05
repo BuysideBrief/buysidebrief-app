@@ -84,6 +84,13 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    const resendOk = results.resend === 'added';
+    const beehiivOk = results.beehiiv === 'added';
+
+    if (!resendOk && !beehiivOk) {
+      return res.status(500).json({ error: 'Subscription failed. Please try again.' });
+    }
+
     return res.status(200).json({
       success: true,
       message: 'Subscribed!',
