@@ -15,6 +15,10 @@ module.exports = async function handler(req, res) {
 
   const date = req.query.date || new Date().toISOString().slice(0, 10);
 
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(new Date(date).getTime())) {
+    return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+  }
+
   try {
     const snippet = await kv.get(`afternoon:snippet:${date}`);
     if (!snippet) {
