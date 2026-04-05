@@ -87,16 +87,31 @@ Each Form 4 filing gets a score based on:
 
 ## Environment Variables
 
-| Key | Required | Description |
-|-----|----------|-------------|
-| `SEC_USER_AGENT` | Yes | SEC requires identification (e.g. `BuysideBrief email@domain.com`) |
-| `RESEND_API_KEY` | Yes | From [resend.com](https://resend.com) |
-| `RESEND_AUDIENCE_ID` | For broadcast | Create in Resend dashboard → Audiences |
-| `FINNHUB_API_KEY` | For scorecard | Free at [finnhub.io](https://finnhub.io) (60 req/min) |
-| `ALPHA_VANTAGE_KEY` | Fallback | Free at [alphavantage.co](https://alphavantage.co) (25 req/day) |
-| `BEEHIIV_API_KEY` | Optional | For dual subscriber management |
-| `BEEHIIV_PUB_ID` | Optional | Beehiiv publication ID |
-| `TEST_EMAIL` | For testing | Where dry-run digests get sent |
+Copy `.env.example` to `.env` and fill in values for local development.
+
+| Variable | Required | Used In | Description |
+|----------|----------|---------|-------------|
+| `CRON_SECRET` | Yes | `api/*.js` | Auth token for cron endpoints (`Bearer` header) |
+| `SEC_USER_AGENT` | Yes | `lib/sec-fetcher.js`, `lib/context-enricher.js` | SEC requires identification (e.g. `BuysideBrief email@domain.com`) |
+| `RESEND_API_KEY` | Yes | `api/fetch-and-send.js`, `api/send-weekly.js`, `api/subscribe.js` | Email delivery via [resend.com](https://resend.com) |
+| `RESEND_AUDIENCE_ID` | For broadcast | `api/fetch-and-send.js`, `api/send-weekly.js`, `api/subscribe.js` | Resend audience ID for subscriber broadcasts |
+| `UPSTASH_REDIS_REST_URL` | Yes | `lib/redis.js`, `lib/performance-tracker.js` | Upstash Redis connection URL |
+| `UPSTASH_REDIS_REST_TOKEN` | Yes | `lib/redis.js`, `lib/performance-tracker.js` | Upstash Redis auth token |
+| `ANTHROPIC_API_KEY` | Yes | `lib/ai-content.js` | Claude API key for AI-generated content |
+| `FINNHUB_API_KEY` | Yes | `lib/price-helper.js`, `lib/market-overview.js`, `lib/earnings-helper.js`, `lib/contrarian-detector.js` | Stock price data — free at [finnhub.io](https://finnhub.io) (60 req/min) |
+| `ALPHA_VANTAGE_KEY` | Fallback | `lib/price-helper.js`, `lib/context-enricher.js` | Fallback price API — free at [alphavantage.co](https://alphavantage.co) (25 req/day) |
+| `TEST_EMAIL` | For testing | `api/fetch-and-send.js` | Recipient for dry-run digests (overrides audience broadcast) |
+| `SNIPPET_EMAIL` | Optional | `api/fetch-and-send.js` | Recipient for social media snippet emails |
+| `OWNER_EMAIL` | Optional | `api/fetch-and-send.js` | Fallback recipient for snippet emails |
+| `BEEHIIV_API_KEY` | Optional | `api/subscribe.js` | For dual subscriber management via Beehiiv |
+| `BEEHIIV_PUB_ID` | Optional | `api/subscribe.js` | Beehiiv publication ID |
+| `TASTYTRADE_REF` | Optional | `lib/affiliate-links.js` | Tastytrade affiliate referral code |
+| `IBKR_REF` | Optional | `lib/affiliate-links.js` | Interactive Brokers affiliate referral code |
+| `TRADINGVIEW_REF` | Optional | `lib/affiliate-links.js` | TradingView affiliate referral code |
+| `KV_REST_API_URL` | Alt | `lib/redis.js` | Vercel KV alias for `UPSTASH_REDIS_REST_URL` |
+| `KV_REST_API_TOKEN` | Alt | `lib/redis.js` | Vercel KV alias for `UPSTASH_REDIS_REST_TOKEN` |
+| `REDIS_URL` | Alt | `lib/redis.js` | Generic Redis URL fallback |
+| `REDIS_TOKEN` | Alt | `lib/redis.js` | Generic Redis token fallback |
 
 ## Setup Checklist
 
