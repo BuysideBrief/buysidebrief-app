@@ -7,7 +7,7 @@
  * POST { email: "user@example.com" }
  */
 
-module.exports = async function handler(req, res) {
+const handler = async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -104,5 +104,9 @@ module.exports = async function handler(req, res) {
 };
 
 function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (typeof email !== 'string' || email.length > 254) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
+
+module.exports = handler;
+module.exports.isValidEmail = isValidEmail;
