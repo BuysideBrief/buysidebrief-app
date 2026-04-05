@@ -998,12 +998,28 @@
       h += '<div class="section-heading">Which signals predict returns?</div>';
       h += '<div class="section-subtext">Win rate by insider signal type, based on 30-day returns</div>';
 
-      if (!data || !Array.isArray(data.signals) || data.signals.length === 0) {
-        h += '<div class="no-data">Not enough data yet</div></div>';
-        return h;
+      // Accept bySignal30d array or signals array
+      const signals = (data && (data.bySignal30d || data.signals)) || [];
+      if (!Array.isArray(signals) || signals.length === 0) {
+        // Fall back to currentReturns-based data if no 30d yet
+        const current = (data && data.currentReturns && data.currentReturns.bySignal) || [];
+        if (!Array.isArray(current) || current.length === 0) {
+          h += '<div class="no-data">Not enough data yet</div></div>';
+          return h;
+        }
+        // Use current returns as fallback
+        return renderSignalTable(h, current, 'Win rate by insider signal type, based on current returns');
       }
 
-      const sorted = [...data.signals].sort((a, b) => (b.winRate || 0) - (a.winRate || 0));
+      return renderSignalTable(h, signals);
+    }
+
+    function renderSignalTable(h, signals, altSubtext) {
+      if (altSubtext) {
+        // Replace subtext
+        h = h.replace(/based on 30-day returns/, 'based on current returns');
+      }
+      const sorted = [...signals].sort((a, b) => (b.winRate || 0) - (a.winRate || 0));
 
       h += '<table class="signal-table"><thead><tr>';
       h += '<th>Signal</th><th>Picks</th><th>Win Rate</th><th>Avg Return</th>';
@@ -1012,7 +1028,7 @@
       // First 2 rows ungated
       sorted.slice(0, 2).forEach(s => {
         h += `<tr>
-          <td class="signal-name">${esc(s.signal || s.name)}</td>
+          <td class="signal-name">${esc(s.signal || s.name || s.label || '')}</td>
           <td>${s.picks || s.count || 0}</td>
           <td class="${wrClass(s.winRate)}">${s.winRate != null ? s.winRate + '%' : '—'}</td>
           <td>${fmtReturn(s.avgReturn)}</td>
@@ -1025,7 +1041,7 @@
         h += '<div class="gated-section"><table class="signal-table"><tbody>';
         sorted.slice(2).forEach(s => {
           h += `<tr>
-            <td class="signal-name">${esc(s.signal || s.name)}</td>
+            <td class="signal-name">${esc(s.signal || s.name || s.label || '')}</td>
             <td>${s.picks || s.count || 0}</td>
             <td class="${wrClass(s.winRate)}">${s.winRate != null ? s.winRate + '%' : '—'}</td>
             <td>${fmtReturn(s.avgReturn)}</td>
@@ -1043,37 +1059,49 @@
       let h = '<div class="analysis-section fade-up">';
       h += '<div class="section-heading">How each tier performs</div>';
 
-      if (!data || !data.tiers || Object.keys(data.tiers).length === 0) {
+      // Accept tierTotals (actual shape) or tiers
+      const tiers = (data && (data.tierTotals || data.tiers)) || {};
+      const hasAnyPicks = Object.values(tiers).some(t => (t.count || t.picks || 0) > 0);
+
+      if (!data || Object.keys(tiers).length === 0 || !hasAnyPicks) {
         h += '<div class="no-data">Not enough data yet</div></div>';
         return h;
       }
 
-      const tierOrder = ['strong_signal', 'top_pick', 'featured'];
-      const tierLabels = { strong_signal: 'Strong Signal', top_pick: 'Top Pick', featured: 'Featured' };
+      const tierOrder = ['strong_signal', 'top_pick', 'feature'];
+      const tierLabels = { strong_signal: 'Strong Signal', top_pick: 'Top Pick', feature: 'Featured' };
 
       h += '<div class="tier-cards">';
       tierOrder.forEach(key => {
-        const t = data.tiers[key];
+        const t = tiers[key];
         if (!t) return;
+        const picks = t.count || t.picks || 0;
+        if (picks === 0) return;
         const wrCls = t.winRate > 60 ? 'wr-green' : t.winRate >= 40 ? 'wr-amber' : 'wr-red';
         h += `<div class="tier-card">
           <div class="tier-name">${tierLabels[key] || key}</div>
           <div class="tier-value ${wrCls}">${t.winRate != null ? t.winRate + '%' : '—'}</div>
           <div class="tier-label">win rate</div>
-          <div class="tier-stats">${t.picks || 0} picks &middot; avg ${fmtReturn(t.avgReturn)}</div>
+          <div class="tier-stats">${picks} picks &middot; avg ${fmtReturn(t.avgReturn)}</div>
         </div>`;
       });
       h += '</div>';
 
-      // Price bucket breakdown (soft-gated)
-      if (data.priceBuckets && data.priceBuckets.length > 0) {
+      // Price bucket breakdown from matrix (soft-gated)
+      const matrix = data.matrix || {};
+      const bucketTotals = data.bucketTotals || {};
+      const bucketLabels = { micro: 'Micro (<$10)', small: 'Small ($10-50)', mid: 'Mid ($50-200)', large: 'Large ($200+)' };
+      const bucketKeys = Object.keys(bucketTotals).filter(k => (bucketTotals[k].count || 0) > 0);
+
+      if (bucketKeys.length > 0) {
         h += '<div class="gated-section"><table class="signal-table"><thead><tr>';
         h += '<th>Price Bucket</th><th>Picks</th><th>Win Rate</th><th>Avg Return</th>';
         h += '</tr></thead><tbody>';
-        data.priceBuckets.forEach(b => {
+        bucketKeys.forEach(k => {
+          const b = bucketTotals[k];
           h += `<tr>
-            <td class="signal-name">${esc(b.bucket || b.label)}</td>
-            <td>${b.picks || b.count || 0}</td>
+            <td class="signal-name">${bucketLabels[k] || k}</td>
+            <td>${b.count || 0}</td>
             <td class="${wrClass(b.winRate)}">${b.winRate != null ? b.winRate + '%' : '—'}</td>
             <td>${fmtReturn(b.avgReturn)}</td>
           </tr>`;
@@ -1137,17 +1165,40 @@
       let h = '<div class="analysis-section fade-up">';
       h += '<div class="section-heading">Performance over time</div>';
 
-      if (!data || (!data.checkpoints && !data.avg7d && !data.avg30d && !data.avg90d)) {
+      if (!data) {
         h += '<div class="no-data">Not enough data yet</div></div>';
         return h;
       }
 
-      // Support both flat keys and checkpoints array
-      const points = data.checkpoints || [
-        { label: '7-Day', avg: data.avg7d, winRate: data.winRate7d },
-        { label: '30-Day', avg: data.avg30d, winRate: data.winRate30d },
-        { label: '90-Day', avg: data.avg90d, winRate: data.winRate90d },
-      ].filter(p => p.avg != null);
+      // Build points from checkpoints array if populated
+      let points = [];
+      if (Array.isArray(data.checkpoints) && data.checkpoints.length > 0) {
+        points = data.checkpoints.map(p => ({
+          label: p.label || p.day + 'd',
+          avg: p.avgReturn != null ? p.avgReturn : p.avg,
+          winRate: p.winRate,
+        }));
+      }
+
+      // Fall back to currentSnapshot if no checkpoint data yet
+      if (points.length === 0 && data.currentSnapshot) {
+        const snap = data.currentSnapshot;
+        points = [{ label: 'Current', avg: snap.avgReturn, winRate: snap.winRate }];
+      }
+
+      // Last resort: flat keys
+      if (points.length === 0) {
+        points = [
+          { label: '7-Day', avg: data.avg7d, winRate: data.winRate7d },
+          { label: '30-Day', avg: data.avg30d, winRate: data.winRate30d },
+          { label: '90-Day', avg: data.avg90d, winRate: data.winRate90d },
+        ].filter(p => p.avg != null);
+      }
+
+      if (points.length === 0) {
+        h += '<div class="no-data">Not enough data yet</div></div>';
+        return h;
+      }
 
       h += '<div class="decay-row">';
       points.forEach(p => {
