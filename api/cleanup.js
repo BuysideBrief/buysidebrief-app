@@ -9,6 +9,14 @@
 const { getRedis } = require('../lib/redis');
 
 module.exports = async function handler(req, res) {
+  // Auth check
+  const ua = req.headers['user-agent'] || '';
+  const isCron = ua.includes('vercel-cron')
+    || (process.env.CRON_SECRET && req.headers['authorization'] === `Bearer ${process.env.CRON_SECRET}`);
+  if (!isCron) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   const isDry = req.query.run !== 'true';
 
   try {
