@@ -60,8 +60,8 @@ module.exports = async function handler(req, res) {
     const toProcess = filingIndex.slice(0, 100);
     const parsed = [];
 
-    // Debug mode: return raw filing index data
-    if (req.query.debug === 'true') {
+    // Debug mode: return raw filing index data (auth required)
+    if (isDebug && isCron) {
       return res.status(200).json({
         success: true,
         debug: true,
