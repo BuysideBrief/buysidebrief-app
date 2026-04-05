@@ -33,6 +33,10 @@ module.exports = async function handler(req, res) {
     || (process.env.CRON_SECRET && req.headers['authorization'] === `Bearer ${process.env.CRON_SECRET}`);
   const startTime = Date.now();
 
+  function timeRemaining() {
+    return 55000 - (Date.now() - startTime); // 55s of 60s budget
+  }
+
   // Safeguard: hitting the URL without params defaults to dry run
   // Live sends only happen from cron or with explicit ?send=true
   const shouldSend = isCron || isManualSend;
@@ -128,6 +132,9 @@ module.exports = async function handler(req, res) {
     console.log(`  Mentions: ${categorized.mentions.length}`);
 
     // ── Step 3b: Cross-reference with earnings calendar ──
+    if (timeRemaining() < 15000) {
+      console.log(`Skipping earnings cross-reference — only ${timeRemaining()}ms remaining`);
+    } else {
     console.log('[3b/10] Checking earnings calendar context...');
     try {
       const earningsMap = await batchAnalyzeEarnings(scored);
@@ -166,12 +173,16 @@ module.exports = async function handler(req, res) {
     } catch (e) {
       console.error('  Earnings calendar check failed (non-fatal):', e.message);
     }
+    } // end time-check for earnings
 
     // Re-sort and re-categorize after earnings adjustments
     scored.sort((a, b) => b.score - a.score);
     const postEarningsCategorized = categorizeForDigest(scored);
 
     // ── Step 3c: Contrarian signal detection ──
+    if (timeRemaining() < 15000) {
+      console.log(`Skipping contrarian detection — only ${timeRemaining()}ms remaining`);
+    } else {
     console.log('[3c/10] Checking for contrarian signals...');
     try {
       const contrarianMap = await batchAnalyzeContrarian(scored);
@@ -200,6 +211,7 @@ module.exports = async function handler(req, res) {
     } catch (e) {
       console.error('  Contrarian check failed (non-fatal):', e.message);
     }
+    } // end time-check for contrarian
 
     // ── Step 3d: Dampen repeat insiders ──
     console.log('[3d/10] Dampening repeat insiders...');
@@ -244,6 +256,15 @@ module.exports = async function handler(req, res) {
     const enriched = await enrichAllFilings(scored);
 
     // ── Step 4b: AI-powered "Why it matters" for top signals ──
+    if (timeRemaining() < 20000) {
+      console.log(`Skipping AI content generation — only ${timeRemaining()}ms remaining`);
+      // Fallback: append earnings context to template blurbs where available
+      for (const f of enriched) {
+        if ((f.tier === 'top_pick' || f.tier === 'feature') && f.earningsContext && f.earningsContext.context) {
+          f.whyItMatters = (f.whyItMatters || '') + ' ' + f.earningsContext.context;
+        }
+      }
+    } else {
     console.log('[4b/10] Generating AI content...');
     for (const f of enriched) {
       if (f.tier === 'top_pick' || f.tier === 'feature') {
@@ -271,6 +292,7 @@ module.exports = async function handler(req, res) {
         }
       }
     }
+    } // end time-check for AI content
 
     let enrichedCategorized = categorizeForDigest(enriched);
 
