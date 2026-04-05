@@ -2,8 +2,8 @@
  * Backfill Historical Picks — Out-of-Sample Validation
  *
  * Fetches Form 4 filings from BEFORE our live tracking started (2026-03-18),
- * scores them with our existing pipeline, looks up actual 30-day returns,
- * and stores results separately from live picks for comparison analysis.
+ * scores them with our existing pipeline, looks up current prices via getQuote,
+ * calculates returns since entry, and stores results for comparison analysis.
  *
  * Usage:
  *   DOTENV_CONFIG_PATH=.env.local node -r dotenv/config scripts/backfill-historical-picks.js
@@ -29,7 +29,7 @@ const path = require('path');
 const { fetchAndParseForm4 } = require('../lib/sec-fetcher');
 const { scoreAllFilings } = require('../lib/signal-scorer');
 const { getCompanyProfile, getSectorLabel } = require('../lib/company-profile');
-const { getPriceAtDate, getHistoricalPrices } = require('../lib/price-helper');
+const { getQuote, getPriceAtDate } = require('../lib/price-helper');
 const { getRedis } = require('../lib/redis');
 
 const SEC_USER_AGENT = process.env.SEC_USER_AGENT || 'BuysideBrief hello@buysidebrief.com';
@@ -387,11 +387,14 @@ async function main() {
     return;
   }
 
-  // ── Phase 3: Price lookups (entry + 30-day) ──
+  // ── Phase 3: Price lookups (entry + current quote) ──
   console.log('\n── Phase 3: Price Lookups ──');
 
+  const today = new Date().toISOString().split('T')[0];
   let finnhubCalls = 0;
   let priceFails = [];
+  // Cache getQuote results per ticker to avoid duplicate API calls
+  const quoteCache = {};
 
   for (let i = 0; i < allPicks.length; i++) {
     const pick = allPicks[i];
@@ -413,33 +416,46 @@ async function main() {
       } catch (e) { /* skip */ }
     }
 
-    // 30-day price
-    const date30 = addCalendarDays(filingDate, 30);
-    let price30d = null;
-    try {
-      const priceData = await getPriceAtDate(ticker, date30);
-      if (priceData?.close) price30d = priceData.close;
-      finnhubCalls++;
-      await sleep(FINNHUB_RATE_MS);
-    } catch (e) { /* skip */ }
+    // Current price via getQuote (cached per ticker)
+    let currentPrice = null;
+    if (entryPrice && entryPrice > 0) {
+      if (ticker in quoteCache) {
+        currentPrice = quoteCache[ticker];
+      } else {
+        try {
+          const quote = await getQuote(ticker);
+          currentPrice = quote?.price || null;
+          quoteCache[ticker] = currentPrice;
+          finnhubCalls++;
+          await sleep(FINNHUB_RATE_MS);
+        } catch (e) {
+          quoteCache[ticker] = null;
+        }
 
-    // Rate limit cooldown
-    if (finnhubCalls > 0 && finnhubCalls % FINNHUB_COOLDOWN_EVERY === 0) {
-      console.log(`  Finnhub cooldown after ${finnhubCalls} calls...`);
-      await sleep(FINNHUB_COOLDOWN_MS);
+        // Rate limit cooldown
+        if (finnhubCalls > 0 && finnhubCalls % FINNHUB_COOLDOWN_EVERY === 0) {
+          console.log(`  Finnhub cooldown after ${finnhubCalls} calls...`);
+          await sleep(FINNHUB_COOLDOWN_MS);
+        }
+      }
     }
 
-    // Calculate return
-    let return30d = null;
-    if (entryPrice && entryPrice > 0 && price30d && price30d > 0) {
-      return30d = ((price30d - entryPrice) / entryPrice) * 100;
+    // Calculate current return
+    let currentReturn = null;
+    let daysSinceEntry = null;
+    if (entryPrice && entryPrice > 0 && currentPrice && currentPrice > 0) {
+      currentReturn = ((currentPrice - entryPrice) / entryPrice) * 100;
+      const entryDt = new Date(filingDate + 'T12:00:00Z');
+      const todayDt = new Date(today + 'T12:00:00Z');
+      daysSinceEntry = Math.round((todayDt - entryDt) / (1000 * 60 * 60 * 24));
     } else {
       priceFails.push(ticker);
     }
 
     pick._entryPrice = entryPrice;
-    pick._price30d = price30d;
-    pick._return30d = return30d;
+    pick._currentPrice = currentPrice;
+    pick._currentReturn = currentReturn;
+    pick._daysSinceEntry = daysSinceEntry;
 
     if ((i + 1) % 10 === 0) {
       console.log(`  Priced ${i + 1}/${allPicks.length} picks (${finnhubCalls} API calls)`);
@@ -511,8 +527,10 @@ async function main() {
       buyValue,
       entryDate: filingDate,
       entryPrice: round2(entryPrice),
-      price30d: round2(pick._price30d),
-      return30d: round2(pick._return30d),
+      currentPrice: round2(pick._currentPrice),
+      currentReturn: round2(pick._currentReturn),
+      daysSinceEntry: pick._daysSinceEntry,
+      return30d: null,
       sector,
       marketCap,
       convictionIntensity,
@@ -563,18 +581,22 @@ async function main() {
   // ── Phase 8: Analysis ──
   console.log('\n── Phase 8: Analysis ──');
 
-  const withReturns = pickRecords.filter(p => p.return30d != null && p.entryPrice > 0);
-  const returns = withReturns.map(p => p.return30d);
-  const winners = withReturns.filter(p => p.return30d > 0);
+  const withReturns = pickRecords.filter(p => p.currentReturn != null && p.entryPrice > 0);
+  const returns = withReturns.map(p => p.currentReturn);
+  const winners = withReturns.filter(p => p.currentReturn > 0);
+  const avgDaysHeld = withReturns.length
+    ? Math.round(withReturns.reduce((s, p) => s + (p.daysSinceEntry || 0), 0) / withReturns.length)
+    : 0;
 
   const overallStats = {
     totalPicks: pickRecords.length,
     withReturns: withReturns.length,
+    avgDaysHeld,
     winRate: pct(winners.length, withReturns.length),
     avgReturn: round2(returns.length ? returns.reduce((s, v) => s + v, 0) / returns.length : 0),
     medianReturn: round2(median(returns)),
-    bestPick: withReturns.length ? withReturns.reduce((best, p) => p.return30d > best.return30d ? p : best) : null,
-    worstPick: withReturns.length ? withReturns.reduce((worst, p) => p.return30d < worst.return30d ? p : worst) : null,
+    bestPick: withReturns.length ? withReturns.reduce((best, p) => p.currentReturn > best.currentReturn ? p : best) : null,
+    worstPick: withReturns.length ? withReturns.reduce((worst, p) => p.currentReturn < worst.currentReturn ? p : worst) : null,
   };
 
   // By signal type
@@ -584,8 +606,8 @@ async function main() {
       const cat = normalizeSignal(sig);
       if (!bySignal[cat]) bySignal[cat] = { wins: 0, total: 0, returns: [] };
       bySignal[cat].total++;
-      if (pick.return30d > 0) bySignal[cat].wins++;
-      bySignal[cat].returns.push(pick.return30d);
+      if (pick.currentReturn > 0) bySignal[cat].wins++;
+      bySignal[cat].returns.push(pick.currentReturn);
     }
   }
 
@@ -604,8 +626,8 @@ async function main() {
     const tier = pick.tier;
     if (!byTier[tier]) byTier[tier] = { wins: 0, total: 0, returns: [] };
     byTier[tier].total++;
-    if (pick.return30d > 0) byTier[tier].wins++;
-    byTier[tier].returns.push(pick.return30d);
+    if (pick.currentReturn > 0) byTier[tier].wins++;
+    byTier[tier].returns.push(pick.currentReturn);
   }
 
   const tierStats = {};
@@ -624,8 +646,8 @@ async function main() {
     if (!bucket) continue;
     if (!byPriceBucket[bucket]) byPriceBucket[bucket] = { wins: 0, total: 0, returns: [] };
     byPriceBucket[bucket].total++;
-    if (pick.return30d > 0) byPriceBucket[bucket].wins++;
-    byPriceBucket[bucket].returns.push(pick.return30d);
+    if (pick.currentReturn > 0) byPriceBucket[bucket].wins++;
+    byPriceBucket[bucket].returns.push(pick.currentReturn);
   }
 
   const priceBucketStats = {};
@@ -644,8 +666,8 @@ async function main() {
     if (!bucket) continue;
     if (!byMarketCap[bucket]) byMarketCap[bucket] = { wins: 0, total: 0, returns: [] };
     byMarketCap[bucket].total++;
-    if (pick.return30d > 0) byMarketCap[bucket].wins++;
-    byMarketCap[bucket].returns.push(pick.return30d);
+    if (pick.currentReturn > 0) byMarketCap[bucket].wins++;
+    byMarketCap[bucket].returns.push(pick.currentReturn);
   }
 
   const marketCapStats = {};
@@ -663,8 +685,8 @@ async function main() {
     const sector = pick.sector || 'Unknown';
     if (!bySector[sector]) bySector[sector] = { wins: 0, total: 0, returns: [] };
     bySector[sector].total++;
-    if (pick.return30d > 0) bySector[sector].wins++;
-    bySector[sector].returns.push(pick.return30d);
+    if (pick.currentReturn > 0) bySector[sector].wins++;
+    bySector[sector].returns.push(pick.currentReturn);
   }
 
   const sectorStats = {};
@@ -682,8 +704,8 @@ async function main() {
     const regime = pick.marketRegime || 'unknown';
     if (!byRegime[regime]) byRegime[regime] = { wins: 0, total: 0, returns: [] };
     byRegime[regime].total++;
-    if (pick.return30d > 0) byRegime[regime].wins++;
-    byRegime[regime].returns.push(pick.return30d);
+    if (pick.currentReturn > 0) byRegime[regime].wins++;
+    byRegime[regime].returns.push(pick.currentReturn);
   }
 
   const regimeStats = {};
@@ -728,6 +750,7 @@ async function main() {
     period: analysis.period,
     totalPicks: overallStats.totalPicks,
     withReturns: overallStats.withReturns,
+    avgDaysHeld: overallStats.avgDaysHeld,
     winRate: overallStats.winRate,
     avgReturn: overallStats.avgReturn,
     medianReturn: overallStats.medianReturn,
@@ -740,17 +763,18 @@ async function main() {
   console.log(`Period: ${START_DATE} → ${END_DATE} (${tradingDays.length} trading days)`);
   console.log(`Filings scanned: ${totalFilingsScanned}`);
   console.log(`Picks generated: ${pickRecords.length}`);
-  console.log(`With 30d returns: ${withReturns.length}`);
+  console.log(`With current returns: ${withReturns.length}`);
+  console.log(`Avg days held: ${avgDaysHeld}`);
 
-  console.log(`\n═══ PERFORMANCE ═══`);
-  console.log(`Win rate (30d): ${overallStats.winRate}%`);
+  console.log(`\n═══ PERFORMANCE (current return, avg ${avgDaysHeld}d held) ═══`);
+  console.log(`Win rate: ${overallStats.winRate}%`);
   console.log(`Avg return: ${overallStats.avgReturn > 0 ? '+' : ''}${overallStats.avgReturn}%`);
   console.log(`Median return: ${overallStats.medianReturn > 0 ? '+' : ''}${overallStats.medianReturn}%`);
   if (overallStats.bestPick) {
-    console.log(`Best pick: $${overallStats.bestPick.ticker} +${round2(overallStats.bestPick.return30d)}%`);
+    console.log(`Best pick: $${overallStats.bestPick.ticker} +${round2(overallStats.bestPick.currentReturn)}% (${overallStats.bestPick.daysSinceEntry}d held)`);
   }
   if (overallStats.worstPick) {
-    console.log(`Worst pick: $${overallStats.worstPick.ticker} ${round2(overallStats.worstPick.return30d)}%`);
+    console.log(`Worst pick: $${overallStats.worstPick.ticker} ${round2(overallStats.worstPick.currentReturn)}% (${overallStats.worstPick.daysSinceEntry}d held)`);
   }
 
   // Signal table
@@ -813,7 +837,7 @@ async function main() {
     const liveWinRate = liveComparison.overall?.winRate ?? liveComparison.winRate ?? 'N/A';
     const liveAvgReturn = liveComparison.overall?.avgReturn ?? liveComparison.avgReturn ?? 'N/A';
     const liveN = liveComparison.overall?.withReturns ?? liveComparison.totalPicks ?? 'N/A';
-    console.log(`${'Metric'.padEnd(20)} ${'Backtest (30d)'.padStart(16)} ${'Live'.padStart(16)}`);
+    console.log(`${'Metric'.padEnd(20)} ${`Backtest (${avgDaysHeld}d avg)`.padStart(16)} ${'Live'.padStart(16)}`);
     console.log('─'.repeat(54));
     console.log(`${'Win rate'.padEnd(20)} ${(overallStats.winRate + '%').padStart(16)} ${(liveWinRate + '%').padStart(16)}`);
     console.log(`${'Avg return'.padEnd(20)} ${(overallStats.avgReturn + '%').padStart(16)} ${(liveAvgReturn + '%').padStart(16)}`);
