@@ -69,9 +69,45 @@ function classifyRegime(trailingReturn) {
 // ── SPY Data Loading ─────────────────────────────────
 
 /**
- * SCAN for meta:sp500:* keys and build sorted array of { date, close }.
+ * Fetch SPY daily closes from Yahoo Finance (no API key needed).
+ * Returns array of { date, close } sorted oldest-first.
  */
-async function loadSpyData(kv) {
+async function fetchSpyFromYahoo() {
+  const now = Math.floor(Date.now() / 1000);
+  const oneYearAgo = now - 365 * 24 * 60 * 60;
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=${oneYearAgo}&period2=${now}&interval=1d`;
+
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'Mozilla/5.0' },
+    signal: AbortSignal.timeout(15000),
+  });
+
+  if (!res.ok) throw new Error(`Yahoo Finance HTTP ${res.status}`);
+  const data = await res.json();
+
+  const result = data?.chart?.result?.[0];
+  if (!result) throw new Error('No chart data in Yahoo response');
+
+  const timestamps = result.timestamp || [];
+  const closes = result.indicators?.quote?.[0]?.close || [];
+
+  const entries = [];
+  for (let i = 0; i < timestamps.length; i++) {
+    const close = closes[i];
+    if (close == null || close <= 0) continue;
+    const date = new Date(timestamps[i] * 1000).toISOString().slice(0, 10);
+    entries.push({ date, close: Math.round(close * 100) / 100 });
+  }
+
+  entries.sort((a, b) => a.date.localeCompare(b.date));
+  return entries;
+}
+
+/**
+ * SCAN for meta:sp500:* keys and build sorted array of { date, close }.
+ * Values may be objects { price, date } or plain numbers — handle both.
+ */
+async function loadSpyDataFromRedis(kv) {
   const entries = [];
   let cursor = '0';
 
@@ -86,7 +122,15 @@ async function loadSpyData(kv) {
 
       for (let i = 0; i < keys.length; i++) {
         const date = keys[i].replace('meta:sp500:', '');
-        const close = parseFloat(values[i]);
+        const raw = values[i];
+        let close;
+
+        if (raw && typeof raw === 'object' && raw.price != null) {
+          close = parseFloat(raw.price);
+        } else {
+          close = parseFloat(raw);
+        }
+
         if (!isNaN(close) && close > 0) {
           entries.push({ date, close });
         }
@@ -95,6 +139,55 @@ async function loadSpyData(kv) {
   } while (cursor !== '0');
 
   entries.sort((a, b) => a.date.localeCompare(b.date));
+  return entries;
+}
+
+/**
+ * Load SPY data: try Redis first, backfill from Finnhub if sparse.
+ * Caches fetched prices to Redis for future runs.
+ */
+async function loadSpyData(kv) {
+  let entries = await loadSpyDataFromRedis(kv);
+  console.log(`  From Redis: ${entries.length} SPY data points`);
+
+  if (entries.length < 25) {
+    console.log('  Backfilling from Yahoo Finance (requesting ~1 year of SPY data)...');
+    try {
+      const prices = await fetchSpyFromYahoo();
+      if (prices && prices.length > 0) {
+        console.log(`  Fetched ${prices.length} candles from Yahoo Finance`);
+
+        // Merge: API prices fill gaps, existing Redis values take precedence
+        const existingDates = new Set(entries.map(e => e.date));
+        const newEntries = [];
+
+        for (const p of prices) {
+          if (!existingDates.has(p.date) && p.close > 0) {
+            newEntries.push({ date: p.date, close: p.close });
+          }
+        }
+
+        // Cache new entries to Redis
+        if (newEntries.length > 0) {
+          console.log(`  Caching ${newEntries.length} new SPY prices to Redis...`);
+          const BATCH = 50;
+          for (let i = 0; i < newEntries.length; i += BATCH) {
+            const batch = newEntries.slice(i, i + BATCH);
+            const pipeline = kv.pipeline();
+            for (const e of batch) {
+              pipeline.set(`meta:sp500:${e.date}`, { price: e.close, date: e.date });
+            }
+            await pipeline.exec();
+          }
+        }
+
+        entries = [...entries, ...newEntries].sort((a, b) => a.date.localeCompare(b.date));
+      }
+    } catch (err) {
+      console.warn('  Backfill failed:', err.message);
+    }
+  }
+
   return entries;
 }
 
