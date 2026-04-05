@@ -442,6 +442,238 @@
       .timeframes { flex-direction: column; }
     }
 
+    /* ── Analysis sections ── */
+    .analysis-section {
+      margin-bottom: 32px;
+    }
+    .analysis-section .section-heading {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .analysis-section .section-subtext {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+    .analysis-section .no-data {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      color: var(--ink-faint);
+      font-size: 14px;
+    }
+
+    /* Signal report card table */
+    .signal-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .signal-table th {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+    }
+    .signal-table th:nth-child(n+2) { text-align: right; }
+    .signal-table td {
+      padding: 12px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .signal-table td:nth-child(n+2) {
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .signal-table tr:last-child td { border-bottom: none; }
+    .signal-table .signal-name { font-weight: 500; color: var(--ink); }
+    .wr-green { color: var(--green); font-weight: 500; }
+    .wr-amber { color: var(--accent); font-weight: 500; }
+    .wr-red { color: var(--red); font-weight: 500; }
+
+    /* Tier cards */
+    .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .tier-card {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .tier-card .tier-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .tier-card .tier-value {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+    .tier-card .tier-label {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+    .tier-card .tier-stats {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    /* Patterns / day table */
+    .day-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .day-table th {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 10px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+    }
+    .day-table th:nth-child(n+2) { text-align: right; }
+    .day-table td {
+      padding: 12px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .day-table td:nth-child(n+2) {
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .day-table tr:last-child td { border-bottom: none; }
+    .sample-size { color: var(--ink-faint); font-size: 12px; }
+
+    /* Decay curve */
+    .decay-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .decay-pill {
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 14px 20px;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+    }
+    .decay-pill .decay-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+    .decay-pill .decay-avg {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+    }
+    .decay-pill .decay-wr {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Soft gate ── */
+    .gated-section {
+      position: relative;
+      max-height: 120px;
+      overflow: hidden;
+    }
+    .gated-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: linear-gradient(transparent 0%, var(--cream) 90%);
+      pointer-events: none;
+    }
+    .gate-capture {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 24px;
+      margin-top: -40px;
+    }
+    .gate-capture p {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+    }
+    .gate-capture form {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .gate-capture input[type="email"] {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 14px;
+      background: var(--white);
+      outline: none;
+    }
+    .gate-capture input[type="email"]:focus { border-color: var(--green); }
+    .gate-capture button {
+      background: var(--ink);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .gate-capture button:hover { background: var(--green); }
+
+    @media (max-width: 600px) {
+      .tier-cards { grid-template-columns: 1fr; }
+      .decay-row { flex-direction: column; }
+    }
+
     /* ── Animations ── */
     @keyframes fade-up {
       from { opacity: 0; transform: translateY(12px); }
@@ -678,7 +910,32 @@
           </div>`;
         }
 
+        // ── New analysis sections ──
+        html += renderSignalReportCard(data.signalReportCard);
+        html += renderTierPerformance(data.tierPerformance);
+        html += renderPatterns(data.seasonality);
+        html += renderDecayCurve(data.decayCurve);
+
         app.innerHTML = html;
+
+        // Wire up gate capture forms
+        app.querySelectorAll('.gate-capture form').forEach(form => {
+          form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            if (!email) return;
+            try {
+              const r = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+              });
+              if (r.ok) {
+                this.innerHTML = '<p style="color:var(--green);font-weight:600;">You\'re in! Refresh to unlock.</p>';
+              }
+            } catch (_) {}
+          });
+        });
 
       } catch (err) {
         // API failed — just keep the launch state visible, no error shown
@@ -712,6 +969,199 @@
       const d = document.createElement('div');
       d.textContent = str;
       return d.innerHTML;
+    }
+
+    function gateOverlay() {
+      return `<div class="gate-capture">
+        <p>Subscribe free to see the full breakdown</p>
+        <form>
+          <input type="email" placeholder="you@example.com" required>
+          <button type="submit">Unlock</button>
+        </form>
+      </div>`;
+    }
+
+    function wrClass(rate) {
+      if (rate == null) return '';
+      if (rate > 60) return 'wr-green';
+      if (rate >= 40) return 'wr-amber';
+      return 'wr-red';
+    }
+
+    function fmtReturn(val) {
+      if (val == null) return '—';
+      return (val > 0 ? '+' : '') + val + '%';
+    }
+
+    function renderSignalReportCard(data) {
+      let h = '<div class="analysis-section fade-up">';
+      h += '<div class="section-heading">Which signals predict returns?</div>';
+      h += '<div class="section-subtext">Win rate by insider signal type, based on 30-day returns</div>';
+
+      if (!data || !Array.isArray(data.signals) || data.signals.length === 0) {
+        h += '<div class="no-data">Not enough data yet</div></div>';
+        return h;
+      }
+
+      const sorted = [...data.signals].sort((a, b) => (b.winRate || 0) - (a.winRate || 0));
+
+      h += '<table class="signal-table"><thead><tr>';
+      h += '<th>Signal</th><th>Picks</th><th>Win Rate</th><th>Avg Return</th>';
+      h += '</tr></thead><tbody>';
+
+      // First 2 rows ungated
+      sorted.slice(0, 2).forEach(s => {
+        h += `<tr>
+          <td class="signal-name">${esc(s.signal || s.name)}</td>
+          <td>${s.picks || s.count || 0}</td>
+          <td class="${wrClass(s.winRate)}">${s.winRate != null ? s.winRate + '%' : '—'}</td>
+          <td>${fmtReturn(s.avgReturn)}</td>
+        </tr>`;
+      });
+      h += '</tbody></table>';
+
+      // Remaining rows gated
+      if (sorted.length > 2) {
+        h += '<div class="gated-section"><table class="signal-table"><tbody>';
+        sorted.slice(2).forEach(s => {
+          h += `<tr>
+            <td class="signal-name">${esc(s.signal || s.name)}</td>
+            <td>${s.picks || s.count || 0}</td>
+            <td class="${wrClass(s.winRate)}">${s.winRate != null ? s.winRate + '%' : '—'}</td>
+            <td>${fmtReturn(s.avgReturn)}</td>
+          </tr>`;
+        });
+        h += '</tbody></table></div>';
+        h += gateOverlay();
+      }
+
+      h += '</div>';
+      return h;
+    }
+
+    function renderTierPerformance(data) {
+      let h = '<div class="analysis-section fade-up">';
+      h += '<div class="section-heading">How each tier performs</div>';
+
+      if (!data || !data.tiers || Object.keys(data.tiers).length === 0) {
+        h += '<div class="no-data">Not enough data yet</div></div>';
+        return h;
+      }
+
+      const tierOrder = ['strong_signal', 'top_pick', 'featured'];
+      const tierLabels = { strong_signal: 'Strong Signal', top_pick: 'Top Pick', featured: 'Featured' };
+
+      h += '<div class="tier-cards">';
+      tierOrder.forEach(key => {
+        const t = data.tiers[key];
+        if (!t) return;
+        const wrCls = t.winRate > 60 ? 'wr-green' : t.winRate >= 40 ? 'wr-amber' : 'wr-red';
+        h += `<div class="tier-card">
+          <div class="tier-name">${tierLabels[key] || key}</div>
+          <div class="tier-value ${wrCls}">${t.winRate != null ? t.winRate + '%' : '—'}</div>
+          <div class="tier-label">win rate</div>
+          <div class="tier-stats">${t.picks || 0} picks &middot; avg ${fmtReturn(t.avgReturn)}</div>
+        </div>`;
+      });
+      h += '</div>';
+
+      // Price bucket breakdown (soft-gated)
+      if (data.priceBuckets && data.priceBuckets.length > 0) {
+        h += '<div class="gated-section"><table class="signal-table"><thead><tr>';
+        h += '<th>Price Bucket</th><th>Picks</th><th>Win Rate</th><th>Avg Return</th>';
+        h += '</tr></thead><tbody>';
+        data.priceBuckets.forEach(b => {
+          h += `<tr>
+            <td class="signal-name">${esc(b.bucket || b.label)}</td>
+            <td>${b.picks || b.count || 0}</td>
+            <td class="${wrClass(b.winRate)}">${b.winRate != null ? b.winRate + '%' : '—'}</td>
+            <td>${fmtReturn(b.avgReturn)}</td>
+          </tr>`;
+        });
+        h += '</tbody></table></div>';
+        h += gateOverlay();
+      }
+
+      h += '</div>';
+      return h;
+    }
+
+    function renderPatterns(data) {
+      let h = '<div class="analysis-section fade-up">';
+      h += '<div class="section-heading">When insider buys work best</div>';
+
+      if (!data || !data.byDay || data.byDay.length === 0) {
+        h += '<div class="no-data">Not enough data yet</div></div>';
+        return h;
+      }
+
+      const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+      const sorted = dayOrder.map(d => data.byDay.find(r => r.day === d)).filter(Boolean);
+
+      // Monday + Tuesday ungated
+      const ungated = sorted.slice(0, 2);
+      const gated = sorted.slice(2);
+
+      h += '<table class="day-table"><thead><tr>';
+      h += '<th>Day</th><th>Win Rate</th><th>Avg Return</th><th></th>';
+      h += '</tr></thead><tbody>';
+      ungated.forEach(d => {
+        h += `<tr>
+          <td>${esc(d.day)}</td>
+          <td class="${wrClass(d.winRate)}">${d.winRate != null ? d.winRate + '%' : '—'}</td>
+          <td>${fmtReturn(d.avgReturn)}</td>
+          <td class="sample-size">n=${d.picks || d.count || 0}</td>
+        </tr>`;
+      });
+      h += '</tbody></table>';
+
+      if (gated.length > 0) {
+        h += '<div class="gated-section"><table class="day-table"><tbody>';
+        gated.forEach(d => {
+          h += `<tr>
+            <td>${esc(d.day)}</td>
+            <td class="${wrClass(d.winRate)}">${d.winRate != null ? d.winRate + '%' : '—'}</td>
+            <td>${fmtReturn(d.avgReturn)}</td>
+            <td class="sample-size">n=${d.picks || d.count || 0}</td>
+          </tr>`;
+        });
+        h += '</tbody></table></div>';
+        h += gateOverlay();
+      }
+
+      h += '</div>';
+      return h;
+    }
+
+    function renderDecayCurve(data) {
+      let h = '<div class="analysis-section fade-up">';
+      h += '<div class="section-heading">Performance over time</div>';
+
+      if (!data || (!data.checkpoints && !data.avg7d && !data.avg30d && !data.avg90d)) {
+        h += '<div class="no-data">Not enough data yet</div></div>';
+        return h;
+      }
+
+      // Support both flat keys and checkpoints array
+      const points = data.checkpoints || [
+        { label: '7-Day', avg: data.avg7d, winRate: data.winRate7d },
+        { label: '30-Day', avg: data.avg30d, winRate: data.winRate30d },
+        { label: '90-Day', avg: data.avg90d, winRate: data.winRate90d },
+      ].filter(p => p.avg != null);
+
+      h += '<div class="decay-row">';
+      points.forEach(p => {
+        const cls = p.avg > 0 ? 'positive' : 'negative';
+        h += `<div class="decay-pill">
+          <div class="decay-label">${esc(p.label)}</div>
+          <div class="decay-avg ${cls}">${fmtReturn(p.avg)}</div>
+          ${p.winRate != null ? `<div class="decay-wr">${p.winRate}% win rate</div>` : ''}
+        </div>`;
+      });
+      h += '</div>';
+
+      h += '</div>';
+      return h;
     }
 
     loadScorecard();

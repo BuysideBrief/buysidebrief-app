@@ -7,6 +7,7 @@
  */
 
 const { generateScorecard, getAllCeoProfiles } = require('../lib/performance-tracker');
+const { getRedisOrNoop } = require('../lib/redis');
 
 module.exports = async function handler(req, res) {
   // CORS for the frontend
@@ -14,8 +15,17 @@ module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=1800');
 
   try {
-    const scorecard = await generateScorecard();
-    const ceoProfiles = await getAllCeoProfiles();
+    const redis = getRedisOrNoop();
+
+    const [scorecard, ceoProfiles, signalReportCard, tierPerformance, decayCurve, seasonality, funnel] = await Promise.all([
+      generateScorecard(),
+      getAllCeoProfiles(),
+      redis.get('meta:signal-report-card'),
+      redis.get('meta:tier-performance'),
+      redis.get('meta:decay-curve'),
+      redis.get('meta:seasonality'),
+      redis.get('meta:funnel'),
+    ]);
 
     // Only include CEOs with return data
     const ceoData = ceoProfiles
@@ -51,6 +61,11 @@ module.exports = async function handler(req, res) {
       success: true,
       scorecard,
       ceoProfiles: ceoData,
+      signalReportCard: signalReportCard || null,
+      tierPerformance: tierPerformance || null,
+      decayCurve: decayCurve || null,
+      seasonality: seasonality || null,
+      funnel: funnel || null,
       updatedAt: new Date().toISOString(),
     });
 
