@@ -21,6 +21,7 @@ const { rotateHeadlinePick, recordHeadlinePick } = require('../lib/recently-feat
 const { dampenRepeatInsiders } = require('../lib/pick-filters');
 const { storeIssue } = require('./archive');
 const { getRedisOrNoop } = require('../lib/redis');
+const { getCompanyProfileBatch } = require('../lib/company-profile');
 
 module.exports = async function handler(req, res) {
   const isDryRun = req.query.dry === 'true';
@@ -249,6 +250,27 @@ module.exports = async function handler(req, res) {
       }
     } catch (e) {
       console.error('  Historical store failed (non-fatal):', e.message);
+    }
+
+    // ── Step 3f: Fetch company profiles ──
+    console.log('[3f/10] Fetching company profiles...');
+    try {
+      const tickers = [...new Set(scored.map(f => f.ticker).filter(Boolean))];
+      const profiles = await getCompanyProfileBatch(tickers);
+
+      for (const filing of scored) {
+        const profile = profiles.get(filing.ticker?.toUpperCase());
+        if (profile) {
+          filing.sector = profile.sector;
+          filing.marketCap = profile.marketCap;
+          filing.companyExchange = profile.exchange;
+          filing.convictionIntensity = filing.summary?.totalBuyValue && profile.marketCap
+            ? (filing.summary.totalBuyValue / (profile.marketCap * 1_000_000)) * 100
+            : null;
+        }
+      }
+    } catch (e) {
+      console.error('  Company profile fetch failed (non-fatal):', e.message);
     }
 
     // ── Step 4: Enrich top picks with context ──

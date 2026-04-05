@@ -1,0 +1,375 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+:root {
+  --cream: #FAF8F3;
+  --cream-dark: #F0EDE5;
+  --ink: #2C2A25;
+  --ink-muted: #7A7A72;
+  --ink-faint: #B0A99F;
+  --green: #1A7A4C;
+  --green-bg: #E8F5ED;
+  --green-dark: #145E3A;
+  --amber: #B8860B;
+  --amber-bg: #FFF5E0;
+  --red: #C0392B;
+  --red-bg: #FDEAEA;
+  --rule: #E0DCD3;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', 'SF Mono', monospace;
+}
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: var(--sans);
+  color: var(--ink);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px 12px;
+  border-bottom: 2px solid var(--ink);
+}
+.card-brand {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+}
+.card-brand em { color: var(--green); font-style: italic; }
+.card-date {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+.card-body { padding: 20px 24px 16px; }
+.card-tier {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin-bottom: 12px;
+}
+.tier-strong { background: var(--amber-bg); color: var(--amber); }
+.tier-top { background: var(--green-bg); color: var(--green); }
+.card-ticker-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.card-ticker {
+  font-family: var(--mono);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -1px;
+  color: var(--ink);
+}
+.card-company {
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+.card-score-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+.card-score-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.card-score-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--cream-dark);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.card-score-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+.card-score-num {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  min-width: 40px;
+  text-align: right;
+}
+.card-divider {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 0 0 16px;
+}
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+  margin-bottom: 16px;
+}
+.stat-item {}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.stat-value {
+  font-size: 15px;
+  font-weight: 500;
+}
+.stat-value.buy { color: var(--green); }
+.stat-value.sell { color: var(--red); }
+.card-blurb {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+  border-left: 3px solid var(--green);
+  padding-left: 14px;
+  margin: 16px 0;
+}
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--cream-dark);
+  border-top: 1px solid var(--rule);
+}
+.card-cta {
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+.card-cta a {
+  color: var(--green);
+  font-weight: 500;
+  text-decoration: none;
+}
+.card-url {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+
+.controls {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--color-background-secondary, #f5f5f5);
+  border-radius: 8px;
+}
+.controls h3 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 12px;
+  color: var(--color-text-primary);
+}
+.field {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.field label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  min-width: 80px;
+}
+.field input, .field select {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 13px;
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 4px;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-family: var(--mono);
+}
+.field textarea {
+  flex: 1;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 4px;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-family: var(--serif);
+  resize: vertical;
+  min-height: 50px;
+}
+.update-btn {
+  margin-top: 8px;
+  padding: 6px 16px;
+  background: var(--green, #1A7A4C);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.update-btn:hover { opacity: 0.9; }
+</style>
+
+<div class="card" id="signal-card">
+  <div class="card-header">
+    <span class="card-brand">Buyside <em>Brief</em></span>
+    <span class="card-date">Mar 31, 2026</span>
+  </div>
+  <div class="card-body">
+    <span class="card-tier tier-strong">Strong Signal</span>
+    <div class="card-ticker-row">
+      <span class="card-ticker">CRWD</span>
+      <span class="card-company">CrowdStrike Holdings</span>
+    </div>
+    <div class="card-score-row">
+      <span class="card-score-label">Score</span>
+      <div class="card-score-bar">
+        <div class="card-score-fill" style="width:85%;background:linear-gradient(90deg, var(--green), var(--amber))"></div>
+      </div>
+      <span class="card-score-num">127</span>
+    </div>
+    <hr class="card-divider">
+    <div class="card-stats">
+      <div class="stat-item">
+        <div class="stat-label">Insider</div>
+        <div class="stat-value">George Kurtz</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Role</div>
+        <div class="stat-value">CEO</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Action</div>
+        <div class="stat-value buy">BUY — $2.4M</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">52-wk range</div>
+        <div class="stat-value">Near low</div>
+      </div>
+    </div>
+    <div class="card-blurb">
+      "A CEO buying $2.4M of his own stock near a 52-week low isn't a casual move. That's someone who sees the quarterly numbers putting real money where their mouth is."
+    </div>
+  </div>
+  <div class="card-footer">
+    <span class="card-cta">Free daily signals → <a href="#">buysidebrief.com</a></span>
+    <span class="card-url">buysidebrief.com</span>
+  </div>
+</div>
+
+<div class="controls">
+  <h3>Customize this card</h3>
+  <div class="field">
+    <label>Ticker</label>
+    <input id="f-ticker" value="CRWD">
+  </div>
+  <div class="field">
+    <label>Company</label>
+    <input id="f-company" value="CrowdStrike Holdings">
+  </div>
+  <div class="field">
+    <label>Score</label>
+    <input id="f-score" type="number" value="127">
+  </div>
+  <div class="field">
+    <label>Tier</label>
+    <select id="f-tier">
+      <option value="strong" selected>Strong Signal (≥100)</option>
+      <option value="top">Top Pick (75–99)</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Insider</label>
+    <input id="f-insider" value="George Kurtz">
+  </div>
+  <div class="field">
+    <label>Role</label>
+    <input id="f-role" value="CEO">
+  </div>
+  <div class="field">
+    <label>Action</label>
+    <select id="f-action">
+      <option value="buy" selected>BUY</option>
+      <option value="sell">SELL</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Amount</label>
+    <input id="f-amount" value="$2.4M">
+  </div>
+  <div class="field">
+    <label>52-wk range</label>
+    <input id="f-range" value="Near low">
+  </div>
+  <div class="field">
+    <label>Date</label>
+    <input id="f-date" value="Mar 31, 2026">
+  </div>
+  <div class="field">
+    <label>Blurb</label>
+    <textarea id="f-blurb">A CEO buying $2.4M of his own stock near a 52-week low isn't a casual move. That's someone who sees the quarterly numbers putting real money where their mouth is.</textarea>
+  </div>
+  <button class="update-btn" onclick="updateCard()">Update card</button>
+</div>
+
+<script>
+function updateCard() {
+  const ticker = document.getElementById('f-ticker').value;
+  const company = document.getElementById('f-company').value;
+  const score = parseInt(document.getElementById('f-score').value) || 0;
+  const tier = document.getElementById('f-tier').value;
+  const insider = document.getElementById('f-insider').value;
+  const role = document.getElementById('f-role').value;
+  const action = document.getElementById('f-action').value;
+  const amount = document.getElementById('f-amount').value;
+  const range52 = document.getElementById('f-range').value;
+  const date = document.getElementById('f-date').value;
+  const blurb = document.getElementById('f-blurb').value;
+
+  const card = document.getElementById('signal-card');
+  card.querySelector('.card-date').textContent = date;
+  card.querySelector('.card-ticker').textContent = ticker;
+  card.querySelector('.card-company').textContent = company;
+  card.querySelector('.card-score-num').textContent = score;
+
+  const pct = Math.min(score / 150 * 100, 100);
+  card.querySelector('.card-score-fill').style.width = pct + '%';
+
+  const tierEl = card.querySelector('.card-tier');
+  if (tier === 'strong') {
+    tierEl.textContent = 'Strong Signal';
+    tierEl.className = 'card-tier tier-strong';
+  } else {
+    tierEl.textContent = 'Top Pick';
+    tierEl.className = 'card-tier tier-top';
+  }
+
+  const statVals = card.querySelectorAll('.stat-value');
+  statVals[0].textContent = insider;
+  statVals[1].textContent = role;
+  statVals[2].textContent = (action === 'buy' ? 'BUY' : 'SELL') + ' — ' + amount;
+  statVals[2].className = 'stat-value ' + action;
+  statVals[3].textContent = range52;
+
+  card.querySelector('.card-blurb').textContent = '"' + blurb.replace(/^"|"$/g, '') + '"';
+}
+</script>
