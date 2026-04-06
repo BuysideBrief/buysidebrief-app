@@ -6,3 +6,5 @@ output/
 **/.DS_Store
 buysidebrief_supporting_docs/
 project_management/
+.vercel
+.env*.local

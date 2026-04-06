@@ -46,6 +46,7 @@
     a:hover { color: var(--ink); }
 
     .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+    .container.wide { max-width: 1160px; }
 
     /* ── Nav ── */
     nav {
@@ -434,7 +435,44 @@
     }
     footer p { font-size: 12px; color: var(--ink-faint); line-height: 1.7; }
 
+    /* ── Two-column scorecard layout ── */
+    .scorecard-columns {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      align-items: start;
+    }
+    .scorecard-col-left { min-width: 0; }
+    .scorecard-col-right { min-width: 0; }
+
+    /* ── See more toggle ── */
+    .hidden-pick { display: none; }
+    .see-more-btn {
+      display: inline-block;
+      background: var(--cream);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      margin-top: 12px;
+    }
+    .see-more-btn:hover {
+      background: var(--ink);
+      color: var(--cream);
+    }
+
     /* ── Responsive ── */
+    @media (max-width: 899px) {
+      .scorecard-columns {
+        grid-template-columns: 1fr;
+      }
+      .scorecard-col-right { order: -1; }
+    }
     @media (max-width: 600px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .pick-row { grid-template-columns: 70px 1fr 80px; }
@@ -700,7 +738,7 @@
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container wide">
 
     <!-- Header -->
     <header>
@@ -848,10 +886,16 @@
           ${sc.sp500Return !== null && sc.sp500Return !== undefined ? tfPill('S&P 500', sc.sp500Return) : ''}
         </div>`;
 
-        // Recent picks
+        // ── Two-column layout: left = picks/CEOs, right = data cards ──
+        let leftCol = '';
+        let rightCol = '';
+
+        // Recent picks (left column, collapsible)
         const picksWithReturns = sc.recentPicks.filter(p => p.currentReturn !== null && p.currentReturn !== undefined);
+        const VISIBLE_PICKS = 3;
         if (picksWithReturns.length > 0) {
-          html += `<div class="picks-table fade-up d3">
+          const hiddenPickCount = Math.max(0, picksWithReturns.length - VISIBLE_PICKS);
+          leftCol += `<div class="picks-table fade-up d3">
             <div class="section-header">
               <h2>Recent Picks</h2>
               <span class="count">${picksWithReturns.length} picks</span>
@@ -862,8 +906,8 @@
               <div style="text-align:right;">Return</div>
               <div style="text-align:right;">Score</div>
             </div>
-            ${picksWithReturns.map(p => `
-              <div class="pick-row">
+            ${picksWithReturns.map((p, i) => `
+              <div class="pick-row${i >= VISIBLE_PICKS ? ' hidden-pick' : ''}" data-list="recent-picks">
                 <div class="pick-ticker"><a href="https://www.tradingview.com/symbols/${esc(p.ticker)}/" target="_blank" style="color:#1a7a4c;text-decoration:none;">$${esc(p.ticker)}</a></div>
                 <div class="pick-info">
                   <div class="name">${esc(p.ownerName)}</div>
@@ -875,18 +919,21 @@
                 <div class="pick-score">${p.score}</div>
               </div>
             `).join('')}
+            ${hiddenPickCount > 0 ? `<button class="see-more-btn" data-target="recent-picks" data-label="recent picks" data-total="${picksWithReturns.length}">See all ${picksWithReturns.length} recent picks</button>` : ''}
           </div>`;
         }
 
-        // CEO profiles
+        // CEO profiles (left column, collapsible)
+        const VISIBLE_CEOS = 3;
         if (ceos.length > 0) {
-          html += `<div class="ceo-grid fade-up d4">
+          const hiddenCeoCount = Math.max(0, ceos.length - VISIBLE_CEOS);
+          leftCol += `<div class="ceo-grid fade-up d4">
             <div class="section-header">
               <h2>Insider Track Records</h2>
               <span class="count">${ceos.length} insiders tracked</span>
             </div>
-            ${ceos.map(ceo => `
-              <div class="ceo-card">
+            ${ceos.map((ceo, i) => `
+              <div class="ceo-card${i >= VISIBLE_CEOS ? ' hidden-pick' : ''}" data-list="ceo-picks">
                 <div class="top">
                   <div class="name">${esc(ceo.ownerName)}</div>
                   <span class="title-badge">${esc(ceo.officerTitle)}</span>
@@ -907,16 +954,38 @@
                 </div>` : ''}
               </div>
             `).join('')}
+            ${hiddenCeoCount > 0 ? `<button class="see-more-btn" data-target="ceo-picks" data-label="CEO picks" data-total="${ceos.length}">See all ${ceos.length} CEO picks</button>` : ''}
           </div>`;
         }
 
-        // ── New analysis sections ──
-        html += renderSignalReportCard(data.signalReportCard);
-        html += renderTierPerformance(data.tierPerformance);
-        html += renderPatterns(data.seasonality);
-        html += renderDecayCurve(data.decayCurve);
+        // Data cards (right column)
+        rightCol += renderSignalReportCard(data.signalReportCard);
+        rightCol += renderTierPerformance(data.tierPerformance);
+        rightCol += renderPatterns(data.seasonality);
+        rightCol += renderDecayCurve(data.decayCurve);
+
+        // Assemble two-column grid (only if there's content for both)
+        if (leftCol || rightCol) {
+          html += `<div class="scorecard-columns">
+            <div class="scorecard-col-left">${leftCol}</div>
+            <div class="scorecard-col-right">${rightCol}</div>
+          </div>`;
+        }
 
         app.innerHTML = html;
+
+        // Wire up "See more" toggle buttons
+        app.querySelectorAll('.see-more-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const target = this.dataset.target;
+            const total = this.dataset.total;
+            const label = this.dataset.label;
+            const items = app.querySelectorAll(`[data-list="${target}"].hidden-pick`);
+            const isExpanded = this.classList.toggle('expanded');
+            items.forEach(el => { el.style.display = isExpanded ? '' : 'none'; });
+            this.textContent = isExpanded ? 'Show less' : `See all ${total} ${label}`;
+          });
+        });
 
         // Wire up gate capture forms
         app.querySelectorAll('.gate-capture form').forEach(form => {
