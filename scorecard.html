@@ -447,6 +447,7 @@
 
     /* ── See more toggle ── */
     .hidden-pick { display: none; }
+    .hidden-pick.hidden-pick-visible { display: block; }
     .see-more-btn {
       display: inline-block;
       background: var(--cream);
@@ -982,7 +983,7 @@
             const label = this.dataset.label;
             const items = app.querySelectorAll(`[data-list="${target}"].hidden-pick`);
             const isExpanded = this.classList.toggle('expanded');
-            items.forEach(el => { el.style.display = isExpanded ? '' : 'none'; });
+            items.forEach(el => { el.classList.toggle('hidden-pick-visible', isExpanded); });
             this.textContent = isExpanded ? 'Show less' : `See all ${total} ${label}`;
           });
         });
