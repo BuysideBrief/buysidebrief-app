@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://buysidebrief.com/sitemap.xml
+Sitemap: https://www.buysidebrief.com/sitemap.xml

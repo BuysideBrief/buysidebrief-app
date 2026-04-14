@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const store = new BlogStore(redis);
-    const xml = await store.generateSitemap('https://buysidebrief.com');
+    const xml = await store.generateSitemap('https://www.buysidebrief.com');
 
     res.setHeader('Content-Type', 'application/xml');
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
