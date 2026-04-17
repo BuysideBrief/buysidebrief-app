@@ -34,7 +34,8 @@
   "rewrites": [
     { "source": "/blog", "destination": "/api/blog" },
     { "source": "/blog/:slug", "destination": "/api/blog/:slug" },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/research/:slug", "destination": "/research/:slug.html" }
   ],
   "headers": [
     {
