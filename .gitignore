@@ -8,3 +8,4 @@ buysidebrief_supporting_docs/
 project_management/
 .vercel
 .env*.local
+scripts/research/**/cache/

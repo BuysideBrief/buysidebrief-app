@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research — Buyside Brief</title>
+  <meta name="description" content="Public research on insider trading signals — how Buyside Brief decides what to score and what to ignore. Full methodology, reproducible from public SEC data.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.buysidebrief.com/research">
+  <meta property="og:title" content="Research — Buyside Brief">
+  <meta property="og:description" content="Public research on insider trading signals. Full methodology, reproducible from public SEC data.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.buysidebrief.com/research">
+  <meta property="og:image" content="https://www.buysidebrief.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Research — Buyside Brief">
+  <meta name="twitter:description" content="Public research on insider trading signals. Full methodology, reproducible from public SEC data.">
+  <meta name="twitter:image" content="https://www.buysidebrief.com/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #faf8f4;
+      --cream-dark: #f2efe8;
+      --ink: #1a1a1a;
+      --ink-light: #3d3d3d;
+      --ink-muted: #7a7a7a;
+      --ink-faint: #b0a99f;
+      --green: #1a7a4c;
+      --green-bg: #e8f5ee;
+      --red: #c0392b;
+      --accent: #d4a853;
+      --rule: #e0dbd3;
+      --white: #ffffff;
+      --serif: 'Instrument Serif', 'Georgia', serif;
+      --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { color: var(--ink); }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Nav ── */
+    nav {
+      border-bottom: 1px solid var(--rule);
+      padding: 16px 0;
+    }
+    nav .inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav .logo {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav .logo em { color: var(--green); font-style: italic; }
+    nav .links { display: flex; gap: 20px; font-size: 14px; }
+    nav .links a { color: var(--ink-muted); text-decoration: none; }
+    nav .links a:hover { color: var(--green); }
+    nav .links a.active { color: var(--green); font-weight: 600; }
+
+    /* ── Header ── */
+    header {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+    header h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    header h1 em { color: var(--green); font-style: italic; }
+    header .subtitle {
+      font-size: 17px;
+      color: var(--ink-light);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* ── Test card list ── */
+    .tests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 24px 0 8px;
+    }
+    .test-card {
+      display: block;
+      background: var(--white);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 24px 28px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .test-card:hover {
+      border-color: var(--green);
+      transform: translateY(-1px);
+      color: var(--ink);
+    }
+    .test-card .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .test-card h2 {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .test-card h2 em { color: var(--green); font-style: italic; }
+    .test-card .card-lede {
+      color: var(--ink-light);
+      font-size: 15px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .test-card .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+    .test-card .card-meta .tag {
+      background: var(--cream-dark);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--ink-light);
+    }
+    .test-card .card-meta .result-neg {
+      color: var(--ink-muted);
+    }
+    .test-card .card-meta .result-pos {
+      color: var(--green);
+    }
+    .test-card .card-arrow {
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 13px;
+      margin-top: 14px;
+      display: inline-block;
+    }
+
+    /* ── Placeholder card (future tests) ── */
+    .placeholder-card {
+      background: transparent;
+      border: 1px dashed var(--rule);
+      border-radius: 10px;
+      padding: 24px 28px;
+      text-align: center;
+      color: var(--ink-faint);
+      font-size: 14px;
+    }
+    .placeholder-card strong { color: var(--ink-muted); }
+
+    /* ── About research block ── */
+    .about-research {
+      background: var(--cream-dark);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin: 32px 0 8px;
+    }
+    .about-research h2 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .about-research h2 em { color: var(--green); font-style: italic; }
+    .about-research p {
+      color: var(--ink-light);
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+
+    /* ── Bottom CTA (site-native) ── */
+    .bottom-cta {
+      text-align: center;
+      padding: 48px 0 56px;
+    }
+    .bottom-cta h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .bottom-cta h2 em { color: var(--green); font-style: italic; }
+    .bottom-cta p { color: var(--ink-muted); margin-bottom: 20px; }
+    .bottom-cta a.cta {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .bottom-cta a.cta:hover { background: var(--green); transform: translateY(-1px); }
+    .bottom-cta .back-link {
+      display: block;
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    /* ── Footer ── */
+    footer.site-footer {
+      border-top: 1px solid var(--rule);
+      padding: 24px 0 48px;
+      text-align: center;
+    }
+    footer.site-footer p { font-size: 12px; color: var(--ink-faint); line-height: 1.7; }
+
+    @media (max-width: 600px) {
+      .test-card { padding: 20px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="inner">
+      <a href="/" class="logo">Buyside <em>Brief</em></a>
+      <div class="links">
+        <a href="/">Home</a>
+        <a href="/scorecard.html">Scorecard</a>
+        <a href="/archive.html">Archive</a>
+        <a href="/research" class="active">Research</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <h1>Research</h1>
+      <p class="subtitle">
+        How we decide what signals to include &mdash; and what to leave out. Every study below is
+        reproducible from public SEC data, with full methodology and sample sizes in plain view.
+      </p>
+    </header>
+
+    <!-- Test list -->
+    <div class="tests-list">
+
+      <!-- Published test: new-exec-signal-2026-04 -->
+      <a href="/research/new-exec-signal-2026-04" class="test-card">
+        <div class="eyebrow">April 2026 &middot; Signal test</div>
+        <h2>Do insider buys from <em>newly-appointed</em> executives outperform?</h2>
+        <p class="card-lede">
+          Twelve months of Form 4 purchases cross-referenced against 8-K Item 5.02 appointments.
+          Three cohorts, two variants, forward returns vs. SPY at 30 / 60 / 90 days.
+        </p>
+        <div class="card-meta">
+          <span class="tag">SEC Form 4</span>
+          <span class="tag">8-K Item 5.02</span>
+          <span>N<sub>cohort 1</sub> = 92 &middot; N<sub>cohort 2</sub> = 1,197</span>
+          <span class="result-neg">Result: no edge (p=0.82)</span>
+        </div>
+        <span class="card-arrow">Read the test &rarr;</span>
+      </a>
+
+      <!-- Placeholder: future tests -->
+      <div class="placeholder-card">
+        <strong>More research coming</strong><br>
+        Next up: cluster buying as a standalone signal, 52-week-low timing, and repeat-buyer reliability.
+      </div>
+
+    </div>
+
+    <!-- About research -->
+    <div class="about-research">
+      <h2>How this <em>works</em></h2>
+      <p>
+        Each research post here tests a specific hypothesis about insider buying &mdash; usually one
+        that&rsquo;s either a candidate for the daily scoring model or a claim we&rsquo;ve seen
+        repeated without evidence. We publish both the positive and negative results. Methodology
+        and sample sizes are front and center; anything ambiguous is flagged, not hidden.
+      </p>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="bottom-cta">
+      <h2>Get the <em>signals</em> daily</h2>
+      <p>Free. No paywall. Just public SEC data, scored and explained.</p>
+      <a href="/" class="cta">Subscribe free</a>
+      <a href="/" class="back-link">&larr; Back to homepage</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        Not investment advice. SEC Form 4 data is public record. Past insider buying
+        patterns do not predict future performance. Do your own research.
+      </p>
+      <p style="margin-top:8px;">
+        &copy; 2026 Buyside Brief &middot;
+        <a href="/" style="color:var(--ink-faint);">Home</a> &middot;
+        <a href="/research" style="color:var(--ink-faint);">Research</a> &middot;
+        <a href="mailto:hello@buysidebrief.com" style="color:var(--ink-faint);">Contact</a> &middot;
+        <a href="/privacy.html" style="color:var(--ink-faint);">Privacy</a> &middot;
+        <a href="/terms.html" style="color:var(--ink-faint);">Terms</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do insider buys from newly-appointed executives outperform? — Buyside Brief research</title>
+  <meta name="description" content="A clean-room backtest of whether Form 4 insider buys from recently-appointed executives (per 8-K Item 5.02) beat buys from long-tenured C-suite peers. One year of SEC data, audited methodology, negative result with a caveat.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://www.buysidebrief.com/research/new-exec-signal-2026-04">
+  <meta property="og:title" content="Do insider buys from newly-appointed executives outperform? — Buyside Brief research">
+  <meta property="og:description" content="A clean-room backtest of whether Form 4 insider buys from recently-appointed executives beat buys from long-tenured C-suite peers. 12 months of SEC data.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.buysidebrief.com/research/new-exec-signal-2026-04">
+  <meta property="og:image" content="https://www.buysidebrief.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Do insider buys from newly-appointed executives outperform? — Buyside Brief research">
+  <meta name="twitter:description" content="A clean-room backtest of whether Form 4 insider buys from recently-appointed executives beat buys from long-tenured C-suite peers. 12 months of SEC data.">
+  <meta name="twitter:image" content="https://www.buysidebrief.com/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #faf8f4;
+      --cream-dark: #f2efe8;
+      --ink: #1a1a1a;
+      --ink-light: #3d3d3d;
+      --ink-muted: #7a7a7a;
+      --ink-faint: #b0a99f;
+      --green: #1a7a4c;
+      --green-bg: #e8f5ee;
+      --rule: #e0dbd3;
+      --serif: 'Instrument Serif', 'Georgia', serif;
+      --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+    a:hover { color: var(--ink); }
+
+    /* ── Nav (site-native pattern, matches scorecard.html / archive.html) ── */
+    nav.site-nav {
+      border-bottom: 1px solid var(--rule);
+      padding: 16px 0;
+    }
+    nav.site-nav .inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav.site-nav .logo {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav.site-nav .logo em { color: var(--green); font-style: italic; }
+    nav.site-nav .links { display: flex; gap: 20px; font-size: 14px; }
+    nav.site-nav .links a { color: var(--ink-muted); text-decoration: none; }
+    nav.site-nav .links a:hover { color: var(--green); }
+    nav.site-nav .links a.active { color: var(--green); font-weight: 600; }
+
+    /* ── Intro block (site-native header pattern) ── */
+    .intro {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 24px 16px;
+    }
+    .intro .eyebrow-site {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+    .intro .eyebrow-site a { color: var(--green); text-decoration: none; }
+    .intro .eyebrow-site a:hover { text-decoration: underline; }
+    .intro h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 14px 0 18px;
+      letter-spacing: -0.3px;
+    }
+    .intro h1 em { color: var(--green); font-style: italic; }
+    .intro p.lede {
+      font-size: 17px;
+      color: var(--ink-light);
+      line-height: 1.55;
+      margin-bottom: 8px;
+    }
+    .intro p.meta {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-faint);
+      margin-top: 14px;
+    }
+
+    /* ── Bottom CTA (site-native pattern, matches scorecard) ── */
+    .bottom-cta {
+      text-align: center;
+      padding: 56px 24px 72px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .bottom-cta h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .bottom-cta h2 em { color: var(--green); font-style: italic; }
+    .bottom-cta p { color: var(--ink-muted); margin-bottom: 20px; }
+    .bottom-cta a.cta {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .bottom-cta a.cta:hover { background: var(--green); transform: translateY(-1px); }
+
+    /* ── Footer (site-native) ── */
+    footer.site-footer {
+      border-top: 1px solid var(--rule);
+      padding: 24px 0 48px;
+      text-align: center;
+    }
+    footer.site-footer p { font-size: 12px; color: var(--ink-faint); line-height: 1.7; }
+
+    /* ══════════════════════════════════════════════════════════════
+       DASHBOARD STYLES — preserved from the original research
+       dashboard.html, scoped under .research-page to avoid collision
+       with the site styles above. Content and presentation are
+       intentionally identical to the standalone dashboard.
+       ══════════════════════════════════════════════════════════════ */
+    .research-page {
+      --db-bg: #FAF8F5;
+      --db-muted: #6B6B6B;
+      --db-rule: #D8D4CC;
+      --db-accent: #355E3B;
+      --db-warn: #B8845A;
+      --db-chip: #EFE9DF;
+
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 40px 16px;
+      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.55;
+    }
+
+    .research-page h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-weight: 400;
+      font-size: 44px;
+      line-height: 1.15;
+      margin: 6px 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .research-page h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-weight: 400;
+      font-size: 28px;
+      margin: 40px 0 14px;
+      letter-spacing: -0.01em;
+    }
+    .research-page h3 { font-size: 16px; font-weight: 600; margin: 18px 0 10px; }
+    .research-page p, .research-page li { font-size: 15px; }
+    .research-page .sub { color: var(--db-muted); font-size: 14px; }
+    .research-page .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+
+    .research-page .hero {
+      background: var(--db-chip);
+      border: 1px solid var(--db-rule);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin: 28px 0 36px;
+    }
+    .research-page .hero .stat {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 54px;
+      line-height: 1;
+      color: var(--db-accent);
+    }
+    .research-page .hero .label {
+      margin-top: 10px;
+      font-size: 15px;
+      color: var(--ink);
+    }
+
+    .research-page .chart { margin: 18px 0 32px; }
+    .research-page .bar-row {
+      display: grid;
+      grid-template-columns: 280px 1fr 90px;
+      align-items: center;
+      column-gap: 14px;
+      padding: 4px 0;
+      font-size: 14px;
+    }
+    .research-page .bar-label { color: var(--ink); }
+    .research-page .n-badge { color: var(--db-muted); font-size: 12px; margin-left: 6px; }
+    .research-page .bar-track {
+      position: relative;
+      height: 22px;
+      background: transparent;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .research-page .bar-center { border-left: 1px dashed var(--db-rule); }
+    .research-page .bar-fill-right { height: 22px; align-self: center; grid-column: 2 / 3; border-radius: 0 2px 2px 0; }
+    .research-page .bar-fill-left { height: 22px; align-self: center; grid-column: 1 / 2; border-radius: 2px 0 0 2px; justify-self: end; }
+    .research-page .bar-val { text-align: right; font-size: 14px; }
+
+    .research-page .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 24px;
+      font-size: 14px;
+    }
+    .research-page .data-table caption {
+      text-align: left;
+      font-weight: 600;
+      padding: 8px 0;
+      color: var(--ink);
+    }
+    .research-page .data-table th, .research-page .data-table td {
+      text-align: right;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--db-rule);
+    }
+    .research-page .data-table th:first-child, .research-page .data-table td:first-child { text-align: left; }
+    .research-page .data-table thead th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--db-muted);
+      font-weight: 600;
+      border-bottom: 2px solid var(--ink);
+    }
+    .research-page .warn { color: var(--db-warn); font-size: 12px; }
+
+    .research-page .row-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 780px) {
+      .research-page .row-pair { grid-template-columns: 1fr; }
+      .research-page .bar-row { grid-template-columns: 1fr; }
+      .research-page { padding: 24px 24px 16px; }
+    }
+
+    .research-page .tests { margin: 16px 0; font-size: 14px; }
+    .research-page .test-line { padding: 6px 0; border-bottom: 1px dotted var(--db-rule); }
+
+    .research-page .db-methodology {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid var(--db-rule);
+      color: var(--db-muted);
+      font-size: 13px;
+    }
+    .research-page .db-methodology code { background: var(--db-chip); padding: 1px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .research-page .methodology dt { font-weight: 600; color: var(--ink); margin-top: 10px; }
+    .research-page .methodology dd { margin: 2px 0 0 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="site-nav">
+    <div class="inner">
+      <a href="/" class="logo">Buyside <em>Brief</em></a>
+      <div class="links">
+        <a href="/">Home</a>
+        <a href="/scorecard.html">Scorecard</a>
+        <a href="/archive.html">Archive</a>
+        <a href="/research" class="active">Research</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Site-native intro wrapping the dashboard -->
+  <section class="intro">
+    <p class="eyebrow-site"><a href="/research">Research</a> &nbsp;/&nbsp; April 2026</p>
+    <h1>A full-methodology <em>backtest</em>: do insider buys from newly-appointed executives outperform?</h1>
+    <p class="lede">
+      This page is a full-methodology backtest of whether Form 4 insider buys from recently-appointed executives
+      (identified via 8-K Item 5.02 filings within the prior 90 days) beat buys from long-tenured C-suite peers at
+      stable companies. One year of SEC filings, a fixed cohort definition set before running, and every number below
+      is reproducible from public EDGAR and Polygon data.
+    </p>
+    <p class="lede">
+      The short answer is <strong>no</strong> — the headline edge is within the noise floor. The longer answer, with
+      the two sub-findings that are worth keeping an eye on, is below.
+    </p>
+    <p class="meta">
+      Published 2026-04-17 &middot; Test window 2025-04-16 &rarr; 2026-04-16 &middot;
+      <a href="/research">&larr; All research</a>
+    </p>
+  </section>
+
+  <!-- ═════ Preserved dashboard content (scoped under .research-page) ═════ -->
+  <div class="research-page">
+
+    <div class="hero">
+      <div class="stat mono">+0.82%</div>
+      <div class="label">
+        90-day mean excess-return difference: <strong>new-exec cohort</strong> vs. <strong>stable-C-suite placebo</strong>.
+        (N=58 vs N=885; p=0.824)
+      </div>
+    </div>
+
+    <h2>Mean excess return vs. SPY, by cohort</h2>
+    <div class="chart">
+      <h3>Mean excess return vs. SPY &mdash; 30-day horizon</h3>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 1 &mdash; new exec (all) <span class="n-badge mono">N=85</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:11.664742576751093%; background:#355E3B;"></div>
+          </div>
+          <div class="bar-val mono">1.92%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 1 &mdash; role-confirmed <span class="n-badge mono">N=80</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:1.4166362673650637%; background:#6B8E4E;"></div>
+          </div>
+          <div class="bar-val mono">0.23%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 2 &mdash; placebo C-suite <span class="n-badge mono">N=1084</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:14.56422625503403%; background:#B8845A;"></div>
+          </div>
+          <div class="bar-val mono">2.40%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 3 &mdash; baseline <span class="n-badge mono">N=488</span></div>
+          <div class="bar-track">
+            <div class="bar-fill-left" style="width:12.246778607107867%; background:#8A7F72;"></div><div class="bar-center"></div>
+          </div>
+          <div class="bar-val mono">-2.02%</div>
+        </div>
+    </div>
+    <div class="chart">
+      <h3>Mean excess return vs. SPY &mdash; 60-day horizon</h3>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 1 &mdash; new exec (all) <span class="n-badge mono">N=62</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:50%; background:#355E3B;"></div>
+          </div>
+          <div class="bar-val mono">8.23%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 1 &mdash; role-confirmed <span class="n-badge mono">N=57</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:48.357335282250894%; background:#6B8E4E;"></div>
+          </div>
+          <div class="bar-val mono">7.96%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 2 &mdash; placebo C-suite <span class="n-badge mono">N=944</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:4.181193078614615%; background:#B8845A;"></div>
+          </div>
+          <div class="bar-val mono">0.69%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 3 &mdash; baseline <span class="n-badge mono">N=488</span></div>
+          <div class="bar-track">
+            <div class="bar-fill-left" style="width:17.20857726884906%; background:#8A7F72;"></div><div class="bar-center"></div>
+          </div>
+          <div class="bar-val mono">-2.83%</div>
+        </div>
+    </div>
+    <div class="chart">
+      <h3>Mean excess return vs. SPY &mdash; 90-day horizon</h3>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 1 &mdash; new exec (all) <span class="n-badge mono">N=58</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:4.05440605117197%; background:#355E3B;"></div>
+          </div>
+          <div class="bar-val mono">0.67%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 1 &mdash; role-confirmed <span class="n-badge mono">N=53</span></div>
+          <div class="bar-track">
+            <div class="bar-center"></div><div class="bar-fill-right" style="width:0.9428140689447322%; background:#6B8E4E;"></div>
+          </div>
+          <div class="bar-val mono">0.16%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 2 &mdash; placebo C-suite <span class="n-badge mono">N=885</span></div>
+          <div class="bar-track">
+            <div class="bar-fill-left" style="width:0.9475651172932897%; background:#B8845A;"></div><div class="bar-center"></div>
+          </div>
+          <div class="bar-val mono">-0.16%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cohort 3 &mdash; baseline <span class="n-badge mono">N=488</span></div>
+          <div class="bar-track">
+            <div class="bar-fill-left" style="width:33.76616549664516%; background:#8A7F72;"></div><div class="bar-center"></div>
+          </div>
+          <div class="bar-val mono">-5.56%</div>
+        </div>
+    </div>
+
+    <h2>Full cohort tables</h2>
+    <div>
+      <table class="data-table">
+      <caption>Cohort 1 &mdash; New executive buy (all matches)</caption>
+      <thead><tr>
+        <th>Horizon</th><th>N</th><th>Mean ret</th><th>Median ret</th>
+        <th>Mean excess</th><th>Median excess</th><th>Win %</th><th>Excess win %</th><th>Std dev</th>
+      </tr></thead>
+      <tbody><tr>
+        <td class="mono">30d</td>
+        <td class="mono">85</td>
+        <td class="mono">2.96%</td>
+        <td class="mono">1.27%</td>
+        <td class="mono">1.92%</td>
+        <td class="mono">1.22%</td>
+        <td class="mono">57.65%</td>
+        <td class="mono">56.47%</td>
+        <td class="mono">22.78%</td>
+      </tr><tr>
+        <td class="mono">60d</td>
+        <td class="mono">62</td>
+        <td class="mono">11.65%</td>
+        <td class="mono">2.98%</td>
+        <td class="mono">8.23%</td>
+        <td class="mono">-1.65%</td>
+        <td class="mono">58.06%</td>
+        <td class="mono">40.32%</td>
+        <td class="mono">82.62%</td>
+      </tr><tr>
+        <td class="mono">90d</td>
+        <td class="mono">58</td>
+        <td class="mono">5.83%</td>
+        <td class="mono">6.43%</td>
+        <td class="mono">0.67%</td>
+        <td class="mono">-0.46%</td>
+        <td class="mono">65.52%</td>
+        <td class="mono">48.28%</td>
+        <td class="mono">27.53%</td>
+      </tr></tbody>
+    </table>
+      <table class="data-table">
+      <caption>Cohort 1 &mdash; New executive buy (role-confirmed only, high-confidence name match)</caption>
+      <thead><tr>
+        <th>Horizon</th><th>N</th><th>Mean ret</th><th>Median ret</th>
+        <th>Mean excess</th><th>Median excess</th><th>Win %</th><th>Excess win %</th><th>Std dev</th>
+      </tr></thead>
+      <tbody><tr>
+        <td class="mono">30d</td>
+        <td class="mono">80</td>
+        <td class="mono">1.21%</td>
+        <td class="mono">0.95%</td>
+        <td class="mono">0.23%</td>
+        <td class="mono">1.20%</td>
+        <td class="mono">55.00%</td>
+        <td class="mono">56.25%</td>
+        <td class="mono">17.34%</td>
+      </tr><tr>
+        <td class="mono">60d</td>
+        <td class="mono">57</td>
+        <td class="mono">11.38%</td>
+        <td class="mono">2.87%</td>
+        <td class="mono">7.96%</td>
+        <td class="mono">-1.65%</td>
+        <td class="mono">57.89%</td>
+        <td class="mono">38.60%</td>
+        <td class="mono">85.86%</td>
+      </tr><tr>
+        <td class="mono">90d</td>
+        <td class="mono">53</td>
+        <td class="mono">5.41%</td>
+        <td class="mono">6.32%</td>
+        <td class="mono">0.16%</td>
+        <td class="mono">-0.59%</td>
+        <td class="mono">64.15%</td>
+        <td class="mono">47.17%</td>
+        <td class="mono">28.33%</td>
+      </tr></tbody>
+    </table>
+      <table class="data-table">
+      <caption>Cohort 2 &mdash; Placebo: stable C-suite (no 8-K 5.02 in prior 180 days)</caption>
+      <thead><tr>
+        <th>Horizon</th><th>N</th><th>Mean ret</th><th>Median ret</th>
+        <th>Mean excess</th><th>Median excess</th><th>Win %</th><th>Excess win %</th><th>Std dev</th>
+      </tr></thead>
+      <tbody><tr>
+        <td class="mono">30d</td>
+        <td class="mono">1084</td>
+        <td class="mono">4.07%</td>
+        <td class="mono">2.38%</td>
+        <td class="mono">2.40%</td>
+        <td class="mono">0.56%</td>
+        <td class="mono">63.19%</td>
+        <td class="mono">53.04%</td>
+        <td class="mono">14.44%</td>
+      </tr><tr>
+        <td class="mono">60d</td>
+        <td class="mono">944</td>
+        <td class="mono">4.29%</td>
+        <td class="mono">2.53%</td>
+        <td class="mono">0.69%</td>
+        <td class="mono">-1.51%</td>
+        <td class="mono">60.49%</td>
+        <td class="mono">44.17%</td>
+        <td class="mono">20.75%</td>
+      </tr><tr>
+        <td class="mono">90d</td>
+        <td class="mono">885</td>
+        <td class="mono">4.58%</td>
+        <td class="mono">2.31%</td>
+        <td class="mono">-0.16%</td>
+        <td class="mono">-3.05%</td>
+        <td class="mono">57.85%</td>
+        <td class="mono">41.69%</td>
+        <td class="mono">25.27%</td>
+      </tr></tbody>
+    </table>
+      <table class="data-table">
+      <caption>Cohort 3 &mdash; Baseline: all qualifying Form 4 P-buys</caption>
+      <thead><tr>
+        <th>Horizon</th><th>N</th><th>Mean ret</th><th>Median ret</th>
+        <th>Mean excess</th><th>Median excess</th><th>Win %</th><th>Excess win %</th><th>Std dev</th>
+      </tr></thead>
+      <tbody><tr>
+        <td class="mono">30d</td>
+        <td class="mono">488</td>
+        <td class="mono">4.80%</td>
+        <td class="mono">3.65%</td>
+        <td class="mono">-2.02%</td>
+        <td class="mono">-3.18%</td>
+        <td class="mono">70.29%</td>
+        <td class="mono">34.63%</td>
+        <td class="mono">11.89%</td>
+      </tr><tr>
+        <td class="mono">60d</td>
+        <td class="mono">488</td>
+        <td class="mono">7.80%</td>
+        <td class="mono">6.16%</td>
+        <td class="mono">-2.83%</td>
+        <td class="mono">-4.07%</td>
+        <td class="mono">75.41%</td>
+        <td class="mono">35.45%</td>
+        <td class="mono">20.80%</td>
+      </tr><tr>
+        <td class="mono">90d</td>
+        <td class="mono">488</td>
+        <td class="mono">8.17%</td>
+        <td class="mono">4.70%</td>
+        <td class="mono">-5.56%</td>
+        <td class="mono">-8.49%</td>
+        <td class="mono">67.62%</td>
+        <td class="mono">30.12%</td>
+        <td class="mono">23.39%</td>
+      </tr></tbody>
+    </table>
+    </div>
+
+    <h2>Sub-cohort breakdown (Cohort 1)</h2>
+    <div class="row-pair">
+      <table class="data-table">
+      <caption>By role category</caption>
+      <thead><tr><th>Role</th><th>N (90d)</th><th>Mean ret 90d</th><th>Mean excess 90d</th><th>Win % 90d</th><th>Excess win % 90d</th></tr></thead>
+      <tbody><tr>
+        <td>CEO</td>
+        <td class="mono">10<span class="warn"> &#9888;</span></td>
+        <td class="mono">8.55%</td>
+        <td class="mono">4.61%</td>
+        <td class="mono">60.00%</td>
+        <td class="mono">50.00%</td>
+      </tr><tr>
+        <td>CFO</td>
+        <td class="mono">3<span class="warn"> &#9888;</span></td>
+        <td class="mono">21.41%</td>
+        <td class="mono">15.07%</td>
+        <td class="mono">100.00%</td>
+        <td class="mono">66.67%</td>
+      </tr><tr>
+        <td>Director</td>
+        <td class="mono">33</td>
+        <td class="mono">0.81%</td>
+        <td class="mono">-4.26%</td>
+        <td class="mono">63.64%</td>
+        <td class="mono">48.48%</td>
+      </tr><tr>
+        <td>Other C-suite</td>
+        <td class="mono">12<span class="warn"> &#9888;</span></td>
+        <td class="mono">13.50%</td>
+        <td class="mono">7.35%</td>
+        <td class="mono">66.67%</td>
+        <td class="mono">41.67%</td>
+      </tr></tbody>
+    </table>
+      <table class="data-table">
+      <caption>By tenure bucket (days since appointment)</caption>
+      <thead><tr><th>Tenure</th><th>N (90d)</th><th>Mean ret 90d</th><th>Mean excess 90d</th><th>Win % 90d</th><th>Excess win % 90d</th></tr></thead>
+      <tbody><tr>
+        <td>0-30</td>
+        <td class="mono">31</td>
+        <td class="mono">9.41%</td>
+        <td class="mono">3.32%</td>
+        <td class="mono">67.74%</td>
+        <td class="mono">51.61%</td>
+      </tr><tr>
+        <td>31-90</td>
+        <td class="mono">27<span class="warn"> &#9888;</span></td>
+        <td class="mono">1.73%</td>
+        <td class="mono">-2.37%</td>
+        <td class="mono">62.96%</td>
+        <td class="mono">44.44%</td>
+      </tr></tbody>
+    </table>
+    </div>
+
+    <h2>Statistical tests</h2>
+    <div class="tests">
+      <div class="test-line">
+          <strong>30-day excess return &mdash; Cohort 1 (all) vs Cohort 2:</strong>
+          <span class="mono">t=-0.19, p=0.845, &Delta;mean=-0.48%, N=85/1084</span><br>
+          <span class="sub">&mdash; role-confirmed variant: <span class="mono">t=-1.15, p=0.250, &Delta;mean=-2.17%, N=80/1084</span></span>
+        </div><div class="test-line">
+          <strong>60-day excess return &mdash; Cohort 1 (all) vs Cohort 2:</strong>
+          <span class="mono">t=0.72, p=0.470, &Delta;mean=7.55%, N=62/944</span><br>
+          <span class="sub">&mdash; role-confirmed variant: <span class="mono">t=0.64, p=0.520, &Delta;mean=7.28%, N=57/944</span></span>
+        </div><div class="test-line">
+          <strong>90-day excess return &mdash; Cohort 1 (all) vs Cohort 2:</strong>
+          <span class="mono">t=0.22, p=0.824, &Delta;mean=0.82%, N=58/885</span><br>
+          <span class="sub">&mdash; role-confirmed variant: <span class="mono">t=0.08, p=0.937, &Delta;mean=0.31%, N=53/885</span></span>
+        </div>
+      <p class="sub">Welch's two-sample t-test with normal approximation for p-values. Treat with care when N&lt;30 on either side.</p>
+    </div>
+
+    <section class="db-methodology">
+      <h2 style="margin-top:0">Methodology</h2>
+      <dl class="methodology">
+        <dt>Universe</dt><dd>NYSE + Nasdaq (XNYS / XNAS / XASE) active US stocks, price &ge; $2 at transaction. 8614 tickers in the universe snapshot.</dd>
+        <dt>Form 4 filter</dt><dd>Transaction code <code>P</code> (purchase), Acquired-Disposed code <code>A</code>.</dd>
+        <dt>Cohort 1 definition</dt><dd>Buyer named in an 8-K Item 5.02 appointment/promotion at the same CIK within 90 days prior to the transaction. Two variants: "all" (headline) and "role-confirmed" (role&ne;Unknown AND name-match confidence=high).</dd>
+        <dt>Cohort 2 definition</dt><dd>C-suite buyer (officer; title contains CEO / CFO / COO / President) with NO 8-K Item 5.02 at the same CIK in the prior 180 days.</dd>
+        <dt>Cohort 3</dt><dd>All qualifying Form 4 P-buys (baseline). Price pulls sampled to 500 to cap Polygon free-tier calls.</dd>
+        <dt>Forward returns</dt><dd>Entry = closing price on Form 4 <em>transaction</em> date (not filing date). Exit = closing price at +30 / +60 / +90 calendar days, rolled forward to next trading day for weekends/holidays.</dd>
+        <dt>Excess return</dt><dd>Ticker return minus SPY return over the same window.</dd>
+        <dt>Sample sizes</dt><dd>
+          Form 4 total: 7599 |
+          after clean: 7599 |
+          $2 floor: 6688 |
+          exchange: 5458 |
+          appointments: 10000 |
+          cohort 1 all: 92 |
+          cohort 1 role-confirmed: 86 |
+          cohort 2: 1197.
+        </dd>
+        <dt>Data sources</dt><dd>SEC EDGAR (efts.sec.gov full-text search + /Archives/ document pulls). Prices via Polygon daily aggregates (adjusted).</dd>
+        <dt>Caveats</dt><dd>8-K Item 5.02 appointee extraction is regex-based and imperfect &mdash; role=Unknown entries are retained in cohort 1 "all" but excluded from the role-confirmed variant. Some recent buys are excluded from the 90-day bucket because the forward window extends past the data availability date (2026-07-31).</dd>
+      </dl>
+      <p class="sub">Generated 2026-04-17.</p>
+    </section>
+  </div>
+  <!-- ═════ end dashboard content ═════ -->
+
+  <!-- Bottom CTA -->
+  <div class="bottom-cta">
+    <h2>Get the <em>signals</em> daily</h2>
+    <p>Free. No paywall. Just public SEC data, scored and explained. Research like this is how we decide what to include.</p>
+    <a href="/" class="cta">Subscribe free</a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        Not investment advice. SEC Form 4 data is public record. Past insider buying
+        patterns do not predict future performance. Do your own research.
+      </p>
+      <p style="margin-top:8px;">
+        &copy; 2026 Buyside Brief &middot;
+        <a href="/" style="color:var(--ink-faint);">Home</a> &middot;
+        <a href="/research" style="color:var(--ink-faint);">Research</a> &middot;
+        <a href="mailto:hello@buysidebrief.com" style="color:var(--ink-faint);">Contact</a> &middot;
+        <a href="/privacy.html" style="color:var(--ink-faint);">Privacy</a> &middot;
+        <a href="/terms.html" style="color:var(--ink-faint);">Terms</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
