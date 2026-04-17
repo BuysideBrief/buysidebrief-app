@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20026513",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "HURA",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-25",
+      "notificationDate": "2025-01-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "WBD",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2024-11-29",
+      "notificationDate": "2025-01-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

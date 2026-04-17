@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20030187",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "BWIN",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-10",
+      "notificationDate": "2025-04-16",
+      "amountRangeText": "$500,001 - $1,000,000",
+      "amountMidpoint": 750001
+    }
+  ]
+}

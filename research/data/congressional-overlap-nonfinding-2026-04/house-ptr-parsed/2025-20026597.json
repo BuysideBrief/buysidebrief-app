@@ -1,0 +1,52 @@
+{
+  "year": 2025,
+  "docId": "20026597",
+  "rowCount": 4,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AGCO",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-31",
+      "notificationDate": "2025-01-02",
+      "amountRangeText": "$50,001 - $100,000",
+      "amountMidpoint": 75001
+    },
+    {
+      "ticker": "DVN",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2024-12-31",
+      "notificationDate": "2025-01-02",
+      "amountRangeText": "$250,001 - $500,000",
+      "amountMidpoint": 375001
+    },
+    {
+      "ticker": "DXCM",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-31",
+      "notificationDate": "2025-01-02",
+      "amountRangeText": "$50,001 - $100,000",
+      "amountMidpoint": 75001
+    },
+    {
+      "ticker": "EL",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-31",
+      "notificationDate": "2025-01-02",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

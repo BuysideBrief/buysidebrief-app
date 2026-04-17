@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-04-17T23:31:32.951Z",
+  "windows": {
+    "form4": {
+      "start": "2025-04-16",
+      "end": "2025-04-29"
+    },
+    "ptrTxRange": {
+      "start": "2025-01-16",
+      "end": "2025-04-29"
+    }
+  },
+  "counts": {
+    "form4Filings": 264,
+    "form4Clean": 264,
+    "form4AfterPriceFloor": 225,
+    "housePtrFilingsTotal": 966,
+    "housePtrFilingsInWindow": 278,
+    "pdfParseErrors": 45,
+    "congressStockRowsTotal": 634,
+    "congressStockRowsInWindow": 406,
+    "congressBuysInWindow": 223,
+    "uniqueTickersInCongress": 177
+  },
+  "cohorts": {
+    "overlap": 0,
+    "placebo": 225,
+    "neither": 0
+  },
+  "direction": {
+    "politician-first": 0,
+    "insider-first": 0,
+    "simultaneous": 0
+  },
+  "windowBucket": {
+    "0-30": 0,
+    "31-60": 0,
+    "61-90": 0
+  },
+  "decisionGate": {
+    "projected12moOverlap": 0,
+    "decision": "STOP — projected <50, too rare to power a headline comparison"
+  },
+  "spotChecks": []
+}

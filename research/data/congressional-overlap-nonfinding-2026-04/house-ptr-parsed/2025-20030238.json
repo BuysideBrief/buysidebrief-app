@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20030238",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ACN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-04-08",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "AMD",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-04-08",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "A",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-04-08",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ABNB",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-04-08",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GOOGL",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-04-08",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GOOG",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-04-08",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

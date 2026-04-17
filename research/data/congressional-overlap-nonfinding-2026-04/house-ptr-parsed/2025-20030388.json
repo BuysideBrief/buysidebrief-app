@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20030388",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "LDOS",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-05-13",
+      "notificationDate": "2025-05-17",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "SAIC",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-05-13",
+      "notificationDate": "2025-05-17",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

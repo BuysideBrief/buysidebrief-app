@@ -1,0 +1,41 @@
+{
+  "year": 2025,
+  "docId": "20026556",
+  "rowCount": 3,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ABNB",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-07",
+      "notificationDate": "2025-01-10",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-07",
+      "notificationDate": "2025-01-10",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "FI",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-07",
+      "notificationDate": "2025-01-10",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "year": 2025,
+  "docId": "20029065",
+  "rowCount": 3,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "MCK",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-04",
+      "notificationDate": "2025-04-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "MSFT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-04",
+      "notificationDate": "2025-04-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "CRM",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-11",
+      "notificationDate": "2025-04-03",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

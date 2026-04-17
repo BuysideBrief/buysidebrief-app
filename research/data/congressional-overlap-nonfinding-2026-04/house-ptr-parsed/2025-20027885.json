@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20027885",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-20",
+      "notificationDate": "2025-03-03",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-26",
+      "notificationDate": "2025-03-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMP",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-26",
+      "notificationDate": "2025-03-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ARINA",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-20",
+      "notificationDate": "2025-03-03",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "BLK",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-18",
+      "notificationDate": "2025-03-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "COST",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-26",
+      "notificationDate": "2025-03-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

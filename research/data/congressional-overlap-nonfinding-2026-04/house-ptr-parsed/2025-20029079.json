@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20029079",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AVGO",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-10",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AVGO",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-10",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AVGO",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-11",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "ELV",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-10",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ELV",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-10",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ELV",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-10",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

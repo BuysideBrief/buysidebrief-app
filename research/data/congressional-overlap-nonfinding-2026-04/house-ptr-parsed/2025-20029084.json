@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20029084",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ACN",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-04",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GOOGL",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-04",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-04",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMP",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-04",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMP",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-04",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AAPL",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-04",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

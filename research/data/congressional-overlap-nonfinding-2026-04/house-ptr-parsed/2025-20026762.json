@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20026762",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ALE",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-28",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMT",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-15",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BA",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-15",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BMY",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-15",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AVGO",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-01-15",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "CRL",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-15",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20027810",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "STT",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-18",
+      "notificationDate": "2025-02-19",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

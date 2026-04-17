@@ -1,0 +1,74 @@
+{
+  "year": 2024,
+  "docId": "20026360",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-12-09",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "SCHW",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-12-09",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "IBKR",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-12-09",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "MSFT",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-12-09",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "NVDA",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-12-09",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "NVDA",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-12-09",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

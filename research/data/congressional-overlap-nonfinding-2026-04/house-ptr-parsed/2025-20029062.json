@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20029062",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-10-29",
+      "notificationDate": "2025-04-02",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "TSLA",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-10-29",
+      "notificationDate": "2025-04-02",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

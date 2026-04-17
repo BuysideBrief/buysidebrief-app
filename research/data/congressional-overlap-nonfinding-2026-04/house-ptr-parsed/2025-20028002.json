@@ -1,0 +1,85 @@
+{
+  "year": 2025,
+  "docId": "20028002",
+  "rowCount": 7,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ABBV",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GOOG",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AAPL",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMAT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BX",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "CAH",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "CAT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

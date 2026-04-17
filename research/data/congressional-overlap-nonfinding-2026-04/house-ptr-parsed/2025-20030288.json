@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20030288",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AGIO",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-17",
+      "notificationDate": "2025-05-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ALKT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-17",
+      "notificationDate": "2025-05-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ALKT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-30",
+      "notificationDate": "2025-05-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-29",
+      "notificationDate": "2025-05-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ARMK",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-14",
+      "notificationDate": "2025-05-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ARIS",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-08",
+      "notificationDate": "2025-05-05",
+      "amountRangeText": "$50,001 - $100,000",
+      "amountMidpoint": 75001
+    }
+  ]
+}

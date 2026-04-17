@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20026712",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "FCNCA",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-21",
+      "notificationDate": "2025-01-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "FCNCA",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-21",
+      "notificationDate": "2025-01-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "FCNCA",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-16",
+      "notificationDate": "2025-01-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GDDY",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-16",
+      "notificationDate": "2025-01-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GDDY",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-16",
+      "notificationDate": "2025-01-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GDDY",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-21",
+      "notificationDate": "2025-01-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

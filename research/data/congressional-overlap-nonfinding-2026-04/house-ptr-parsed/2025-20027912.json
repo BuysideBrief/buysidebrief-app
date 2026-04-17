@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20027912",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "HURC",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-06",
+      "notificationDate": "2025-02-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

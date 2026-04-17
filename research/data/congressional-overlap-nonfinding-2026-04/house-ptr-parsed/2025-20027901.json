@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20027901",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ABT",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-13",
+      "notificationDate": "2025-03-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BABA",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-12",
+      "notificationDate": "2025-03-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ABEV",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-07",
+      "notificationDate": "2025-03-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ABEV",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-06",
+      "notificationDate": "2025-03-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AAPL",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-03",
+      "notificationDate": "2025-03-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AAPL",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-24",
+      "notificationDate": "2025-03-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20026590",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "GOOGL",
+      "assetType": "OP",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-14",
+      "notificationDate": "2025-01-14",
+      "amountRangeText": "$250,001 - $500,000",
+      "amountMidpoint": 375001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "OP",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-14",
+      "notificationDate": "2025-01-14",
+      "amountRangeText": "$250,001 - $500,000",
+      "amountMidpoint": 375001
+    },
+    {
+      "ticker": "AAPL",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2024-12-31",
+      "notificationDate": "2024-12-31",
+      "amountRangeText": "$5,000,001 - $25,000,000",
+      "amountMidpoint": 15000001
+    },
+    {
+      "ticker": "NVDA",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2024-12-31",
+      "notificationDate": "2024-12-31",
+      "amountRangeText": "$1,000,001 - $5,000,000",
+      "amountMidpoint": 3000001
+    },
+    {
+      "ticker": "NVDA",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-20",
+      "notificationDate": "2024-12-20",
+      "amountRangeText": "$500,001 - $1,000,000",
+      "amountMidpoint": 750001
+    },
+    {
+      "ticker": "NVDA",
+      "assetType": "OP",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-14",
+      "notificationDate": "2025-01-14",
+      "amountRangeText": "$250,001 - $500,000",
+      "amountMidpoint": 375001
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20030454",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "PG",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-15",
+      "notificationDate": "2025-06-04",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

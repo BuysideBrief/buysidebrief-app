@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20027995",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-26",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-26",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-26",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$50,001 - $100,000",
+      "amountMidpoint": 75001
+    },
+    {
+      "ticker": "COST",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-28",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "COST",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-28",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "COST",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-28",
+      "notificationDate": "2025-03-18",
+      "amountRangeText": "$50,001 - $100,000",
+      "amountMidpoint": 75001
+    }
+  ]
+}

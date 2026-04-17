@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20026754",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "SPG",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-03",
+      "notificationDate": "2025-02-07",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

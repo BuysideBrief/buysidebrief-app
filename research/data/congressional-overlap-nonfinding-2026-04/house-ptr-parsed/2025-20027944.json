@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20027944",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "F",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-07",
+      "notificationDate": "2025-03-10",
+      "amountRangeText": "$50,001 - $100,000",
+      "amountMidpoint": 75001
+    },
+    {
+      "ticker": "F",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-10",
+      "notificationDate": "2025-03-10",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

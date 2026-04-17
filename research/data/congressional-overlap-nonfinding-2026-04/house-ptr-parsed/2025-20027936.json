@@ -1,0 +1,74 @@
+{
+  "year": 2025,
+  "docId": "20027936",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ALB",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-12",
+      "notificationDate": "2025-03-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "DOX",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-11",
+      "notificationDate": "2025-03-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "APTV",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-12",
+      "notificationDate": "2025-03-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ANET",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-12",
+      "notificationDate": "2025-03-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BLK",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-24",
+      "notificationDate": "2025-03-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BA",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-12",
+      "notificationDate": "2025-03-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20030316",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "TMO",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-11",
+      "notificationDate": "2025-05-07",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

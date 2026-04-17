@@ -1,0 +1,63 @@
+{
+  "year": 2025,
+  "docId": "20030292",
+  "rowCount": 5,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ACN",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-11",
+      "notificationDate": "2025-05-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ADBE",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-11",
+      "notificationDate": "2025-05-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GOOGL",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-11",
+      "notificationDate": "2025-05-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-11",
+      "notificationDate": "2025-05-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ADI",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-04-11",
+      "notificationDate": "2025-05-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

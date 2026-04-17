@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20030235",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AAPL",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-10",
+      "notificationDate": "2025-04-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "NVDA",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-10",
+      "notificationDate": "2025-04-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20024927",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "SNV",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-02-19",
+      "notificationDate": "2025-03-19",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

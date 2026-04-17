@@ -1,0 +1,30 @@
+{
+  "year": 2024,
+  "docId": "20026380",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "INTC",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "UNP",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

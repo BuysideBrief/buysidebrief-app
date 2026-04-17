@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20026706",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "CVS",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-31",
+      "notificationDate": "2025-01-31",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

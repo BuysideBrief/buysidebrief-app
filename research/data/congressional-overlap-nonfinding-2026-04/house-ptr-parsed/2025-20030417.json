@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20030417",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "RSP",
+      "assetType": "OT",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-28",
+      "notificationDate": "2025-05-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

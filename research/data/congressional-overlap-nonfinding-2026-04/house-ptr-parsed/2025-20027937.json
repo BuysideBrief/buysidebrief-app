@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20027937",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "UBS",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-03-07",
+      "notificationDate": "2025-03-10",
+      "amountRangeText": "$250,001 - $500,000",
+      "amountMidpoint": 375001
+    }
+  ]
+}

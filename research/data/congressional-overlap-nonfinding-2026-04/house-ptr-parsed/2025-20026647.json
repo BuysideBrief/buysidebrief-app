@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20026647",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "DIS",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-01-15",
+      "notificationDate": "2025-01-22",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

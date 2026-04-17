@@ -1,0 +1,41 @@
+{
+  "year": 2025,
+  "docId": "20029067",
+  "rowCount": 3,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "TGT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-21",
+      "notificationDate": "2025-03-21",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "TGT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-21",
+      "notificationDate": "2025-03-21",
+      "amountRangeText": "$100,001 - $250,000",
+      "amountMidpoint": 175001
+    },
+    {
+      "ticker": "TGT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-03",
+      "notificationDate": "2025-03-28",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

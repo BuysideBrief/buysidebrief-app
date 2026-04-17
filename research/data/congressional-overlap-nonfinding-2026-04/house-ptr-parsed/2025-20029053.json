@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20029053",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "WMT",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

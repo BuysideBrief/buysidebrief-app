@@ -1,0 +1,41 @@
+{
+  "year": 2024,
+  "docId": "20026376",
+  "rowCount": 3,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ARLP",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-14",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ET",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-19",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "HTGC",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-20",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

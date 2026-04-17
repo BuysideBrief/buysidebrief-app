@@ -1,0 +1,42 @@
+[
+  {
+    "label": "senate-trading (v4, Senate)",
+    "status": 403,
+    "ok": false
+  },
+  {
+    "label": "senate-disclosure (v4, House)",
+    "status": 403,
+    "ok": false
+  },
+  {
+    "label": "senate-trades (stable)",
+    "status": 402,
+    "ok": false
+  },
+  {
+    "label": "house-trades (stable)",
+    "status": 402,
+    "ok": false
+  },
+  {
+    "label": "senate-trading by symbol AAPL",
+    "status": 403,
+    "ok": false
+  },
+  {
+    "label": "senate-disclosure by symbol AAPL",
+    "status": 403,
+    "ok": false
+  },
+  {
+    "label": "senate-trades by symbol AAPL (stable)",
+    "status": 402,
+    "ok": false
+  },
+  {
+    "label": "house-trades by symbol AAPL (stable)",
+    "status": 402,
+    "ok": false
+  }
+]

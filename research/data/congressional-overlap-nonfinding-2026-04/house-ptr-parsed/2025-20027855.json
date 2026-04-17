@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20027855",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "NVDA",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-02-05",
+      "notificationDate": "2025-02-24",
+      "amountRangeText": "$500,001 - $1,000,000",
+      "amountMidpoint": 750001
+    }
+  ]
+}

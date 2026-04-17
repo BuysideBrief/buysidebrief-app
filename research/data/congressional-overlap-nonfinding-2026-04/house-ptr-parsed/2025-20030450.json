@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20030450",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "ARLP",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-15",
+      "notificationDate": "2025-06-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "HTGC",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-20",
+      "notificationDate": "2025-06-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

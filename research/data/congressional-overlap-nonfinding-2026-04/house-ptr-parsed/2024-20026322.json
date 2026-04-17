@@ -1,0 +1,19 @@
+{
+  "year": 2024,
+  "docId": "20026322",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "PG",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-15",
+      "notificationDate": "2024-12-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

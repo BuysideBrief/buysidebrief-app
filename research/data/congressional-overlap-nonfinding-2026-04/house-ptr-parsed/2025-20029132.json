@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20029132",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "NVO",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-07",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "NVO",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-27",
+      "notificationDate": "2025-04-07",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

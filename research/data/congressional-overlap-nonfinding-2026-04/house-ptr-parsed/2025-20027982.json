@@ -1,0 +1,52 @@
+{
+  "year": 2025,
+  "docId": "20027982",
+  "rowCount": 4,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AEP",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-24",
+      "notificationDate": "2025-03-24",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "BAC",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-24",
+      "notificationDate": "2025-03-24",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "CB",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-24",
+      "notificationDate": "2025-03-24",
+      "amountRangeText": "$100,001 - $250,000",
+      "amountMidpoint": 175001
+    },
+    {
+      "ticker": "C",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-24",
+      "notificationDate": "2025-03-24",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

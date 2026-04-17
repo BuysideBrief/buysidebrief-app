@@ -1,0 +1,74 @@
+{
+  "year": 2024,
+  "docId": "20026346",
+  "rowCount": 6,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AOS",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-11-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ACN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-11-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GOOG",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-11-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-11-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-11-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "AMZN",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-08",
+      "notificationDate": "2024-11-30",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

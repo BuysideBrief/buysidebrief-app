@@ -1,0 +1,19 @@
+{
+  "year": 2024,
+  "docId": "20026340",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "GLAS",
+      "assetType": "HN",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-26",
+      "notificationDate": "2024-12-05",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

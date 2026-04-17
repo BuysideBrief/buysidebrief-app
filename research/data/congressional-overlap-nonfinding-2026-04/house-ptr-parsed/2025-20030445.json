@@ -1,0 +1,19 @@
+{
+  "year": 2025,
+  "docId": "20030445",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "UNP",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-04-21",
+      "notificationDate": "2025-05-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

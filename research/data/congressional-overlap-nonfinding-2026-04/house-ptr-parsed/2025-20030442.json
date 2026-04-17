@@ -1,0 +1,96 @@
+{
+  "year": 2025,
+  "docId": "20030442",
+  "rowCount": 8,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "DAY",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-05-07",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "DAY",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-05-27",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "FBIN",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-05-29",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "MKL",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-27",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "MKL",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-07",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "MKL",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-13",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "TTC",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-28",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "TSCO",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-27",
+      "notificationDate": "2025-06-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

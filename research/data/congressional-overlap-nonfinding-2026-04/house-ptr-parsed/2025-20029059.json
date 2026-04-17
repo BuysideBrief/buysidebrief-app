@@ -1,0 +1,96 @@
+{
+  "year": 2025,
+  "docId": "20029059",
+  "rowCount": 8,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "AOS",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-03-06",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BJ",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-17",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BJ",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-14",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "CPAY",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-13",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "DAY",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-03-18",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "IDXX",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-14",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ITT",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-05",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "JLL",
+      "assetType": "ST",
+      "ownerCode": "DC",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-05",
+      "notificationDate": "2025-04-01",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20026548",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "EBS",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-11",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "HST",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-11",
+      "notificationDate": "2024-12-11",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

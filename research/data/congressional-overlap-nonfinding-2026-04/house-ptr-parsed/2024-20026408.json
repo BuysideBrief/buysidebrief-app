@@ -1,0 +1,63 @@
+{
+  "year": 2024,
+  "docId": "20026408",
+  "rowCount": 5,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "FTV",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-04",
+      "notificationDate": "2024-12-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "LBTYK",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "E",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-11-27",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    },
+    {
+      "ticker": "LBTYK",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "E",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-11-27",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "PDRDF",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-04",
+      "notificationDate": "2024-12-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "SNRE",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "E",
+      "txTypeQualifier": null,
+      "txDate": "2024-11-13",
+      "notificationDate": "2024-11-27",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

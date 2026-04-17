@@ -1,0 +1,19 @@
+{
+  "year": 2024,
+  "docId": "20026446",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "MSFT",
+      "assetType": "ST",
+      "ownerCode": "SP",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-18",
+      "notificationDate": "2024-12-19",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

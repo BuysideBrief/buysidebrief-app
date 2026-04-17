@@ -1,0 +1,30 @@
+{
+  "year": 2025,
+  "docId": "20029100",
+  "rowCount": 2,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "FSLR",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-19",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "ZOOM",
+      "assetType": "ST",
+      "ownerCode": "SELF",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2025-03-19",
+      "notificationDate": "2025-03-31",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}

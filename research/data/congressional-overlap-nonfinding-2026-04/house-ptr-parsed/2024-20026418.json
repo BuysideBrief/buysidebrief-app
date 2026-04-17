@@ -1,0 +1,19 @@
+{
+  "year": 2024,
+  "docId": "20026418",
+  "rowCount": 1,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "NGL",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": null,
+      "txDate": "2024-12-03",
+      "notificationDate": "2024-12-16",
+      "amountRangeText": "$15,001 - $50,000",
+      "amountMidpoint": 32501
+    }
+  ]
+}

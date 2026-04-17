@@ -1,0 +1,63 @@
+{
+  "year": 2025,
+  "docId": "20030474",
+  "rowCount": 5,
+  "error": null,
+  "rows": [
+    {
+      "ticker": "COF",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "E",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-19",
+      "notificationDate": "2025-06-06",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "FIS",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-15",
+      "notificationDate": "2025-06-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "GD",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-02",
+      "notificationDate": "2025-06-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "MS",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "S",
+      "txTypeQualifier": "partial",
+      "txDate": "2025-05-15",
+      "notificationDate": "2025-06-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    },
+    {
+      "ticker": "BK",
+      "assetType": "ST",
+      "ownerCode": "JT",
+      "txType": "P",
+      "txTypeQualifier": null,
+      "txDate": "2025-05-15",
+      "notificationDate": "2025-06-03",
+      "amountRangeText": "$1,001 - $15,000",
+      "amountMidpoint": 8001
+    }
+  ]
+}
