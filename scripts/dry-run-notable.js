@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
- * Invoke api/fetch-and-send.js locally in dry-run mode and report how many
- * notable entries the new step 3g surfaces. Compare to the before-snapshot
- * scorecard to confirm win-rate is unchanged.
+ * Local end-to-end dry-run of api/fetch-and-send.js with notable-pipeline focus.
+ * Usage: node scripts/dry-run-notable.js
+ * Invokes the handler with { query: { dry: "true" } }, captures the JSON
+ * response, prints step-3g notable counts, and snapshots the scorecard
+ * before/after to help debug contamination questions. No emails sent.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env.local') });
 

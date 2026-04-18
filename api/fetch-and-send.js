@@ -150,7 +150,7 @@ module.exports = async function handler(req, res) {
         // Attach earnings context to the filing
         f.earningsContext = ec;
 
-        if (ec.scoreAdjustment > 0 && f.summary.buyCount > 0) {
+        if (ec.scoreAdjustment > 0 && f.summary?.buyCount > 0) {
           // Post-earnings buy boost — only apply to buys
           f.score += ec.scoreAdjustment;
           f.signals.push(`Post-earnings buy (+${ec.scoreAdjustment}): ${ec.signal === 'post_earnings_buy' ? `bought ${ec.daysSinceEarnings}d after earnings` : ec.signal}`);
@@ -192,7 +192,7 @@ module.exports = async function handler(req, res) {
 
       for (const f of scored) {
         const cc = contrarianMap.get(f.ticker);
-        if (!cc || f.summary.buyCount === 0) continue;
+        if (!cc || (f.summary?.buyCount ?? 0) === 0) continue;
 
         f.contrarianContext = cc;
         f.score += cc.boost;
@@ -418,7 +418,7 @@ module.exports = async function handler(req, res) {
           score: f.score,
           tier: f.tier,
           signals: f.signals,
-          buyValue: f.summary.totalBuyValue,
+          buyValue: f.summary?.totalBuyValue ?? 0,
           whyItMatters: f.whyItMatters || null,
           earningsContext: f.earningsContext ? {
             signal: f.earningsContext.signal,

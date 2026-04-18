@@ -937,12 +937,15 @@
         }
 
         // Notable (not-scored, not-tracked) — last 7 days.
-        // Editorial color only. No return column by design.
+        // Editorial color only. No return column by design. Collapsed by
+        // default: the section header + methodology are visible, but all
+        // rows stay hidden until the reader explicitly expands the list.
         const notable = data.notable || [];
         if (notable.length > 0) {
-          const VISIBLE_NOTABLE = 5;
-          const hiddenNotableCount = Math.max(0, notable.length - VISIBLE_NOTABLE);
-          leftCol += `<div class="picks-table fade-up d3" style="margin-top:20px;">
+          // VISIBLE_NOTABLE = 0 means every row starts under .hidden-pick,
+          // so the section title + lede render, but entries only appear on
+          // click. The shared see-more-btn handler below toggles them.
+          leftCol += `<div class="picks-table fade-up d3" style="margin-top:20px;background:#f7f4ee;border:1px dashed #d8cfb8;">
             <div class="section-header">
               <h2>Also Worth Noting <span style="font-size:12px;color:#b0a99f;font-weight:normal;">(last 7 days &middot; not tracked)</span></h2>
               <span class="count">${notable.length} ${notable.length === 1 ? 'filing' : 'filings'}</span>
@@ -952,14 +955,15 @@
               because small-cap purchases historically outperform &mdash; so these don&rsquo;t make the scored-picks list
               and are <strong>not included in the win-rate above</strong>. <a href="#notable-methodology" style="color:#1a7a4c;">Why?</a>
             </p>
-            <div class="pick-row header">
+            <button class="see-more-btn" data-target="notable-picks" data-label="notable filings" data-total="${notable.length}" style="margin-bottom:12px;">See all ${notable.length} notable ${notable.length === 1 ? 'filing' : 'filings'}</button>
+            <div class="pick-row header hidden-pick" data-list="notable-picks">
               <div>Ticker</div>
               <div>Insider</div>
               <div style="text-align:right;">Buy Value</div>
               <div style="text-align:right;">Filed</div>
             </div>
-            ${notable.map((n, i) => `
-              <div class="pick-row${i >= VISIBLE_NOTABLE ? ' hidden-pick' : ''}" data-list="notable-picks">
+            ${notable.map(n => `
+              <div class="pick-row hidden-pick" data-list="notable-picks">
                 <div class="pick-ticker"><a href="https://www.tradingview.com/symbols/${esc(n.ticker)}/" target="_blank" style="color:#1a7a4c;text-decoration:none;">$${esc(n.ticker)}</a></div>
                 <div class="pick-info">
                   <div class="name">${esc(n.ownerName || '')}</div>
@@ -969,7 +973,6 @@
                 <div class="pick-score" style="color:#7a7a7a;font-weight:normal;">${esc(n.date || '')}</div>
               </div>
             `).join('')}
-            ${hiddenNotableCount > 0 ? `<button class="see-more-btn" data-target="notable-picks" data-label="notable filings" data-total="${notable.length}">See all ${notable.length} notable filings</button>` : ''}
             <p id="notable-methodology" style="margin:16px 0 0;padding-top:12px;border-top:1px dashed #e0dbd3;font-size:12px;color:#b0a99f;line-height:1.6;">
               <strong style="color:#7a7a7a;">Methodology note:</strong> our scoring model penalizes insider buys at large-cap
               companies because backtest data shows small-cap purchases significantly outperform in the 30&ndash;90 day window.

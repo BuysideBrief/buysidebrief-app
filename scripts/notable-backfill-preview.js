@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Read-only preview: scan historical filing:* records from recent days and
- * report which would qualify as notable under the current filter. Does NOT
- * write to Redis. Use this to confirm the notable predicate fires on real data.
+ * Read-only "what would have qualified as notable in the last N days?" preview.
+ * Usage: node scripts/notable-backfill-preview.js <days>      (default 7)
+ * Scans filing:* records in Redis, applies the current isNotable() filter,
+ * and prints qualifiers + rejection-reason counts. Does NOT write to Redis.
  */
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env.local') });
 
