@@ -13,6 +13,7 @@ const { formatValue } = require('../lib/signal-scorer');
 const { getTimingPhrase } = require('../lib/email-formatter');
 const { generateWeeklyDeepDive } = require('../lib/ai-content');
 const { getRedisOrNoop } = require('../lib/redis');
+const { getNotableForRange } = require('../lib/notable');
 
 const kv = getRedisOrNoop();
 
@@ -34,6 +35,16 @@ module.exports = async function handler(req, res) {
     const weekPicks = allPicks.filter(p => p.entryDate >= weekStr);
     const scorecard = await generateScorecard();
 
+    // Past-7-days notable filings (editorial color, NOT performance-tracked).
+    let notable = [];
+    try {
+      const toDate = new Date().toISOString().slice(0, 10);
+      const fromDate = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+      notable = await getNotableForRange(fromDate, toDate);
+    } catch (e) {
+      console.error('Notable range fetch failed (non-fatal):', e.message);
+    }
+
     // Generate AI weekly deep dive
     let deepDive = null;
     try {
@@ -43,7 +54,7 @@ module.exports = async function handler(req, res) {
     }
 
     // Build the weekly email
-    const { subject, html } = formatWeeklyEmail(weekPicks, scorecard, deepDive);
+    const { subject, html } = formatWeeklyEmail(weekPicks, scorecard, deepDive, notable);
 
     if (isDryRun) {
       return res.status(200).json({
@@ -117,7 +128,7 @@ module.exports = async function handler(req, res) {
   }
 };
 
-function formatWeeklyEmail(weekPicks, scorecard, deepDive) {
+function formatWeeklyEmail(weekPicks, scorecard, deepDive, notable) {
   const now = new Date();
   const weekEnd = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const weekStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
@@ -151,6 +162,37 @@ function formatWeeklyEmail(weekPicks, scorecard, deepDive) {
     }).join('');
 
   const scorecardHtml = formatScorecardForWeekly(scorecard);
+
+  // Also-worth-noting section. Emitted only when non-empty, per spec.
+  const notableList = Array.isArray(notable) ? notable : [];
+  const notableRows = notableList
+    .slice(0, 8)
+    .map(n => `
+      <tr>
+        <td style="padding:12px 0;border-bottom:1px solid #f2efe8;">
+          <strong style="font-size:15px;font-family:Georgia,serif;">$${esc(n.ticker)}</strong>
+          <span style="color:#7a7a7a;font-size:13px;font-family:-apple-system,Helvetica,Arial,sans-serif;"> — ${esc(n.issuerName || '')}</span><br>
+          <span style="font-size:14px;color:#3d3d3d;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+            ${esc(n.officerTitle || (n.isDirector ? 'Director' : 'Insider'))} <strong>${esc(n.ownerName || '')}</strong>
+            bought <strong style="color:#1a7a4c;">$${formatValue(n.buyValue)}</strong>
+          </span><br>
+          <span style="font-size:12px;color:#b0a99f;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+            Filed ${esc(n.date || '')}
+          </span>
+        </td>
+      </tr>`).join('');
+  const notableHtml = notableList.length > 0 ? `
+<tr><td style="padding:0 20px 24px;">
+  <h2 style="margin:0 0 6px;font-size:20px;font-family:Georgia,serif;font-weight:normal;border-bottom:1px solid #e0dbd3;padding-bottom:10px;">
+    Also Worth Noting This Week
+  </h2>
+  <p style="margin:10px 0 14px;font-size:13px;color:#7a7a7a;line-height:1.55;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+    Real insider purchases at companies you&rsquo;ve heard of. These don&rsquo;t score high enough on our model to be featured picks &mdash;
+    usually because the buy is small relative to the company&rsquo;s market cap &mdash; but they&rsquo;re worth knowing about.
+    <em>Not tracked on the scorecard.</em>
+  </p>
+  <table width="100%" cellpadding="0" cellspacing="0">${notableRows}</table>
+</td></tr>` : '';
 
   const html = `
 <!DOCTYPE html>
@@ -189,6 +231,8 @@ function formatWeeklyEmail(weekPicks, scorecard, deepDive) {
   ${weekPicks.length > 0 ? `<table width="100%" cellpadding="0" cellspacing="0">${pickRows}</table>` :
     '<p style="color:#7a7a7a;font-family:-apple-system,Helvetica,Arial,sans-serif;">Quiet week on the insider front. No filings crossed our threshold.</p>'}
 </td></tr>
+
+${notableHtml}
 
 ${scorecardHtml}
 

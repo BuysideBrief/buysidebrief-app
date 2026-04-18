@@ -8,6 +8,7 @@
 
 const { generateScorecard, getAllCeoProfiles } = require('../lib/performance-tracker');
 const { getRedisOrNoop } = require('../lib/redis');
+const { getNotableForRange } = require('../lib/notable');
 
 module.exports = async function handler(req, res) {
   // CORS for the frontend
@@ -17,7 +18,11 @@ module.exports = async function handler(req, res) {
   try {
     const redis = getRedisOrNoop();
 
-    const [scorecard, ceoProfiles, signalReportCard, tierPerformance, decayCurve, seasonality, funnel] = await Promise.all([
+    // Last-7-days window for the Notable section.
+    const toDate = new Date().toISOString().slice(0, 10);
+    const fromDate = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
+
+    const [scorecard, ceoProfiles, signalReportCard, tierPerformance, decayCurve, seasonality, funnel, notable] = await Promise.all([
       generateScorecard(),
       getAllCeoProfiles(),
       redis.get('meta:signal-report-card'),
@@ -25,6 +30,7 @@ module.exports = async function handler(req, res) {
       redis.get('meta:decay-curve'),
       redis.get('meta:seasonality'),
       redis.get('meta:funnel'),
+      getNotableForRange(fromDate, toDate),
     ]);
 
     // Only include CEOs with return data
@@ -66,6 +72,10 @@ module.exports = async function handler(req, res) {
       decayCurve: decayCurve || null,
       seasonality: seasonality || null,
       funnel: funnel || null,
+      // Editorial color only — NOT performance-tracked, NOT included in scorecard.winRate.
+      // See lib/notable.js for the filter logic.
+      notable: Array.isArray(notable) ? notable : [],
+      notableWindow: { from: fromDate, to: toDate },
       updatedAt: new Date().toISOString(),
     });
 

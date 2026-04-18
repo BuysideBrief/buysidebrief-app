@@ -10,6 +10,7 @@
 const { fetchRecentFilingsFromFeed, fetchAndParseForm4 } = require('../lib/sec-fetcher');
 const { scoreAllFilings, categorizeForDigest } = require('../lib/signal-scorer');
 const { formatDigestEmail } = require('../lib/email-formatter');
+const { storeNotableFilings } = require('../lib/notable');
 const { enrichAllFilings } = require('../lib/context-enricher');
 const { recordNewPicks, updateAllReturns, generateScorecard, formatScorecardForEmail, formatCeoSpotlight, getCeoProfile, loadRecentPicks } = require('../lib/performance-tracker');
 const { getMarketOverview, formatMarketOverviewForEmail } = require('../lib/market-overview');
@@ -273,6 +274,19 @@ module.exports = async function handler(req, res) {
       console.error('  Company profile fetch failed (non-fatal):', e.message);
     }
 
+    // ── Step 3g: Identify "also worth noting" large-cap buys not in feature tier ──
+    // These get written to a separate Redis namespace and surfaced as editorial
+    // color in the email. They are NEVER tracked on the scorecard.
+    console.log('[3g/10] Identifying notable (non-scored) large-cap buys...');
+    let notableEntries = [];
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      notableEntries = await storeNotableFilings(scored, today);
+      console.log(`  Notable: ${notableEntries.length} large-cap insider buys surfaced`);
+    } catch (e) {
+      console.error('  Notable store failed (non-fatal):', e.message);
+    }
+
     // ── Step 4: Enrich top picks with context ──
     console.log('[4/10] Enriching filings with context...');
     const enriched = await enrichAllFilings(scored);
@@ -369,6 +383,8 @@ module.exports = async function handler(req, res) {
     }
 
     const extraHtml = scorecardHtml + ceoSpotlightHtml;
+    // Attach notable list (editorial color; not performance-tracked). See lib/notable.js.
+    enrichedCategorized.notable = notableEntries;
     const { subject, html } = formatDigestEmail(enrichedCategorized, null, extraHtml, marketHtml);
 
     // Generate social snippet for later use
