@@ -25,7 +25,28 @@ module.exports = async function handler(req, res) {
 
     if (!article) {
       res.setHeader('Content-Type', 'text/html');
-      return res.status(404).send(`<!DOCTYPE html><html><head><title>Not Found</title></head><body><h1>404 — Article Not Found</h1><p><a href="/blog">Back to Blog</a></p></body></html>`);
+      return res.status(404).send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article Not Found | Buyside Brief</title>
+  <meta name="description" content="This Buyside Brief article has moved or been unpublished. Browse the full blog index for the latest insider-trading explainers and Form 4 deep dives.">
+  <link rel="canonical" href="https://www.buysidebrief.com/blog">
+  <meta name="robots" content="noindex,follow">
+  <meta property="og:title" content="Article Not Found | Buyside Brief">
+  <meta property="og:description" content="This Buyside Brief article has moved or been unpublished. Browse the full blog index for the latest insider-trading explainers and Form 4 deep dives.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.buysidebrief.com/blog/${encodeURIComponent(slug)}">
+  <meta property="og:image" content="https://www.buysidebrief.com/og-image.png">
+  <meta property="og:site_name" content="Buyside Brief">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Article Not Found | Buyside Brief">
+  <meta name="twitter:description" content="This Buyside Brief article has moved or been unpublished. Browse the full blog index for the latest insider-trading explainers and Form 4 deep dives.">
+  <meta name="twitter:image" content="https://www.buysidebrief.com/og-image.png">
+</head>
+<body><h1>404 — Article Not Found</h1><p><a href="/blog">Back to Blog</a></p></body>
+</html>`);
     }
 
     const html = wrapArticleInPage(article);
