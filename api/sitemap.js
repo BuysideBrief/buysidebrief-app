@@ -7,11 +7,10 @@
 const { getRedis } = require('../lib/redis');
 const { BlogStore } = require('../lib/publish-pipeline');
 
+const EMPTY_REDIS = { get: async () => null, set: async () => null, smembers: async () => [] };
+
 module.exports = async function handler(req, res) {
-  const redis = getRedis();
-  if (!redis) {
-    return res.status(500).send('Redis not configured');
-  }
+  const redis = getRedis() || EMPTY_REDIS;
 
   try {
     const store = new BlogStore(redis);
