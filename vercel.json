@@ -38,7 +38,7 @@
       "maxDuration": 60
     },
     "api/seo/generate.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     }
   },
   "rewrites": [
