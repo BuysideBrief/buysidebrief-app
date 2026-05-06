@@ -44,6 +44,7 @@ module.exports = async function handler(req, res) {
   <meta name="twitter:title" content="Article Not Found | Buyside Brief">
   <meta name="twitter:description" content="This Buyside Brief article has moved or been unpublished. Browse the full blog index for the latest insider-trading explainers and Form 4 deep dives.">
   <meta name="twitter:image" content="https://www.buysidebrief.com/og-image.png">
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body><h1>404 — Article Not Found</h1><p><a href="/blog">Back to Blog</a></p></body>
 </html>`);
