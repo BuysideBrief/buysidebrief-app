@@ -1,0 +1,6 @@
+cache/
+data/
+run.log
+results/results.json
+results/cohort-assignments.csv
+results/sanity-check.txt
