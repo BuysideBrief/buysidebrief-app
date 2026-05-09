@@ -70,18 +70,19 @@ Each Form 4 filing gets a score based on:
 
 | Signal | Points | Rationale |
 |--------|--------|-----------|
-| Cluster buying (3+ insiders) | +40 | Strongest conviction signal |
 | C-suite purchase | +30 | CEO/CFO putting their own money in |
 | Large purchase (>$500K) | +25 | Meaningful skin in the game |
 | 10%+ owner buying | +20 | Major shareholders adding |
+| Director purchase | +20 | Board-level conviction |
 | Medium purchase (>$100K) | +15 | Notable commitment |
-| Paired buying (2 insiders) | +15 | Emerging cluster |
-| Director purchase | +15 | Board-level conviction |
+| Paired buying (2 insiders) | +10 | Direction-positive in backtest but not significant; held pending retest |
 | Discretionary (no 10b5-1) | +10 | Not pre-scheduled |
-| Option exercise only | -20 | Usually mechanical |
-| Gift/transfer | -30 | Not market signal |
+| Cluster activity (3-4 insiders) | 0 | Surfaced but not scored — backtested as null/negative |
 | Tiny purchase (<$10K) | -15 | Minimal conviction |
 | Pre-scheduled sale | -15 | Not discretionary |
+| Option exercise only | -20 | Usually mechanical |
+| Mega-cluster (5+ insiders) | -20 each | Backtested as contrary indicator (p<0.0001) |
+| Gift/transfer | -30 | Not market signal |
 
 **Thresholds:** Score ≥75 = Top Pick | ≥50 = Featured | ≥25 = Mention | <25 = Omit
 

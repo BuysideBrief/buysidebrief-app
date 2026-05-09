@@ -50,18 +50,27 @@ describe('generateWhyItMatters', () => {
     expect(blurb).toMatch(/serious money|real bet/i);
   });
 
-  test('cluster signal gets cluster context', () => {
+  test('cluster activity (3-4) signal gets transparent backtest context', () => {
     const blurb = generateWhyItMatters(makeScoredFiling({
-      signals: ['Cluster buying: 3 insiders at $TEST'],
+      signals: ['Cluster activity: 3 insiders at $TEST'],
     }));
-    expect(blurb).toMatch(/multiple insiders|shared conviction|notable/i);
+    expect(blurb).toMatch(/multiple insiders|backtest|reliably outperform/i);
+    // Should NOT use the old "strongest predictive signals" framing
+    expect(blurb).not.toMatch(/strongest predictive|shared conviction/i);
   });
 
-  test('paired signal gets paired context', () => {
+  test('mega-cluster (5+) signal gets contrary-indicator context', () => {
+    const blurb = generateWhyItMatters(makeScoredFiling({
+      signals: ['Mega-cluster warning: 5 insiders piling into $TEST (contrary indicator)'],
+    }));
+    expect(blurb).toMatch(/five or more|underperforms|capitulation|stampede/i);
+  });
+
+  test('paired signal gets paired context with backtest hedge', () => {
     const blurb = generateWhyItMatters(makeScoredFiling({
       signals: ['Paired buying: 2 insiders at $TEST'],
     }));
-    expect(blurb).toMatch(/two insiders|worth noting|worth watching/i);
+    expect(blurb).toMatch(/two insiders|paired buying|tracks slightly better/i);
   });
 
   test('discretionary purchase gets discretionary context', () => {

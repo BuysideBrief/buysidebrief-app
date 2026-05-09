@@ -322,40 +322,142 @@ describe('scoreFiling', () => {
 
 describe('scoreAllFilings — cluster detection', () => {
 
-  test('3+ insiders buying same ticker get cluster bonus (+25)', () => {
+  test('2 insiders buying same ticker get paired bonus (+10) and signal note', () => {
+    const filings = [
+      makeFiling({ ticker: 'ABC', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
+      makeFiling({ ticker: 'ABC', ownerName: 'B', ownerCik: '002', transactions: [buyTx(100, 50)] }),
+    ];
+    // Score the same filings as solo to get the baseline
+    const soloScore = scoreFiling(makeFiling({ ticker: 'ABC', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] })).score;
+    const scored = scoreAllFilings(filings);
+    for (const f of scored) {
+      expect(f.signals).toEqual(expect.arrayContaining([
+        expect.stringMatching(/Paired buying: 2 insiders/),
+      ]));
+      expect(f.score).toBe(soloScore + 10);
+    }
+  });
+
+  test('3 insiders buying same ticker get signal note but no score change (cluster activity)', () => {
     const filings = [
       makeFiling({ ticker: 'XYZ', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
       makeFiling({ ticker: 'XYZ', ownerName: 'B', ownerCik: '002', transactions: [buyTx(100, 50)] }),
       makeFiling({ ticker: 'XYZ', ownerName: 'C', ownerCik: '003', transactions: [buyTx(100, 50)] }),
     ];
+    const soloScore = scoreFiling(makeFiling({ ticker: 'XYZ', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] })).score;
     const scored = scoreAllFilings(filings);
     for (const f of scored) {
       expect(f.signals).toEqual(expect.arrayContaining([
-        expect.stringMatching(/Cluster buying/),
+        expect.stringMatching(/Cluster activity: 3 insiders/),
+      ]));
+      // Cluster activity (3-4) is surfaced but not scored
+      expect(f.score).toBe(soloScore);
+      // Should not pick up the legacy "cluster buying" or "paired" labels
+      expect(f.signals).not.toEqual(expect.arrayContaining([
+        expect.stringMatching(/Cluster buying|Paired buying|Mega-cluster/),
       ]));
     }
   });
 
-  test('2 insiders buying same ticker get paired bonus (+10)', () => {
+  test('4 insiders buying same ticker still treated as cluster activity (no score change)', () => {
     const filings = [
-      makeFiling({ ticker: 'ABC', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
-      makeFiling({ ticker: 'ABC', ownerName: 'B', ownerCik: '002', transactions: [buyTx(100, 50)] }),
+      makeFiling({ ticker: 'FOUR', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
+      makeFiling({ ticker: 'FOUR', ownerName: 'B', ownerCik: '002', transactions: [buyTx(100, 50)] }),
+      makeFiling({ ticker: 'FOUR', ownerName: 'C', ownerCik: '003', transactions: [buyTx(100, 50)] }),
+      makeFiling({ ticker: 'FOUR', ownerName: 'D', ownerCik: '004', transactions: [buyTx(100, 50)] }),
     ];
+    const soloScore = scoreFiling(makeFiling({ ticker: 'FOUR', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] })).score;
     const scored = scoreAllFilings(filings);
     for (const f of scored) {
       expect(f.signals).toEqual(expect.arrayContaining([
-        expect.stringMatching(/Paired buying/),
+        expect.stringMatching(/Cluster activity: 4 insiders/),
+      ]));
+      expect(f.score).toBe(soloScore);
+    }
+  });
+
+  test('5 insiders buying same ticker get mega-cluster penalty (-20)', () => {
+    const filings = Array.from({ length: 5 }, (_, i) =>
+      makeFiling({ ticker: 'MEGA', ownerName: `Insider ${i}`, ownerCik: `00${i}`, transactions: [buyTx(100, 50)] })
+    );
+    const soloScore = scoreFiling(makeFiling({ ticker: 'MEGA', ownerName: 'X', ownerCik: '999', transactions: [buyTx(100, 50)] })).score;
+    const scored = scoreAllFilings(filings);
+    for (const f of scored) {
+      expect(f.signals).toEqual(expect.arrayContaining([
+        expect.stringMatching(/Mega-cluster warning: 5 insiders/),
+      ]));
+      expect(f.score).toBe(soloScore - 20);
+      // Should not also carry the cluster-activity or paired labels
+      expect(f.signals).not.toEqual(expect.arrayContaining([
+        expect.stringMatching(/Cluster activity|Paired buying/),
       ]));
     }
   });
 
-  test('1 insider buying does not get cluster or paired bonus', () => {
+  test('6 insiders buying same ticker score -20 once (mega-cluster not double-applied)', () => {
+    const filings = Array.from({ length: 6 }, (_, i) =>
+      makeFiling({ ticker: 'SIX', ownerName: `Insider ${i}`, ownerCik: `01${i}`, transactions: [buyTx(100, 50)] })
+    );
+    const soloScore = scoreFiling(makeFiling({ ticker: 'SIX', ownerName: 'X', ownerCik: '999', transactions: [buyTx(100, 50)] })).score;
+    const scored = scoreAllFilings(filings);
+    for (const f of scored) {
+      expect(f.score).toBe(soloScore - 20);
+      // Each filing should carry the mega-cluster signal exactly once
+      const megaSignals = f.signals.filter(s => /Mega-cluster warning/.test(s));
+      expect(megaSignals.length).toBe(1);
+    }
+  });
+
+  test('mega-cluster penalty drops tier appropriately when score falls below thresholds', () => {
+    // Build filings that would otherwise score in the 'mention' band so the
+    // -20 mega-cluster penalty pushes them into 'skip' territory.
+    // CEO + small purchase (no discretionary bonus path is fine — just need >=25)
+    // Use a director $100K buy (Director +20 + medium $100K +15 + discretionary +10 = 45 → 'feature')
+    // After -20 mega: 25 → 'mention'. Verify downward re-evaluation works.
+    const filings = Array.from({ length: 5 }, (_, i) =>
+      makeFiling({
+        ticker: 'DROP',
+        ownerName: `Director ${i}`,
+        ownerCik: `02${i}`,
+        isDirector: true,
+        transactions: [buyTx(1000, 110)], // $110K — medium
+      })
+    );
+    const scored = scoreAllFilings(filings);
+    for (const f of scored) {
+      expect(f.score).toBe(45 - 20); // 25
+      expect(f.tier).toBe('mention');
+    }
+  });
+
+  test('mega-cluster penalty can drop a low-scoring filing to skip tier', () => {
+    // Director + sub-$25K purchase scores: director +20 + discretionary +10 = 30
+    // (no purchase tier bonus since totalValue is below the $25K threshold,
+    //  and not below $10K so no tiny penalty either). After -20 mega-cluster
+    // penalty: 10 → 'skip'. Verifies the downward tier re-evaluation works.
+    const filings = Array.from({ length: 5 }, (_, i) =>
+      makeFiling({
+        ticker: 'GONE',
+        ownerName: `Director ${i}`,
+        ownerCik: `03${i}`,
+        isDirector: true,
+        transactions: [buyTx(100, 200)], // $20K
+      })
+    );
+    const scored = scoreAllFilings(filings);
+    for (const f of scored) {
+      expect(f.score).toBe(30 - 20); // 10
+      expect(f.tier).toBe('skip');
+    }
+  });
+
+  test('1 insider buying does not get cluster, paired, or mega-cluster label', () => {
     const filings = [
       makeFiling({ ticker: 'SOLO', ownerName: 'A', ownerCik: '001', transactions: [buyTx(100, 50)] }),
     ];
     const scored = scoreAllFilings(filings);
     expect(scored[0].signals).not.toEqual(expect.arrayContaining([
-      expect.stringMatching(/Cluster|Paired/),
+      expect.stringMatching(/Cluster|Paired|Mega-cluster/),
     ]));
   });
 
@@ -368,7 +470,7 @@ describe('scoreAllFilings — cluster detection', () => {
     const scored = scoreAllFilings(filings);
     for (const f of scored) {
       expect(f.signals).toEqual(expect.arrayContaining([
-        expect.stringMatching(/Cluster buying/),
+        expect.stringMatching(/Cluster activity: 3 insiders/),
       ]));
     }
   });
