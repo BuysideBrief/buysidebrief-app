@@ -10,7 +10,7 @@
 
 const { generateScorecard, formatScorecardForWeekly } = require('../lib/performance-tracker');
 const { formatValue } = require('../lib/signal-scorer');
-const { getTimingPhrase } = require('../lib/email-formatter');
+const { getTimingPhrase, UNSUBSCRIBE_URL_TAG } = require('../lib/email-formatter');
 const { generateWeeklyDeepDive } = require('../lib/ai-content');
 const { getRedisOrNoop } = require('../lib/redis');
 const { getNotableForRange } = require('../lib/notable');
@@ -242,7 +242,7 @@ ${scorecardHtml}
     Not investment advice. SEC Form 4 data is public record. 
     Past insider buying patterns do not predict future performance.<br><br>
     <a href="https://www.buysidebrief.com" style="color:#1a7a4c;">buysidebrief.com</a>
-    &middot; <a href="%unsubscribe_url%" style="color:#b0a99f;">Unsubscribe</a>
+    &middot; <a href="${UNSUBSCRIBE_URL_TAG}" style="color:#b0a99f;">Unsubscribe</a>
     &nbsp;&middot;&nbsp; <a href="https://www.buysidebrief.com/privacy.html" style="color:#b0a99f;">Privacy</a>
     &nbsp;&middot;&nbsp; <a href="https://www.buysidebrief.com/terms.html" style="color:#b0a99f;">Terms</a>
   </p>
@@ -261,3 +261,5 @@ function esc(str) {
   if (!str) return '';
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+module.exports.formatWeeklyEmail = formatWeeklyEmail;
