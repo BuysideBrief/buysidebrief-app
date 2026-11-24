@@ -17,6 +17,12 @@ require('dotenv').config();
 const { Redis } = require('@upstash/redis');
 const Anthropic = require('@anthropic-ai/sdk');
 const { constrainLength } = require('../lib/article-generator');
+const {
+  CLAUDE_MODEL,
+  CLAUDE_OUTPUT_CONFIG,
+  THINKING_HEADROOM_TOKENS,
+  firstText,
+} = require('../lib/claude-model');
 
 const TITLE_MIN = 50;
 const TITLE_MAX = 60;
@@ -35,8 +41,9 @@ async function regenerateMetadata(article) {
   const client = new Anthropic();
 
   const message = await client.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 300,
+    model: CLAUDE_MODEL,
+    max_tokens: 300 + THINKING_HEADROOM_TOKENS,
+    output_config: CLAUDE_OUTPUT_CONFIG,
     system: `You rewrite blog post metadata for SEO. Return ONLY valid JSON, nothing else.`,
     messages: [{
       role: 'user',
@@ -55,7 +62,7 @@ Rules:
     }],
   });
 
-  const raw = message.content[0].text.trim();
+  const raw = (firstText(message) || '').trim();
   try {
     const parsed = JSON.parse(raw.replace(/^```json?\s*\n?/i, '').replace(/\n?```\s*$/i, ''));
 
